@@ -72,25 +72,26 @@ def draw_true(ax, p, i, title):
     style(ax, title, IN_COLOR)
 
 
-def draw_recon(ax, recon, n_top, title):
-    """AE 後：取強度前 n_top 名的 (格子, 類別) 當成重建出來的點。"""
+def draw_recon(ax, recon, title):
+    """AE 後：40x40 每一格都畫一點，顏色 = 該格最強的類別，
+    大小/透明度 ∝ 該格的總強度（強度 0 的格子自然看不見）。"""
     inten = torch.expm1(recon.clamp(min=0))[0].numpy()   # (10,40,40) 還原成 count
-    k, iy, ix = np.unravel_index(
-        np.argsort(inten, axis=None)[::-1][:n_top], inten.shape)
-    v = inten[k, iy, ix]
-    rel = v / v.max()
+    total = inten.sum(0)
+    top_cat = inten.argmax(0)
+    rel = total / total.max()
 
     # 格子中心換算回公尺
-    x = (ix + 0.5 - GRID / 2) * CELL
-    y = (iy + 0.5 - GRID / 2) * CELL
+    gy, gx = np.mgrid[0:GRID, 0:GRID]
+    x = (gx + 0.5 - GRID / 2) * CELL
+    y = (gy + 0.5 - GRID / 2) * CELL
     for c in range(len(CAT_ZH)):
-        m = k == c
+        m = top_cat == c
         if m.any():
-            ax.scatter(x[m], y[m], s=DOT * (0.3 + 1.4 * rel[m]),
+            ax.scatter(x[m], y[m], s=DOT * (0.15 + 1.5 * rel[m]),
                        c=CAT_COLORS[c], linewidths=0,
-                       alpha=0.25 + 0.6 * rel[m], label=CAT_ZH[c])
+                       alpha=np.clip(rel[m], 0, 1) * 0.9, label=CAT_ZH[c])
     style(ax, title, OUT_COLOR)
-    return v
+    return total
 
 
 def main():
@@ -120,21 +121,23 @@ def main():
     print(f"MSE loss = {loss:.6f}  "
           f"（全體中位數 {np.median(err):.6f}，此 patch 排在第 {pct:.1f} 百分位）")
 
+    # MSE 是在 log1p 空間算的；POI 數要 expm1 還原回 count 才有意義
     per_cat = ((recon - x) ** 2).mean(dim=(2, 3))[0]
-    print("\n逐類別 MSE：")
+    cnt_x = torch.expm1(x.clamp(min=0))[0].sum(dim=(1, 2))
+    cnt_r = torch.expm1(recon.clamp(min=0))[0].sum(dim=(1, 2))
+    print("\n逐類別 MSE（log1p 空間）與 POI 數（expm1 還原）：")
     for c, name in enumerate(CAT_ZH):
-        print(f"  {name:<6}{per_cat[c]:.6f}   "
-              f"輸入總量 {x[0, c].sum():7.2f} -> 重建 {recon[0, c].sum():7.2f}")
+        print(f"  {name:<6}MSE {per_cat[c]:.6f}   "
+              f"輸入 {cnt_x[c]:6.1f} 個 -> 重建 {cnt_r[c]:6.1f} 個")
 
     fig, (a, b) = plt.subplots(1, 2, figsize=(13, 6.5))
     draw_true(a, np.load(PATCHES), n, f"AE 前（真實 POI，共 {n_poi} 個）")
-    v = draw_recon(b, recon, n_poi,
-                   f"AE 後（重建強度前 {n_poi} 名，MSE {loss:.6f}）")
+    total = draw_recon(b, recon, f"AE 後（全部 40x40 格，MSE {loss:.6f}）")
     a.legend(fontsize=6.5, markerscale=1.4, framealpha=0.9,
              loc="upper left", bbox_to_anchor=(1.01, 1.0))
 
-    print(f"\n重建強度前 {n_poi} 名：最大 {v.max():.3f}、最小 {v.min():.3f} "
-          f"（真實每格至少是 1 個 POI）")
+    print(f"\n重建每格總強度：最大 {total.max():.3f}、"
+          f"總和 {total.sum():.1f}（真實共 {n_poi} 個 POI）")
 
     fig.suptitle(f"v0 重建測試：patch {n}（latent_dim={LATENT_DIM}）",
                  fontsize=12)
