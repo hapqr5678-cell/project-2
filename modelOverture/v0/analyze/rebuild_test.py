@@ -22,25 +22,28 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ae import GRID, CELL, RADIUS, ConvAE, Patches, mse_loss  # noqa: E402
 
 PATCHES = "modelOverture/patches.npz"
-LATENTS = "modelOverture/result/latents.npz"
-CKPT = "modelOverture/result/ae.pt"
-OUT = "modelOverture/result/rebuild_test.png"
+LATENTS = "modelOverture/v0/result/latents.npz"
+CKPT = "modelOverture/v0/result/ae.pt"
+OUT = "modelOverture/v0/result/rebuild_test100.png"
 
 LATENT_DIM = 2
 DOT = 18          # 點的基本大小
 
 CAT_ZH = [
-    "餐飲", "零售", "夜生活", "政府", "交通",
-    "商業服務", "地標", "藝文娛樂", "醫療", "運動休閒",
+    "餐飲", "商業服務", "生活服務", "教育", "醫療",
+    "購物", "藝文娛樂", "文化歷史", "交通旅遊", "運動休閒",
+    "住宿", "社區政府", "地理實體",
 ]
 CAT_COLORS = [
-    "#e6194b", "#3cb44b", "#911eb4", "#4363d8", "#f58231",
-    "#46f0f0", "#008080", "#f032e6", "#9a6324", "#808000",
+    "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231",
+    "#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe",
+    "#008080", "#e6beff", "#9a6324",
 ]
 IN_COLOR = "#2c7fb8"
 OUT_COLOR = "#c0392b"
 
-mpl.rcParams["font.family"] = ["Heiti TC"]
+mpl.rcParams["font.family"] = "sans-serif"
+mpl.rcParams["font.sans-serif"] = ["Microsoft JhengHei", "Heiti TC", "Arial"]
 mpl.rcParams["axes.unicode_minus"] = False
 mpl.rcParams["figure.dpi"] = 130
 

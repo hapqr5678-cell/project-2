@@ -15,39 +15,39 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-PATCHES = "model/patches.npz"
-LATENTS = "model/v0/result/latents.npz"
-OUT = "model/v0/result/outlier_compare.png"
+PATCHES = "modelOverture/patches.npz"
+LATENTS = "modelOverture/v0/result/latents.npz"
+OUT = "modelOverture/v0/result/outlier_compare.png"
 
 TOP_K = 100        # 各取幾個離群 / 基準 patch
 BASE_AVG = 20      # 右下角基準平均用幾個 patch
 RADIUS = 300.0
 
 CATEGORIES = [
-    "Dining and Drinking",
-    "Retail",
-    "Nightlife Spot",
-    "Community and Government",
-    "Travel and Transportation",
-    "Business and Professional Services",
-    "Landmarks and Outdoors",
-    "Arts and Entertainment",
-    "Health and Medicine",
-    "Sports and Recreation",
+    'food_and_drink',  'services_and_business',
+    'lifestyle_services',  'education',
+    'health_care', 'shopping',
+    'arts_and_entertainment',  'cultural_and_historic',
+    'travel_and_transportation',  'sports_and_recreation',
+    'lodging',  'community_and_government',
+    'geographic_entities'
 ]
 CAT_ZH = [
-    "餐飲", "零售", "夜生活", "社區/政府", "交通",
-    "商業服務", "地標/戶外", "藝文娛樂", "醫療", "運動休閒",
+    "餐飲", "商業服務", "生活服務", "教育", "醫療",
+    "購物", "藝文娛樂", "文化歷史", "交通旅遊", "運動休閒",
+    "住宿", "社區政府", "地理實體",
 ]
 CAT_COLORS = [
-    "#e6194b", "#3cb44b", "#911eb4", "#4363d8", "#f58231",
-    "#46f0f0", "#008080", "#f032e6", "#9a6324", "#808000",
+    "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231",
+    "#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe",
+    "#008080", "#e6beff", "#9a6324",
 ]
 
 OUT_COLOR = "#c0392b"
 BASE_COLOR = "#2c7fb8"
 
-mpl.rcParams["font.family"] = ["Heiti TC"]
+mpl.rcParams["font.family"] = "sans-serif"
+mpl.rcParams["font.sans-serif"] = ["Microsoft JhengHei", "Heiti TC", "Arial"]
 mpl.rcParams["axes.unicode_minus"] = False
 mpl.rcParams["figure.dpi"] = 130
 
