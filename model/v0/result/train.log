@@ -1,0 +1,8 @@
+23700 個 patch，device=mps
+  epoch   1  train 0.01040  val 0.00381
+  epoch   5  train 0.00354  val 0.00348
+  epoch  10  train 0.00351  val 0.00346
+  epoch  15  train 0.00337  val 0.00332
+  epoch  20  train 0.00336  val 0.00331
+  epoch  25  train 0.00335  val 0.00330
+  epoch  30  train 0.00334  val 0.00329

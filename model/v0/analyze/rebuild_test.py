@@ -48,12 +48,10 @@ mpl.rcParams["figure.dpi"] = 130
 def style(ax, title, edge):
     ax.add_patch(plt.Circle((0, 0), RADIUS, fill=False, lw=1.6,
                             color=edge, alpha=0.8))
-    ax.set_xlim(-RADIUS * 1.15, RADIUS * 1.15)
-    ax.set_ylim(-RADIUS * 1.15, RADIUS * 1.15)
+    ax.set_xlim(-RADIUS * 1.05, RADIUS * 1.05)
+    ax.set_ylim(-RADIUS * 1.05, RADIUS * 1.05)
     ax.set_aspect("equal")
     ax.set_title(title, fontsize=10, color=edge)
-    ax.set_xlabel("東西向位移 (m)", fontsize=8)
-    ax.set_ylabel("南北向位移 (m)", fontsize=8)
     ax.tick_params(labelsize=7)
     ax.grid(alpha=0.15, linewidth=0.5)
     for s in ax.spines.values():
@@ -132,14 +130,14 @@ def main():
 
     fig, (a, b) = plt.subplots(1, 2, figsize=(13, 6.5))
     draw_true(a, np.load(PATCHES), n, f"AE 前（真實 POI，共 {n_poi} 個）")
-    total = draw_recon(b, recon, f"AE 後（全部 40x40 格，MSE {loss:.6f}）")
+    total = draw_recon(b, recon, f"AE 後MSE {loss:.6f}）")
     a.legend(fontsize=6.5, markerscale=1.4, framealpha=0.9,
              loc="upper left", bbox_to_anchor=(1.01, 1.0))
 
     print(f"\n重建每格總強度：最大 {total.max():.3f}、"
           f"總和 {total.sum():.1f}（真實共 {n_poi} 個 POI）")
 
-    fig.suptitle(f"v0 重建測試：patch {n}（latent_dim={LATENT_DIM}）",
+    fig.suptitle(f"patch {n}（latent_dim={LATENT_DIM}）",
                  fontsize=12)
     fig.tight_layout()
     fig.savefig(OUT, bbox_inches="tight")

@@ -1,6 +1,7 @@
 """訓練 v0 的 in = out ConvAE，輸出每個 patch 的 latent 與 MSE 重建誤差。
 
-patch 在 batch 內即時做隨機旋轉再 binning，避免 latent 被「街區朝向」吃掉。
+patch 在 batch 內即時 binning；ROTATE=True 時會做隨機旋轉，避免 latent 被
+「街區朝向」吃掉（目前暫時關閉）。
 """
 
 import os
@@ -22,6 +23,7 @@ BATCH = 256
 LR = 1e-3
 VAL_FRAC = 0.1
 SEED = 0
+ROTATE = False  # 暫時關掉隨機旋轉
 
 device = ("mps" if torch.backends.mps.is_available()
           else "cuda" if torch.cuda.is_available() else "cpu")
@@ -39,7 +41,7 @@ def run(data, train_idx, val_idx):
         total = 0.0
         for i in range(0, len(perm), BATCH):
             batch = perm[i:i + BATCH]
-            x = data.render(batch, rotate=True).to(device)
+            x = data.render(batch, rotate=ROTATE).to(device)
             _, recon = model(x)
             loss = mse_loss(recon, x).mean()
             opt.zero_grad()
@@ -53,7 +55,7 @@ def run(data, train_idx, val_idx):
                 vl = []
                 for i in range(0, len(val_idx), BATCH):
                     batch = val_idx[i:i + BATCH]
-                    x = data.render(batch, rotate=True).to(device)
+                    x = data.render(batch, rotate=ROTATE).to(device)
                     _, recon = model(x)
                     vl.append(mse_loss(recon, x))
                 val = torch.cat(vl).mean().item()
