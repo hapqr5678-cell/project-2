@@ -95,21 +95,25 @@ def block(cin, cout, transpose=False):
 class ConvAE(nn.Module):
     def __init__(self, latent_dim=2):
         super().__init__()
+        s1 = (GRID + 2*1 - 3) // 2 + 1
+        s2 = (s1 + 2*1 - 3) // 2 + 1
+        s3 = (s2 + 2*1 - 3) // 2 + 1
+        self.enc_size = s3
         self.emb = nn.Embedding(N_CAT, EMB_DIM)
         self.encoder = nn.Sequential(
             block(EMB_DIM, 32),   # 40 -> 20
             block(32, 64),        # 20 -> 10
             block(64, 128),       # 10 -> 5
             nn.Flatten(),
-            nn.Linear(128 * 5 * 5, 256),
+            nn.Linear(128 * s3 * s3, 256),
             nn.GELU(),
             nn.Linear(256, latent_dim),   # latent 前不接激活，離群值才不會被壓回來
         )
         self.decoder = nn.Sequential(
             nn.Linear(latent_dim, 256),
             nn.GELU(),
-            nn.Linear(256, 128 * 5 * 5),
-            nn.Unflatten(1, (128, 5, 5)),
+            nn.Linear(256, 128 * s3 * s3),
+            nn.Unflatten(1, (128, s3, s3)),
             block(128, 64, transpose=True),   # 5 -> 10
             block(64, 32, transpose=True),    # 10 -> 20
             nn.ConvTranspose2d(32, EMB_DIM, 4, 2, 1),   # 20 -> 40，跟輸入同形狀

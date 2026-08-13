@@ -13,12 +13,14 @@ sys.path.insert(0, ROOT)
 from config.dataset import (CAT_COLORS, CAT_ZH, CELL, GRID, N_CAT,  # noqa: E402
                             PATCHES, RADIUS, result)
 
-MODEL_VERSION = "v0"
+MODEL_VERSION = "v0_l16"
 MODELS = {
-    "v0": dict(latent_dim=2),
-    # "v0_l16": dict(latent_dim=16),  # 用目前的 patches 重訓後解開即可切換
+    "v0": dict(latent_dim=2, log1p=True),
+    "v0_poisson_nll": dict(latent_dim=2, log1p=False),
+    "v0_l16": dict(latent_dim=16, log1p=True),
     # v1 的輸入/輸出介面不同（counts×mask、回傳 log_lam），要接再另外處理
 }
+cfg = MODELS[MODEL_VERSION]
 PATCH_IDX = None     # None = 從 robust 距離最小（最典型）的 patch 起手；或填 patch 編號
 BATCH_N = 50         # 「+N 隨機」一次灑幾顆
 OUTLIER_PCT = 99.5   # 全體 robust 距離的離群門檻百分位
@@ -41,13 +43,15 @@ def robust_distance(z, ref):
 
 
 def render(dx, dy, cat):
-    """把一組點列表 binning 成 (1,N_CAT,40,40) 的 log1p(count) 矩陣。"""
+    """把一組點列表 binning 成 (1,N_CAT,40,40) 的輸入矩陣。"""
     ix = np.clip(np.floor(dx / CELL + GRID / 2), 0, GRID - 1).astype(np.int64)
     iy = np.clip(np.floor(dy / CELL + GRID / 2), 0, GRID - 1).astype(np.int64)
     flat = (cat.astype(np.int64) * GRID + iy) * GRID + ix
     counts = np.bincount(flat, minlength=N_CAT * GRID * GRID)
     counts = counts.reshape(1, N_CAT, GRID, GRID).astype(np.float32)
-    return torch.from_numpy(np.log1p(counts))
+    if cfg.get("log1p", True):
+        counts = np.log1p(counts)
+    return torch.from_numpy(counts)
 
 
 def sample_disk(rng, k):
