@@ -5,20 +5,24 @@ v0 是最單純的 in = out + MSE，沒有任何防止「latent 被密度吃掉�
 當成後面版本要打敗的對照數字。
 """
 
+import os
+import sys
+
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from scipy.spatial import cKDTree
 
-PATCHES = "model/patches.npz"
-LATENTS = "model/v0/result/latents.npz"
-OUT = "model/v0/result/latent_plot.png"
+sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
+from config.dataset import PATCHES, RADIUS, result  # noqa: E402
+
+LATENTS = result("v0", "latents.npz")
+OUT = result("v0", "latent_plot.png")
 
 ZOOM_PCT = (1, 99)      # 放大視角的座標範圍百分位
 OUTLIER_PCT = 99.5      # robust 距離超過這個百分位的點算離群
 KNN = 50
 DOT = 3.0
-RADIUS = 300.0
 
 mpl.rcParams["font.family"] = ["Heiti TC"]
 mpl.rcParams["axes.unicode_minus"] = False

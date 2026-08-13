@@ -9,15 +9,17 @@
 並當成後面版本的對照組：看「單純重建」的 latent 會被什麼主導。
 """
 
+import os
+import sys
+
 import numpy as np
 import torch
 import torch.nn as nn
 
-GRID = 40
-N_CAT = 10
+sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
+from config.dataset import CELL, GRID, N_CAT, RADIUS  # noqa: E402,F401
+
 IN_CH = N_CAT
-CELL = 15.0
-RADIUS = 300.0
 
 
 class Patches:

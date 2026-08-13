@@ -9,20 +9,24 @@ latent 是 16 維畫不出來，散點圖一律先用 PCA 投影到 2 維（PC1/
 kNN R² 與 robust 距離仍然用完整的 16 維算。
 """
 
+import os
+import sys
+
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from scipy.spatial import cKDTree
 
-PATCHES = "model/patches.npz"
-LATENTS = "model/v0_l16/result/latents.npz"
-OUT = "model/v0_l16/result/latent_plot.png"
+sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
+from config.dataset import PATCHES, RADIUS, result  # noqa: E402
+
+LATENTS = result("v0_l16", "latents.npz")
+OUT = result("v0_l16", "latent_plot.png")
 
 ZOOM_PCT = (1, 99)      # 放大視角的座標範圍百分位
 OUTLIER_PCT = 99.5      # robust 距離超過這個百分位的點算離群
 KNN = 50
 DOT = 3.0
-RADIUS = 300.0
 
 mpl.rcParams["font.family"] = ["Heiti TC"]
 mpl.rcParams["axes.unicode_minus"] = False

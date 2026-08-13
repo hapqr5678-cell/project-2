@@ -19,24 +19,16 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
 from ae import GRID, CELL, RADIUS, ConvAE, Patches, mse_loss  # noqa: E402
+from config.dataset import CAT_COLORS, CAT_ZH, PATCHES, result  # noqa: E402
 
-PATCHES = "model/patches.npz"
-LATENTS = "model/v0/result/latents.npz"
-CKPT = "model/v0/result/ae.pt"
-OUT = "model/v0/result/rebuild_test.png"
+LATENTS = result("v0", "latents.npz")
+CKPT = result("v0", "ae.pt")
+OUT = result("v0", "rebuild_test.png")
 
 LATENT_DIM = 2
 DOT = 18          # 點的基本大小
-
-CAT_ZH = [
-    "餐飲", "零售", "夜生活", "政府", "交通",
-    "商業服務", "地標", "藝文娛樂", "醫療", "運動休閒",
-]
-CAT_COLORS = [
-    "#e6194b", "#3cb44b", "#911eb4", "#4363d8", "#f58231",
-    "#46f0f0", "#008080", "#f032e6", "#9a6324", "#808000",
-]
 IN_COLOR = "#2c7fb8"
 OUT_COLOR = "#c0392b"
 
