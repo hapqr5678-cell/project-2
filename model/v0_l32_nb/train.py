@@ -1,13 +1,13 @@
-"""訓練 v0_poisson_nll 的 ConvAE，輸出每個 patch 的 latent 與 Poisson deviance。
+"""訓練 v0_l32_nb 的 ConvAE，輸出每個 patch 的 latent 與 NB deviance。
 
-超參數刻意跟 v0 完全相同（latent 2 維、30 epoch、lr 1e-3、不旋轉），
-差別只有輸入是 raw count、loss 是圓內的 Poisson NLL，這樣兩邊的 latent
-才是可比較的。
+超參數刻意跟 v0_poisson_nll 完全相同（latent 32 維、30 epoch、lr 1e-3、
+不旋轉、同一組切分），差別只有 loss 從 Poisson 換成 NB，
+這樣兩邊的 latent 才是可比較的。
 
-存進 latents.npz 的 err 是 deviance 不是 NLL，也不是 MSE，
-所以數值不能直接跟 v0 / v0_weight_mse 的 err 比大小，只能各自比排序。
-
-訓練期間 print 的是 NLL（省略常數項），可能是負的，看趨勢就好。
+結尾會印出每個類別學到的 theta。要看的是它有多大：
+theta 越大代表 NB 越接近 Poisson，也就是模型自己說「不需要 overdispersion」。
+Var/mean = 1 + mu/theta，以 mu ~ 0.01 的典型格子來說，theta=1 也只帶來
+1% 的額外變異——所以 theta 要小到 0.1 以下才算真的有在用這個自由度。
 """
 
 import os
@@ -18,14 +18,14 @@ import torch
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
-from ae import ConvAE, Patches, poisson_deviance, poisson_nll  # noqa: E402
-from config.dataset import PATCHES, result  # noqa: E402
+from ae import ConvAE, Patches, nb_deviance, nb_nll  # noqa: E402
+from config.dataset import CAT_ZH, PATCHES, result  # noqa: E402
 
-OUT = result("v0_poisson_nll", "latents.npz")
-CKPT = result("v0_poisson_nll", "ae.pt")
+OUT = result("v0_l32_nb", "latents.npz")
+CKPT = result("v0_l32_nb", "ae.pt")
 
-LATENT_DIM = 2
-EPOCHS = 50
+LATENT_DIM = 32
+EPOCHS = 60
 BATCH = 256
 LR = 1e-3
 VAL_FRAC = 0.1
@@ -49,8 +49,8 @@ def run(data, train_idx, val_idx):
         for i in range(0, len(perm), BATCH):
             batch = perm[i:i + BATCH]
             x = data.render(batch, rotate=ROTATE).to(device)
-            _, log_lam = model(x)
-            loss = poisson_nll(log_lam, x).mean()
+            _, log_mu = model(x)
+            loss = nb_nll(log_mu, model.log_theta_map(), x).mean()
             opt.zero_grad()
             loss.backward()
             opt.step()
@@ -63,15 +63,21 @@ def run(data, train_idx, val_idx):
                 for i in range(0, len(val_idx), BATCH):
                     batch = val_idx[i:i + BATCH]
                     x = data.render(batch, rotate=ROTATE).to(device)
-                    _, log_lam = model(x)
-                    vl.append(poisson_nll(log_lam, x))
-                    vd.append(poisson_deviance(log_lam, x))
+                    _, log_mu = model(x)
+                    vl.append(nb_nll(log_mu, model.log_theta_map(), x))
+                    vd.append(nb_deviance(log_mu, model.log_theta_map(), x))
                 val = torch.cat(vl).mean().item()
                 dev = torch.cat(vd).mean().item()
             print(f"  epoch {epoch + 1:3d}  train NLL {total / len(perm):.5f}  "
                   f"val NLL {val:.5f}  val deviance {dev:.5f}")
 
     torch.save(model.state_dict(), CKPT)
+
+    print("\n各類別學到的 dispersion（theta 越大越接近 Poisson）")
+    th = torch.exp(model.log_theta.detach().cpu()).numpy()
+    for k, t in enumerate(th):
+        print(f"  {CAT_ZH[k]:<6} theta = {t:9.3f}   "
+              f"mu=0.01 時 var/mean = {1 + 0.01 / t:.4f}")
 
     # 推論用固定朝向(不旋轉)，讓每個 patch 的 latent 是唯一的
     model.eval()
@@ -80,9 +86,9 @@ def run(data, train_idx, val_idx):
         for i in range(0, data.n, BATCH):
             idx = torch.arange(i, min(i + BATCH, data.n))
             x = data.render(idx, rotate=False).to(device)
-            z, log_lam = model(x)
+            z, log_mu = model(x)
             zs.append(z.cpu())
-            errs.append(poisson_deviance(log_lam, x).cpu())
+            errs.append(nb_deviance(log_mu, model.log_theta_map(), x).cpu())
     return torch.cat(zs).numpy(), torch.cat(errs).numpy()
 
 

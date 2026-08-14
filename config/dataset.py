@@ -23,11 +23,11 @@ DATASET = "fsq"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-RADIUS = 100.0
-CELL = 15.0
+RADIUS = 50.0
+CELL = 12.5
 GRID = int(RADIUS * 2 / CELL)
-CENTER_STEP = 50       # patch 中心的格點間距(公尺)
-MIN_POI = 10           # 圓內少於這個數量的中心直接丟掉
+CENTER_STEP = 10       # patch 中心的格點間距(公尺)
+MIN_POI = 5           # 圓內少於這個數量的中心直接丟掉
 CRS = "EPSG:6677"      # 日本平面直角座標系第9系，涵蓋東京都，單位公尺
 
 SOURCES = {
@@ -102,7 +102,7 @@ def result(version, name):
     return os.path.join(d, name)
 
 
-PATCHES = os.path.join(ROOT, "model", "patch", "patches_100.npz")
+PATCHES = os.path.join(ROOT, "model", "patch", "patches.npz")
 # 手算特徵表，跟模型無關；沿用既有位置
 FEATURES = result("v0", "features.npz")
 FEATURES_CSV = result("v0", "features.csv")

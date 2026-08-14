@@ -1,4 +1,4 @@
-"""挑一個 patch 丟進訓練好的 v0_poisson_nll AE，比較「進去」與「出來」的 POI 分布。
+"""挑一個 patch 丟進訓練好的 v0_l32_poisson_nll AE，比較「進去」與「出來」的 POI 分布。
 
 用 --n 指定 patch 編號（0 起算）。
 
@@ -31,9 +31,9 @@ from ae import (GRID, CELL, MASK, RADIUS, ConvAE, Patches,  # noqa: E402
 from config.result_style import REBUILD_GRID  # noqa: E402
 from config.dataset import CAT_COLORS, CAT_ZH, PATCHES, result  # noqa: E402
 
-LATENTS = result("v0_poisson_nll", "latents.npz")
-CKPT = result("v0_poisson_nll", "ae.pt")
-OUT = result("v0_poisson_nll", "rebuild_test.png")
+LATENTS = result("v0_l32_poisson_nll", "latents.npz")
+CKPT = result("v0_l32_poisson_nll", "ae.pt")
+OUT = result("v0_l32_poisson_nll", "rebuild_test.png")
 
 
 DOT = 18          # 點的基本大小

@@ -13,11 +13,13 @@ sys.path.insert(0, ROOT)
 from config.dataset import (CAT_COLORS, CAT_ZH, CELL, GRID, N_CAT,  # noqa: E402
                             PATCHES, RADIUS, result)
 
-MODEL_VERSION = "v0_l16"
+MODEL_VERSION = "v0_l32_poisson_nll"
 MODELS = {
     "v0": dict(latent_dim=2, log1p=True),
     "v0_poisson_nll": dict(latent_dim=2, log1p=False),
     "v0_l16": dict(latent_dim=16, log1p=True),
+    "v0_l32_poisson_nll": dict(latent_dim=32, log1p=False),
+    "v0_l32_nb": dict(latent_dim=32, log1p=False),
     # v1 的輸入/輸出介面不同（counts×mask、回傳 log_lam），要接再另外處理
 }
 cfg = MODELS[MODEL_VERSION]

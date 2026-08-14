@@ -1,6 +1,6 @@
-"""訓練 v0_poisson_nll 的 ConvAE，輸出每個 patch 的 latent 與 Poisson deviance。
+"""訓練 v0_l32_poisson_nll 的 ConvAE，輸出每個 patch 的 latent 與 Poisson deviance。
 
-超參數刻意跟 v0 完全相同（latent 2 維、30 epoch、lr 1e-3、不旋轉），
+超參數刻意跟 v0 完全相同（latent 32 維、30 epoch、lr 1e-3、不旋轉），
 差別只有輸入是 raw count、loss 是圓內的 Poisson NLL，這樣兩邊的 latent
 才是可比較的。
 
@@ -21,11 +21,11 @@ sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from ae import ConvAE, Patches, poisson_deviance, poisson_nll  # noqa: E402
 from config.dataset import PATCHES, result  # noqa: E402
 
-OUT = result("v0_poisson_nll", "latents.npz")
-CKPT = result("v0_poisson_nll", "ae.pt")
+OUT = result("v0_l32_poisson_nll", "latents.npz")
+CKPT = result("v0_l32_poisson_nll", "ae.pt")
 
-LATENT_DIM = 2
-EPOCHS = 50
+LATENT_DIM = 32
+EPOCHS = 400
 BATCH = 256
 LR = 1e-3
 VAL_FRAC = 0.1

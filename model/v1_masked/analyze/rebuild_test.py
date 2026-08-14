@@ -16,6 +16,7 @@
                 東西的格子。這一版的 loss 從沒要求過這件事，純粹拿來對照 v1_embeding
 """
 
+import argparse
 import os
 import sys
 
@@ -28,15 +29,15 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
 from ae import GRID, CELL, RADIUS, ConvAE, Patches, mse_loss  # noqa: E402
+from config.result_style import REBUILD_GRID  # noqa: E402
 from config.dataset import CAT_COLORS, CAT_ZH, N_CAT, PATCHES, result  # noqa: E402
 
 LATENTS = result("v1_masked", "latents.npz")
 CKPT = result("v1_masked", "ae.pt")
 OUT = result("v1_masked", "rebuild_test.png")
 
-PATCH_N = 0       # 要看哪個 patch（0 起算）
+
 SHOW_MASKED_OUT = False   # 右圖要不要把被遮罩排掉的空白格用灰點疊上去
-LATENT_DIM = 2
 DOT = 18          # 點的基本大小
 IN_COLOR = "#2c7fb8"
 MID_COLOR = "#6a51a3"
@@ -62,6 +63,12 @@ def style(ax, title, edge):
     ax.set_title(title, fontsize=10, color=edge)
     ax.tick_params(labelsize=7)
     ax.grid(alpha=0.15, linewidth=0.5)
+    if REBUILD_GRID:
+        import numpy as _np
+        ticks = _np.arange(-GRID // 2, GRID // 2 + 1) * CELL
+        for t in ticks:
+            ax.axhline(t, color='#888', lw=0.3, alpha=0.35)
+            ax.axvline(t, color='#888', lw=0.3, alpha=0.35)
     for s in ax.spines.values():
         s.set_alpha(0.3)
 
@@ -108,12 +115,17 @@ def draw_recon(ax, score, inten, occ, title):
 
 
 def main():
-    data = Patches(PATCHES)
-    n = PATCH_N
-    assert 0 <= n < data.n, f"PATCH_N 要在 0~{data.n - 1}"
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--n", type=int, default=0, help="patch 編號（0 起算）")
+    n = ap.parse_args().n
 
+    data = Patches(PATCHES)
+    assert 0 <= n < data.n, f"--n 要在 0~{data.n - 1}"
+
+    sd = torch.load(CKPT, map_location="cpu")
+    LATENT_DIM = sd["encoder.6.weight"].shape[0]
     model = ConvAE(LATENT_DIM)
-    model.load_state_dict(torch.load(CKPT, map_location="cpu"))
+    model.load_state_dict(sd)
     model.eval()
 
     g = data.render(torch.tensor([n]))

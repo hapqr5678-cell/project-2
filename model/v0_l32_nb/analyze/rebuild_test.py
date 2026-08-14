@@ -1,18 +1,15 @@
-"""挑一個 patch 丟進訓練好的 v0_poisson_nll AE，比較「進去」與「出來」的 POI 分布。
+"""挑一個 patch 丟進訓練好的 v0_l32_nb AE，比較「進去」與「出來」的 POI 分布。
 
 用 --n 指定 patch 編號（0 起算）。
 
-左圖 = AE 前的真實 POI 點圖（半徑 300m 的圓，顏色 = 類別）。
-右圖 = AE 後的重建：這一版 decoder 輸出的是 log λ，exp 之後就直接是
-「該格該類的 POI 期望個數」，不必像 v0 那樣 expm1 反推——這是 Poisson 版
-最好用的一點，重建強度本身有單位，可以直接跟真實 POI 數對帳
-（見最後印的「重建 λ 總和 vs 真實 POI 數」）。
+左圖 = AE 前的真實 POI 點圖（半徑 RADIUS 的圓，顏色 = 類別）。
+右圖 = AE 後的重建：decoder 輸出的是 log μ，exp 之後就直接是
+「該格該類的 POI 期望個數」，單位跟真實 POI 數完全可以對帳。
 
-圓外的格子不畫也不列入統計：loss 有圓形遮罩，那裡的 λ 完全沒被約束，
-畫出來只會看到模型的自由發揮，不是重建結果。
+圓外的格子不畫也不列入統計：圓外沒有 loss 約束，μ 會自由漂移。
 
-另外印出這個 patch 的 deviance / NLL、它在全體裡的百分位，以及逐類別的
-deviance 與 λ 對帳。
+另外印出這個 patch 的 NB deviance、它在全體裡的百分位，以及逐類別的
+deviance 與 μ 對帳；最後印出各類別學到的 theta（越大越接近 Poisson）。
 """
 
 import argparse
@@ -27,14 +24,13 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
 from ae import (GRID, CELL, MASK, RADIUS, ConvAE, Patches,  # noqa: E402
-                poisson_deviance, poisson_nll)
+                nb_deviance, nb_nll)
 from config.result_style import REBUILD_GRID  # noqa: E402
 from config.dataset import CAT_COLORS, CAT_ZH, PATCHES, result  # noqa: E402
 
-LATENTS = result("v0_poisson_nll", "latents.npz")
-CKPT = result("v0_poisson_nll", "ae.pt")
-OUT = result("v0_poisson_nll", "rebuild_test.png")
-
+LATENTS = result("v0_l32_nb", "latents.npz")
+CKPT = result("v0_l32_nb", "ae.pt")
+OUT = result("v0_l32_nb", "rebuild_test.png")
 
 DOT = 18          # 點的基本大小
 IN_COLOR = "#2c7fb8"
@@ -55,8 +51,7 @@ def style(ax, title, edge):
     ax.tick_params(labelsize=7)
     ax.grid(alpha=0.15, linewidth=0.5)
     if REBUILD_GRID:
-        import numpy as _np
-        ticks = _np.arange(-GRID // 2, GRID // 2 + 1) * CELL
+        ticks = np.arange(-GRID // 2, GRID // 2 + 1) * CELL
         for t in ticks:
             ax.axhline(t, color='#888', lw=0.3, alpha=0.35)
             ax.axvline(t, color='#888', lw=0.3, alpha=0.35)
@@ -88,10 +83,10 @@ def _spiral_offsets(n, spacing=CELL * 0.18):
     return pts
 
 
-def draw_recon(ax, lam, title):
-    """AE 後：把圓內每格每類的 λ 四捨五入成整數個 POI，
+def draw_recon(ax, mu, title):
+    """AE 後：把圓內每格每類的 μ 四捨五入成整數個 POI，
     從格子中心往外螺旋排列，每個 POI 畫一個點。"""
-    inten = lam[0].numpy()          # (10,GRID,GRID)
+    inten = mu[0].numpy()          # (N_CAT, GRID, GRID)
     total = inten.sum(0)
     inside = MASK[0, 0].numpy().astype(bool)
 
@@ -135,44 +130,50 @@ def main():
     # 跟 train.py 的推論一致：固定朝向、不旋轉
     x = data.render(torch.tensor([n]), rotate=False)
     with torch.no_grad():
-        z, log_lam = model(x)
-    dev = poisson_deviance(log_lam, x).item()
-    nll = poisson_nll(log_lam, x).item()
-    lam = torch.exp(log_lam)
+        z, log_mu = model(x)
+        log_theta = model.log_theta_map()
+    dev = nb_deviance(log_mu, log_theta, x).item()
+    nll = nb_nll(log_mu, log_theta, x).item()
+    mu = torch.exp(log_mu)
 
     err = np.load(LATENTS)["err"]
     pct = (err < dev).mean() * 100
     n_poi = int(data.n_poi[n])
 
     print(f"patch {n}：POI {n_poi}  ({data.lat[n]:.5f}, {data.lon[n]:.5f})")
-    print(f"latent z = ({z[0, 0]:+.3f}, {z[0, 1]:+.3f})")
-    print(f"deviance = {dev:.6f}  "
+    print("latent z = " + ", ".join(f"{v:+.3f}" for v in z[0].tolist()))
+    print(f"NB deviance = {dev:.6f}  "
           f"（全體中位數 {np.median(err):.6f}，此 patch 排在第 {pct:.1f} 百分位）")
-    print(f"NLL = {nll:.6f}（省略 log(y!) 常數項，可能為負）")
+    print(f"NB NLL = {nll:.6f}（省略 log(y!) 與 lgamma 常數，可能為負）")
 
-    # 逐類別：deviance 只算圓內；λ 總和可以直接跟輸入的 count 總和對帳
-    m = MASK.to(log_lam.dtype)
-    cell = 2 * (torch.xlogy(x, x) - x * log_lam - x + lam) * m
+    # 逐類別：deviance 只算圓內；μ 總和可以直接跟輸入的 count 總和對帳
+    m = MASK.to(log_mu.dtype)
+    th = torch.exp(log_theta)
+    lse = torch.logaddexp(log_theta, log_mu)
+    cell = 2 * (torch.xlogy(x, x) - x * log_mu
+                - (x + th) * (torch.log(x + th) - lse)) * m
     per_cat = cell[0].sum(dim=(1, 2)) / MASK.sum()
     cnt_x = (x * m)[0].sum(dim=(1, 2))
-    cnt_r = (lam * m)[0].sum(dim=(1, 2))
-    print("\n逐類別 deviance（圓內平均）與 POI 數對帳：")
+    cnt_r = (mu * m)[0].sum(dim=(1, 2))
+    print("\n逐類別 NB deviance（圓內平均）與 POI 數對帳：")
     for c, name in enumerate(CAT_ZH):
+        theta_val = torch.exp(model.log_theta[c]).item()
         print(f"  {name:<6}deviance {per_cat[c]:.6f}   "
-              f"輸入 {cnt_x[c]:6.1f} 個 -> 重建 λ 總和 {cnt_r[c]:6.1f}")
+              f"輸入 {cnt_x[c]:6.1f} 個 -> 重建 μ 總和 {cnt_r[c]:6.1f}   "
+              f"theta={theta_val:.3f}")
 
     fig, (a, b) = plt.subplots(1, 2, figsize=(13, 6.5))
     draw_true(a, np.load(PATCHES), n, f"AE 前（真實 POI，共 {n_poi} 個）")
-    total, inside = draw_recon(b, lam, f"AE 後（deviance {dev:.6f}）")
+    total, inside = draw_recon(b, mu, f"AE 後（NB deviance {dev:.6f}）")
     a.legend(fontsize=6.5, markerscale=1.4, framealpha=0.9,
              loc="upper left", bbox_to_anchor=(1.01, 1.0))
 
-    print(f"\n圓內重建 λ：每格最大 {total[inside].max():.3f}、"
+    print(f"\n圓內重建 μ：每格最大 {total[inside].max():.3f}、"
           f"總和 {total[inside].sum():.1f}（圓內真實共 {cnt_x.sum():.0f} 個 POI）")
-    print(f"圓外（loss 沒約束）λ 總和 {total[~inside].sum():.1f}，"
+    print(f"圓外（loss 沒約束）μ 總和 {total[~inside].sum():.1f}，"
           f"僅供參考，未畫在圖上")
 
-    fig.suptitle(f"patch {n}（latent_dim={LATENT_DIM}，raw count + 圓內 Poisson NLL）",
+    fig.suptitle(f"patch {n}（latent_dim={LATENT_DIM}，raw count + 圓內 NB NLL）",
                  fontsize=12)
     fig.tight_layout()
     fig.savefig(OUT, bbox_inches="tight")
