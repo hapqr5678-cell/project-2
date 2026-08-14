@@ -25,7 +25,8 @@
 原本那張圖上「離群」同時混著密度大和形狀怪，分不出是哪一種。
 
 S_REF 只是把正規化後的數字拉回「典型 patch 的計數尺度」，避免 log1p
-作用在 0.001 這種量級上等同線性。取 60（全體 n_poi 的中位數）。
+作用在 0.001 這種量級上等同線性。取全體 n_poi 的中位數（見檔案上方 S_REF，
+幾何參數一改就要跟著對）。
 
 已知風險：
   * 稀疏 patch 被放大得很兇。n_poi=10 的 patch，一個點會變成
@@ -49,7 +50,10 @@ sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from config.dataset import CELL, GRID, N_CAT, HALF_WIDTH  # noqa: E402,F401
 
 IN_CH = N_CAT
-S_REF = 60.0   # 參考規模：全體 n_poi 的中位數
+# 參考規模：全體 n_poi 的中位數。改幾何參數(HALF_WIDTH/CELL)之後這個數字會變，
+# 必須重新對一次——留著舊值會讓 log1p 作用在遠小於 1 的量級上而退化成線性，
+# 正規化就白做了。目前值對應 HALF_WIDTH=800 / CELL=50（中位數 227）。
+S_REF = 227.0
 
 
 

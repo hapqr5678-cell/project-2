@@ -14,6 +14,7 @@ csv 會把 list 壓成字串，之後 clean 還要自己解析。
 舊的會被刪掉，跑不動時先去 list bucket 看現在有哪些版本。
 """
 
+import argparse
 import os
 import time
 
@@ -21,22 +22,27 @@ import duckdb
 
 RELEASE = "2026-07-22.0"
 SRC = f"s3://overturemaps-us-west-2/release/{RELEASE}/theme=places/type=place/*.parquet"
-
-# 東京車站為中心，取正方形範圍
-CENTER_LON, CENTER_LAT = 139.7671, 35.6812
-HALF_KM = 8.2
-
-# 該緯度上一度經度/緯度各約多少公里
-KM_PER_LON, KM_PER_LAT = 90.3, 111.0
-
 OUT = f"{os.path.dirname(os.path.abspath(__file__))}/overture_raw.parquet"
 
 
 def main():
-    dlon = HALF_KM / KM_PER_LON
-    dlat = HALF_KM / KM_PER_LAT
-    xmin, xmax = CENTER_LON - dlon, CENTER_LON + dlon
-    ymin, ymax = CENTER_LAT - dlat, CENTER_LAT + dlat
+    parser = argparse.ArgumentParser(description="從 Overture Maps 抓取給定 bounding box 的 places")
+    parser.add_argument("--box", type=float, nargs=4, metavar=('XMIN', 'YMIN', 'XMAX', 'YMAX'),
+                        help="輸入 bounding box (xmin ymin xmax ymax)，例如: 139.54 35.50 139.98 35.86")
+    args = parser.parse_args()
+
+    if args.box:
+        xmin, ymin, xmax, ymax = args.box
+    else:
+        # 預設：東京車站為中心，取正方形範圍
+        CENTER_LON, CENTER_LAT = 139.7671, 35.6812
+        HALF_KM = 8
+        KM_PER_LON, KM_PER_LAT = 90.3, 111.0
+        dlon = HALF_KM / KM_PER_LON
+        dlat = HALF_KM / KM_PER_LAT
+        xmin, xmax = CENTER_LON - dlon, CENTER_LON + dlon
+        ymin, ymax = CENTER_LAT - dlat, CENTER_LAT + dlat
+
     print(f"release {RELEASE}")
     print(f"bbox lon [{xmin:.4f}, {xmax:.4f}]  lat [{ymin:.4f}, {ymax:.4f}]")
 
@@ -81,5 +87,19 @@ def main():
     for c, k in rows:
         print(f"  {k:7d}  {c}")
 
+    print("\n輸出分布圖...")
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    df = pd.read_parquet(OUT)
+    plt.figure(figsize=(10, 8))
+    plt.scatter(df['lon'], df['lat'], s=0.1, alpha=0.3, c='blue')
+    plt.title(f"Overture Points (Total: {n})")
+    plt.xlabel("Longitude")
+    plt.ylabel("Latitude")
+    plt.grid(True, linestyle='--', alpha=0.6)
+    
+    img_out = OUT.replace(".parquet", "_map.png")
+    plt.savefig(img_out, dpi=150, bbox_inches='tight')
+    print(f"已儲存分布圖至 {img_out}")
 
 main()

@@ -13,7 +13,7 @@ sys.path.insert(0, ROOT)
 from config.dataset import (CAT_COLORS, CAT_ZH, CELL, GRID, N_CAT,  # noqa: E402
                             PATCHES, HALF_WIDTH, result)
 
-MODEL_VERSION = "v0_l32_poisson_nll"
+MODEL_VERSION = "v2_ae"
 MODELS = {
     "v0": dict(latent_dim=2, log1p=True),
     "v0_poisson_nll": dict(latent_dim=2, log1p=False),
@@ -21,6 +21,10 @@ MODELS = {
     "v0_l32_poisson_nll": dict(latent_dim=32, log1p=False),
     "v0_l32_nb": dict(latent_dim=32, log1p=False),
     # v1 的輸入/輸出介面不同（counts×mask、回傳 log_lam），要接再另外處理
+    "v2_ae": dict(latent_dim=2, v2=True),
+    "v2_l16_ae": dict(latent_dim=16, v2=True),
+    "v2_vae": dict(latent_dim=2, v2=True, vae=True),
+    "v2_perceiver": dict(latent_dim=2, v2=True, perceiver=True),
 }
 cfg = MODELS[MODEL_VERSION]
 PATCH_IDX = None     # None = 從 robust 距離最小（最典型）的 patch 起手；或填 patch 編號
@@ -31,7 +35,15 @@ SEED = 0
 DOT = 3.0
 
 sys.path.insert(0, os.path.join(ROOT, "model", MODEL_VERSION))
-from ae import ConvAE  # type: ignore # noqa: E402
+if cfg.get("v2"):
+    if cfg.get("perceiver"):
+        from ae import PerceiverAE as ModelClass  # type: ignore # noqa: E402
+    elif cfg.get("vae"):
+        from ae import VAE as ModelClass  # type: ignore # noqa: E402
+    else:
+        from ae import MLPAE as ModelClass  # type: ignore # noqa: E402
+else:
+    from ae import ConvAE as ModelClass  # type: ignore # noqa: E402
 
 mpl.rcParams["font.family"] = ["Heiti TC"]
 mpl.rcParams["axes.unicode_minus"] = False
@@ -88,7 +100,7 @@ assert len(z_all) == len(p["n_poi"]), (
     f"latents({len(z_all)}) 與 patches({len(p['n_poi'])}) 的 patch 數不一致，"
     f"請先重跑 model/{MODEL_VERSION}/train.py")
 
-model = ConvAE(cfg["latent_dim"])
+model = ModelClass(cfg["latent_dim"])
 model.load_state_dict(torch.load(result(MODEL_VERSION, "ae.pt"),
                                  map_location="cpu"))
 model.eval()
@@ -146,7 +158,22 @@ def encode_current():
     cat = np.concatenate([cat0] + [np.full(len(b[0]), b[2], dtype=cat0.dtype)
                                    for b in state["added"]])
     with torch.no_grad():
-        z, _ = model(render(dx, dy, cat))
+        if cfg.get("v2"):
+            if cfg.get("perceiver"):
+                T = len(cat)
+                tok = torch.from_numpy(cat).unsqueeze(0).long()
+                pad_mask = torch.zeros(1, T, dtype=torch.bool)
+                if T == 0:
+                    tok = torch.zeros(1, 1, dtype=torch.long)
+                    pad_mask = torch.ones(1, 1, dtype=torch.bool)
+                z, _ = model(tok, pad_mask)
+            else:
+                counts = np.bincount(cat, minlength=N_CAT)
+                x = torch.from_numpy(counts).unsqueeze(0).float()
+                out = model(x)
+                z = out[0] if not cfg.get("vae") else out[2]
+        else:
+            z, _ = model(render(dx, dy, cat))
     return z[0].numpy()
 
 

@@ -68,6 +68,13 @@ def main():
     z = np.load(LATENTS)["z"]
     f = np.load(FEATURES)
 
+    # 兩邊列數不一樣時 numpy 不會報錯，只會安靜地取前面幾列給出錯的答案
+    if len(z) != len(f["n_total"]):
+        raise SystemExit(
+            f"latents 有 {len(z)} 列、features 有 {len(f['n_total'])} 列。\n"
+            f"兩者來自不同的 patches.npz，請重跑 build_patches -> train -> "
+            f"build_features。")
+
     print(f"latent 能還原多少（kNN R², k={KNN}）")
     for key, label, group, _ in COLS:
         print(f"  {group:<12}{key:<14}R² = {knn_r2(z, f[key].astype(float)):+.3f}")
