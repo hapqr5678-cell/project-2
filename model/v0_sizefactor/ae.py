@@ -46,16 +46,11 @@ import torch
 import torch.nn as nn
 
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
-from config.dataset import CELL, GRID, N_CAT, RADIUS  # noqa: E402,F401
+from config.dataset import CELL, GRID, N_CAT, HALF_WIDTH  # noqa: E402,F401
 
 IN_CH = N_CAT
 S_REF = 60.0   # 參考規模：全體 n_poi 的中位數
 
-# 圓形遮罩：格子中心到 patch 中心的距離 <= RADIUS 才算數。
-_axis = (torch.arange(GRID, dtype=torch.float32) + 0.5 - GRID / 2) * CELL
-_yy, _xx = torch.meshgrid(_axis, _axis, indexing="ij")
-MASK = ((_xx ** 2 + _yy ** 2) <= RADIUS ** 2).view(1, 1, GRID, GRID)
-N_VALID = int(MASK.sum()) * N_CAT   # loss 的分母：圓內格數 x 類別數
 
 
 def normalize(counts):
@@ -153,9 +148,8 @@ class ConvAE(nn.Module):
 
 def poisson_nll(log_lam, x):
     """跟 v0_poisson_nll 同一個式子：每格 lambda - y*log lambda，只算圓內。"""
-    m = MASK.to(log_lam.device)
-    cell = (torch.exp(log_lam) - x * log_lam) * m
-    return cell.sum(dim=(1, 2, 3)) / N_VALID
+    cell = (torch.exp(log_lam) - x * log_lam)
+    return cell.mean(dim=(1, 2, 3))
 
 
 def poisson_deviance(log_lam, x):
@@ -164,7 +158,6 @@ def poisson_deviance(log_lam, x):
     注意這一版的 deviance 天生會比 v0_poisson_nll 低：總量已經由 size factor
     免費給定，decoder 只要描述形狀。兩版的 err 不能比大小，只能各自比排序。
     """
-    m = MASK.to(log_lam.device)
     lam = torch.exp(log_lam)
-    cell = 2 * (torch.xlogy(x, x) - x * log_lam - x + lam) * m
-    return cell.sum(dim=(1, 2, 3)) / N_VALID
+    cell = 2 * (torch.xlogy(x, x) - x * log_lam - x + lam)
+    return cell.mean(dim=(1, 2, 3))

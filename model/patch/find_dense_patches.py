@@ -19,7 +19,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
-from config.dataset import CAT_ZH, CATEGORIES, PATCHES, RADIUS  # noqa: E402
+from config.dataset import CAT_ZH, CATEGORIES, PATCHES, HALF_WIDTH  # noqa: E402
 
 
 def calculate_category_counts(d, n_patches, n_cats):
@@ -42,8 +42,8 @@ def main():
     parser.add_argument("--top", type=int, default=20, help="顯示前幾名（預設 20）")
     parser.add_argument("--cat", type=str, default=None,
                         help=f"指定只看特定類別，可填中文或英文名稱：{', '.join(CAT_ZH)}")
-    parser.add_argument("--dedup", nargs="?", const=RADIUS, type=float, default=None,
-                        help="空間去重半徑（公尺，預設為 RADIUS）。開啟後會避開重疊的鄰近 patch，找出獨立熱點")
+    parser.add_argument("--dedup", nargs="?", const=HALF_WIDTH, type=float, default=None,
+                        help="空間去重半徑（公尺，預設為 HALF_WIDTH）。開啟後會避開重疊的鄰近 patch，找出獨立熱點")
     parser.add_argument("--csv", type=str, default=None, help="將結果輸出為 CSV 檔案")
     args = parser.parse_args()
 

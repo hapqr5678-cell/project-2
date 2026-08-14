@@ -23,11 +23,11 @@ DATASET = "fsq"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-RADIUS = 50.0
-CELL = 12.5
-GRID = int(RADIUS * 2 / CELL)
-CENTER_STEP = 10       # patch 中心的格點間距(公尺)
-MIN_POI = 5           # 圓內少於這個數量的中心直接丟掉
+HALF_WIDTH = 800.0
+CELL = 50
+GRID = int(HALF_WIDTH * 2 / CELL)
+CENTER_STEP = 50       # patch 中心的格點間距(公尺)
+MIN_POI = 10           # 圓內少於這個數量的中心直接丟掉
 CRS = "EPSG:6677"      # 日本平面直角座標系第9系，涵蓋東京都，單位公尺
 
 SOURCES = {

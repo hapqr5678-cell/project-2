@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
-from ae import CELL, GRID, N_CAT, RADIUS, ConvAE, Patches, mse_loss  # noqa: E402
+from ae import CELL, GRID, N_CAT, HALF_WIDTH, ConvAE, Patches, mse_loss  # noqa: E402
 from config.dataset import CAT_COLORS, CAT_ZH, PATCHES, result  # noqa: E402
 
 LATENTS = result("v1_masked", "latents.npz")
@@ -68,8 +68,8 @@ def render(base_cell, base_cat, add_cell, cat_id, pri_base, pri_add):
 
 
 def sample_disk(rng, k):
-    """在半徑 RADIUS 的圓內均勻灑 k 個點，回傳格子編號。"""
-    r = RADIUS * np.sqrt(rng.random(k))
+    """在半徑 HALF_WIDTH 的圓內均勻灑 k 個點，回傳格子編號。"""
+    r = HALF_WIDTH * np.sqrt(rng.random(k))
     t = rng.random(k) * 2 * np.pi
     x, y = r * np.cos(t), r * np.sin(t)
     ix = np.clip(np.floor(x / CELL + GRID / 2), 0, GRID - 1).astype(np.int64)

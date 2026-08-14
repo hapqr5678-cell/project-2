@@ -26,7 +26,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
-from config.dataset import CELL, GRID, N_CAT, RADIUS  # noqa: E402,F401
+from config.dataset import CELL, GRID, N_CAT, HALF_WIDTH  # noqa: E402,F401
 
 EMB_DIM = 8
 PICK_SEED = 0     # 重疊格挑代表用的 seed，換了整份輸入就變了

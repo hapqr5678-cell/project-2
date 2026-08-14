@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
 from config.dataset import (CAT_COLORS, CAT_ZH, CATEGORIES,  # noqa: E402
-                            PATCHES, RADIUS, result)
+                            PATCHES, HALF_WIDTH, result)
 
 LATENTS = result("v0", "latents.npz")
 OUT = result("v0", "outlier_compare.png")
@@ -57,15 +57,15 @@ def composition(p, i):
 
 def draw_map(ax, p, i, title, edge):
     dx, dy, cat = patch_points(p, i)
-    ax.add_patch(plt.Circle((0, 0), RADIUS, fill=False, lw=1.6,
+    ax.add_patch(plt.Circle((0, 0), HALF_WIDTH, fill=False, lw=1.6,
                             color=edge, alpha=0.8))
     for k in range(len(CATEGORIES)):
         m = cat == k
         if m.any():
             ax.scatter(dx[m], dy[m], s=16, c=CAT_COLORS[k], linewidths=0,
                        alpha=0.85, label=CAT_ZH[k])
-    ax.set_xlim(-RADIUS * 1.1, RADIUS * 1.1)
-    ax.set_ylim(-RADIUS * 1.1, RADIUS * 1.1)
+    ax.set_xlim(-HALF_WIDTH * 1.1, HALF_WIDTH * 1.1)
+    ax.set_ylim(-HALF_WIDTH * 1.1, HALF_WIDTH * 1.1)
     ax.set_aspect("equal")
     ax.set_title(title, fontsize=10, color=edge)
     ax.set_xlabel("東西向位移 (m)", fontsize=8)

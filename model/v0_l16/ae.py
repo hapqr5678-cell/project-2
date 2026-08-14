@@ -17,7 +17,7 @@ import torch
 import torch.nn as nn
 
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
-from config.dataset import CELL, GRID, N_CAT, RADIUS  # noqa: E402,F401
+from config.dataset import CELL, GRID, N_CAT, HALF_WIDTH  # noqa: E402,F401
 
 IN_CH = N_CAT
 

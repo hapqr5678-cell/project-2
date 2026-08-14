@@ -25,7 +25,7 @@ OUT = result("v0_l32_poisson_nll", "latents.npz")
 CKPT = result("v0_l32_poisson_nll", "ae.pt")
 
 LATENT_DIM = 32
-EPOCHS = 400
+EPOCHS = 50
 BATCH = 256
 LR = 1e-3
 VAL_FRAC = 0.1

@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
-from ae import (GRID, CELL, MASK, RADIUS, ConvAE, Patches,  # noqa: E402
+from ae import (GRID, CELL, HALF_WIDTH, ConvAE, Patches,  # noqa: E402
                 poisson_deviance, poisson_nll)
 from config.result_style import REBUILD_GRID  # noqa: E402
 from config.dataset import CAT_COLORS, CAT_ZH, PATCHES, result  # noqa: E402
@@ -46,10 +46,10 @@ mpl.rcParams["figure.dpi"] = 130
 
 
 def style(ax, title, edge):
-    ax.add_patch(plt.Circle((0, 0), RADIUS, fill=False, lw=1.6,
+    ax.add_patch(plt.Circle((0, 0), HALF_WIDTH, fill=False, lw=1.6,
                             color=edge, alpha=0.8))
-    ax.set_xlim(-RADIUS * 1.05, RADIUS * 1.05)
-    ax.set_ylim(-RADIUS * 1.05, RADIUS * 1.05)
+    ax.set_xlim(-HALF_WIDTH * 1.05, HALF_WIDTH * 1.05)
+    ax.set_ylim(-HALF_WIDTH * 1.05, HALF_WIDTH * 1.05)
     ax.set_aspect("equal")
     ax.set_title(title, fontsize=10, color=edge)
     ax.tick_params(labelsize=7)
@@ -93,14 +93,11 @@ def draw_recon(ax, lam, title):
     從格子中心往外螺旋排列，每個 POI 畫一個點。"""
     inten = lam[0].numpy()          # (10,GRID,GRID)
     total = inten.sum(0)
-    inside = MASK[0, 0].numpy().astype(bool)
 
     for c in range(len(CAT_ZH)):
         xs, ys = [], []
         for gy in range(GRID):
             for gx in range(GRID):
-                if not inside[gy, gx]:
-                    continue
                 cnt = int(np.round(inten[c, gy, gx]))
                 if cnt <= 0:
                     continue
@@ -115,7 +112,7 @@ def draw_recon(ax, lam, title):
             ax.scatter(xs, ys, s=DOT, c=CAT_COLORS[c], linewidths=0,
                        alpha=0.85, label=CAT_ZH[c])
     style(ax, title, OUT_COLOR)
-    return total, inside
+    return total
 
 
 def main():
@@ -151,28 +148,25 @@ def main():
     print(f"NLL = {nll:.6f}（省略 log(y!) 常數項，可能為負）")
 
     # 逐類別：deviance 只算圓內；λ 總和可以直接跟輸入的 count 總和對帳
-    m = MASK.to(log_lam.dtype)
-    cell = 2 * (torch.xlogy(x, x) - x * log_lam - x + lam) * m
-    per_cat = cell[0].sum(dim=(1, 2)) / MASK.sum()
-    cnt_x = (x * m)[0].sum(dim=(1, 2))
-    cnt_r = (lam * m)[0].sum(dim=(1, 2))
-    print("\n逐類別 deviance（圓內平均）與 POI 數對帳：")
+    cell = 2 * (torch.xlogy(x, x) - x * log_lam - x + lam)
+    per_cat = cell[0].sum(dim=(1, 2)) / (GRID * GRID)
+    cnt_x = x[0].sum(dim=(1, 2))
+    cnt_r = lam[0].sum(dim=(1, 2))
+    print("\n逐類別 deviance（平均）與 POI 數對帳：")
     for c, name in enumerate(CAT_ZH):
         print(f"  {name:<6}deviance {per_cat[c]:.6f}   "
               f"輸入 {cnt_x[c]:6.1f} 個 -> 重建 λ 總和 {cnt_r[c]:6.1f}")
 
     fig, (a, b) = plt.subplots(1, 2, figsize=(13, 6.5))
     draw_true(a, np.load(PATCHES), n, f"AE 前（真實 POI，共 {n_poi} 個）")
-    total, inside = draw_recon(b, lam, f"AE 後（deviance {dev:.6f}）")
+    total = draw_recon(b, lam, f"AE 後（deviance {dev:.6f}）")
     a.legend(fontsize=6.5, markerscale=1.4, framealpha=0.9,
              loc="upper left", bbox_to_anchor=(1.01, 1.0))
 
-    print(f"\n圓內重建 λ：每格最大 {total[inside].max():.3f}、"
-          f"總和 {total[inside].sum():.1f}（圓內真實共 {cnt_x.sum():.0f} 個 POI）")
-    print(f"圓外（loss 沒約束）λ 總和 {total[~inside].sum():.1f}，"
-          f"僅供參考，未畫在圖上")
+    print(f"\n重建 λ：每格最大 {total.max():.3f}、"
+          f"總和 {total.sum():.1f}（真實共 {cnt_x.sum():.0f} 個 POI）")
 
-    fig.suptitle(f"patch {n}（latent_dim={LATENT_DIM}，raw count + 圓內 Poisson NLL）",
+    fig.suptitle(f"patch {n}（latent_dim={LATENT_DIM}，raw count + Poisson NLL）",
                  fontsize=12)
     fig.tight_layout()
     fig.savefig(OUT, bbox_inches="tight")

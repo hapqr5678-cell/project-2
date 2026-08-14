@@ -39,15 +39,10 @@ import torch
 import torch.nn as nn
 
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
-from config.dataset import CELL, GRID, N_CAT, RADIUS  # noqa: E402,F401
+from config.dataset import CELL, GRID, N_CAT, HALF_WIDTH  # noqa: E402,F401
 
 IN_CH = N_CAT
 
-# 圓形遮罩：格子中心到 patch 中心的距離 <= RADIUS 才算數。
-_axis = (torch.arange(GRID, dtype=torch.float32) + 0.5 - GRID / 2) * CELL
-_yy, _xx = torch.meshgrid(_axis, _axis, indexing="ij")
-MASK = ((_xx ** 2 + _yy ** 2) <= RADIUS ** 2).view(1, 1, GRID, GRID)
-N_VALID = int(MASK.sum()) * N_CAT   # loss 的分母：圓內格數 x 類別數
 
 
 class Patches:
@@ -154,8 +149,7 @@ def nb_nll(log_mu, log_theta, x):
     lse = torch.logaddexp(log_theta, log_mu)
     ll = (torch.lgamma(x + th) - torch.lgamma(th)
           + th * (log_theta - lse) + x * (log_mu - lse))
-    m = MASK.to(log_mu.device)
-    return (-ll * m).sum(dim=(1, 2, 3)) / N_VALID
+    return -ll.mean(dim=(1, 2, 3))
 
 
 def nb_deviance(log_mu, log_theta, x):
@@ -169,5 +163,4 @@ def nb_deviance(log_mu, log_theta, x):
     lse = torch.logaddexp(log_theta, log_mu)
     cell = 2 * (torch.xlogy(x, x) - x * log_mu
                 - (x + th) * (torch.log(x + th) - lse))
-    m = MASK.to(log_mu.device)
-    return (cell * m).sum(dim=(1, 2, 3)) / N_VALID
+    return cell.mean(dim=(1, 2, 3))

@@ -15,7 +15,7 @@ from scipy.spatial import cKDTree
 
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from config.dataset import (CAT_COL, CATEGORIES, CENTER_STEP, CRS,  # noqa: E402
-                            CSV, DATASET, MIN_POI, PATCHES, RADIUS)
+                            CSV, DATASET, MIN_POI, PATCHES, HALF_WIDTH)
 
 OUT = PATCHES
 
@@ -35,7 +35,7 @@ def main():
     centers = (cells + 0.5) * CENTER_STEP
 
     tree = cKDTree(coords)
-    neighbors = tree.query_ball_point(centers, RADIUS)
+    neighbors = tree.query_ball_point(centers, HALF_WIDTH, p=np.inf)
 
     keep = np.array([len(n) >= MIN_POI for n in neighbors])
     centers = centers[keep]

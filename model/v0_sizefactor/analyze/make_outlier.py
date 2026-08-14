@@ -33,7 +33,7 @@ from scipy.spatial import cKDTree
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
-from ae import CELL, GRID, N_CAT, RADIUS, ConvAE, poisson_deviance  # noqa: E402
+from ae import CELL, GRID, N_CAT, HALF_WIDTH, ConvAE, poisson_deviance  # noqa: E402
 from config.dataset import CAT_COLORS, CAT_ZH, PATCHES, result  # noqa: E402
 
 LATENTS = result("v0_sizefactor", "latents.npz")
@@ -95,8 +95,8 @@ def render(dx, dy, cat):
 
 
 def sample_disk(rng, k):
-    """在半徑 RADIUS 的圓內均勻灑 k 個點。"""
-    r = RADIUS * np.sqrt(rng.random(k))
+    """在半徑 HALF_WIDTH 的圓內均勻灑 k 個點。"""
+    r = HALF_WIDTH * np.sqrt(rng.random(k))
     t = rng.random(k) * 2 * np.pi
     return r * np.cos(t), r * np.sin(t)
 

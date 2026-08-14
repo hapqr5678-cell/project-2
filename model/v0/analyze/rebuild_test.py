@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
-from ae import GRID, CELL, RADIUS, ConvAE, Patches, mse_loss  # noqa: E402
+from ae import GRID, CELL, HALF_WIDTH, ConvAE, Patches, mse_loss  # noqa: E402
 from config.result_style import REBUILD_GRID  # noqa: E402
 from config.dataset import CAT_COLORS, CAT_ZH, PATCHES, result  # noqa: E402
 
@@ -38,10 +38,10 @@ mpl.rcParams["figure.dpi"] = 130
 
 
 def style(ax, title, edge):
-    ax.add_patch(plt.Circle((0, 0), RADIUS, fill=False, lw=1.6,
+    ax.add_patch(plt.Circle((0, 0), HALF_WIDTH, fill=False, lw=1.6,
                             color=edge, alpha=0.8))
-    ax.set_xlim(-RADIUS * 1.05, RADIUS * 1.05)
-    ax.set_ylim(-RADIUS * 1.05, RADIUS * 1.05)
+    ax.set_xlim(-HALF_WIDTH * 1.05, HALF_WIDTH * 1.05)
+    ax.set_ylim(-HALF_WIDTH * 1.05, HALF_WIDTH * 1.05)
     ax.set_aspect("equal")
     ax.set_title(title, fontsize=10, color=edge)
     ax.tick_params(labelsize=7)

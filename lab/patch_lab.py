@@ -11,7 +11,7 @@ from scipy.spatial import cKDTree
 ROOT = os.path.abspath(f"{os.path.dirname(__file__)}/..")
 sys.path.insert(0, ROOT)
 from config.dataset import (CAT_COLORS, CAT_ZH, CELL, GRID, N_CAT,  # noqa: E402
-                            PATCHES, RADIUS, result)
+                            PATCHES, HALF_WIDTH, result)
 
 MODEL_VERSION = "v0_l32_poisson_nll"
 MODELS = {
@@ -57,8 +57,8 @@ def render(dx, dy, cat):
 
 
 def sample_disk(rng, k):
-    """在半徑 RADIUS 的圓內均勻灑 k 個點。"""
-    r = RADIUS * np.sqrt(rng.random(k))
+    """在半徑 HALF_WIDTH 的圓內均勻灑 k 個點。"""
+    r = HALF_WIDTH * np.sqrt(rng.random(k))
     t = rng.random(k) * 2 * np.pi
     return r * np.cos(t), r * np.sin(t)
 
@@ -168,15 +168,15 @@ def update():
 def draw_base_map():
     ax_map.clear()
     dx0, dy0, cat0 = state["base"]
-    ax_map.add_patch(plt.Circle((0, 0), RADIUS, fill=False, lw=1.6,
+    ax_map.add_patch(plt.Circle((0, 0), HALF_WIDTH, fill=False, lw=1.6,
                                 color="#555", alpha=0.8))
     for k in range(N_CAT):
         m = cat0 == k
         if m.any():
             ax_map.scatter(dx0[m], dy0[m], s=16, c=CAT_COLORS[k],
                            linewidths=0, alpha=0.85)
-    ax_map.set_xlim(-RADIUS * 1.1, RADIUS * 1.1)
-    ax_map.set_ylim(-RADIUS * 1.1, RADIUS * 1.1)
+    ax_map.set_xlim(-HALF_WIDTH * 1.1, HALF_WIDTH * 1.1)
+    ax_map.set_ylim(-HALF_WIDTH * 1.1, HALF_WIDTH * 1.1)
     ax_map.set_aspect("equal")
     ax_map.set_title(f"patch {state['idx']} 的 POI（點一下加一顆）", fontsize=10)
     ax_map.set_xlabel("東西向位移 (m)", fontsize=8)

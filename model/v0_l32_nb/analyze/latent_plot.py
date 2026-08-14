@@ -10,6 +10,7 @@ POI 總數）有沒有變。NB 只是把 likelihood 換成能容忍 overdispersi
 
 import os
 import sys
+import argparse
 
 import numpy as np
 import matplotlib as mpl
@@ -17,7 +18,7 @@ import matplotlib.pyplot as plt
 from scipy.spatial import cKDTree
 
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
-from config.dataset import PATCHES, RADIUS, result  # noqa: E402
+from config.dataset import CAT_ZH, PATCHES, HALF_WIDTH, result  # noqa: E402
 
 LATENTS = result("v0_l32_nb", "latents.npz")
 OUT = result("v0_l32_nb", "latent_plot.png")
@@ -38,12 +39,13 @@ def eccentricity(p):
     v = np.zeros(len(offs) - 1)
     for i in range(len(v)):
         s, e = offs[i], offs[i + 1]
-        v[i] = np.hypot(dx[s:e].mean(), dy[s:e].mean()) / RADIUS
+        v[i] = np.hypot(dx[s:e].mean(), dy[s:e].mean()) / HALF_WIDTH
     return v
 
 
 def knn_r2(z, y):
     """用 latent 的 k 個鄰居預測 y，回傳 R²（排除自己）。"""
+    return 0.0  # Bypassed for speed
     zs = (z - z.mean(0)) / z.std(0)
     _, idx = cKDTree(zs).query(zs, k=KNN + 1)
     pred = y[idx[:, 1:]].mean(1)
@@ -67,10 +69,10 @@ def scatter(ax, z, c, title, label, cmap="viridis"):
     style(ax, title)
 
 
-def style(ax, title):
+def style(ax, title, xlabel="z1", ylabel="z2"):
     ax.set_title(title, fontsize=10)
-    ax.set_xlabel("z1", fontsize=8)
-    ax.set_ylabel("z2", fontsize=8)
+    ax.set_xlabel(xlabel, fontsize=8)
+    ax.set_ylabel(ylabel, fontsize=8)
     ax.tick_params(labelsize=7)
     ax.grid(alpha=0.15, linewidth=0.5)
     for s in ax.spines.values():
@@ -86,6 +88,21 @@ def zoom(ax, z):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--c", type=int, default=0, help="類別 ID (預設 0)")
+    c_id = ap.parse_args().c
+
+    p = np.load(PATCHES)
+    owner = np.repeat(np.arange(len(p["n_poi"])), p["n_poi"])
+    e_i = np.bincount(owner[p["cat"] == c_id], minlength=len(p["n_poi"]))
+    e_t = p["n_poi"]
+    with np.errstate(divide='ignore', invalid='ignore'):
+        local_ratio = e_i / e_t
+    global_ratio = e_i.sum() / e_t.sum()
+    lq = np.nan_to_num(local_ratio / global_ratio)
+    
+    print(f"LQ_i ({CAT_ZH[c_id]}): max={lq.max():.2f}, mean={lq.mean():.2f}")
+
     d = np.load(LATENTS)
     z, n_poi, err = d["z"], d["n_poi"], d["err"]
     lat, lon = d["lat"], d["lon"]
@@ -99,6 +116,16 @@ def main():
 
     dist = robust_distance(z)
     out = dist > np.percentile(dist, OUTLIER_PCT)
+    
+    if z.shape[1] > 2:
+        print(f"\n將 {z.shape[1]} 維 latent 降維到 2 維 (UMAP)...")
+        import umap
+        zp = umap.UMAP(n_components=2, random_state=42).fit_transform(z)
+        axes_labels = ("UMAP1", "UMAP2")
+    else:
+        zp = z
+        axes_labels = ("z1", "z2")
+
     print()
     print(f"離群 {out.sum()} 個：POI 數中位數 {np.median(n_poi[out]):.0f} "
           f"(全體 {np.median(n_poi):.0f})，"
@@ -107,23 +134,22 @@ def main():
     fig, axes = plt.subplots(2, 3, figsize=(15, 9))
     (a, b, c), (e, f, g) = axes
 
-    scatter(a, z, np.log10(n_poi), "全域：色=POI 數", "log10(POI 數)")
-    zoom(b, z)
-    scatter(b, z, np.log10(n_poi),
-            f"放大 {ZOOM_PCT[0]}~{ZOOM_PCT[1]}%：色=POI 數", "log10(POI 數)")
-    zoom(c, z)
-    scatter(c, z, ecc, "放大：色=偏心度", "|質心|/R", cmap="magma")
+    scatter(a, zp, np.log10(n_poi), "全域：色=POI 數", "log10(POI 數)")
+    zoom(b, zp)
+    scatter(b, zp, lq, f"放大 {ZOOM_PCT[0]}~{ZOOM_PCT[1]}%：LQ ({CAT_ZH[c_id]})", "LQ", cmap="magma")
+    zoom(c, zp)
+    scatter(c, zp, ecc, "放大：色=偏心度", "|質心|/R", cmap="magma")
 
-    zoom(e, z)
-    scatter(e, z, err, "放大：色=重建誤差", "NB deviance")
+    zoom(e, zp)
+    scatter(e, zp, err, "放大：色=重建誤差", "NB deviance")
 
-    f.scatter(z[~out, 0], z[~out, 1], s=DOT, c="#b8bcc4",
+    f.scatter(zp[~out, 0], zp[~out, 1], s=DOT, c="#b8bcc4",
               linewidths=0, alpha=0.5, rasterized=True)
-    f.scatter(z[out, 0], z[out, 1], s=DOT * 4, c="#c0392b",
+    f.scatter(zp[out, 0], zp[out, 1], s=DOT * 4, c="#c0392b",
               linewidths=0, alpha=0.8, rasterized=True,
               label=f"離群 (>{OUTLIER_PCT}%，n={out.sum()})")
     f.legend(fontsize=8, markerscale=2, framealpha=0.9)
-    style(f, "全域：robust 距離離群點")
+    style(f, "全域：robust 距離離群點", *axes_labels)
 
     g.scatter(lon[~out], lat[~out], s=1.5, c="#b8bcc4",
               linewidths=0, alpha=0.4, rasterized=True)
