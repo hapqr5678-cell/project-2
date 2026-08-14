@@ -20,12 +20,13 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from ae import ConvAE, CELL, GRID, N_CAT, RADIUS  # noqa: E402
+sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
+from ae import ConvAE, CELL, GRID, N_CAT, HALF_WIDTH  # noqa: E402
+from config.dataset import CAT_COLORS, CAT_ZH, PATCHES, result  # noqa: E402
 
-PATCHES = "model/patches.npz"
-LATENTS = "model/v0/result/latents.npz"
-CKPT = "model/v0/result/ae.pt"
-OUT = "model/v0/result/make_outlier.png"
+LATENTS = result("v0", "latents.npz")
+CKPT = result("v0", "ae.pt")
+OUT = result("v0", "make_outlier.png")
 
 LATENT_DIM = 2
 ADD_CAT = 2       
@@ -35,15 +36,6 @@ SEED = 0
 OUTLIER_PCT = 99.5   # 全體 robust 距離的離群門檻
 ZOOM_PCT = (1, 99)
 DOT = 3.0
-
-CAT_ZH = [
-    "餐飲", "零售", "夜生活", "社區/政府", "交通",
-    "商業服務", "地標/戶外", "藝文娛樂", "醫療", "運動休閒",
-]
-CAT_COLORS = [
-    "#e6194b", "#3cb44b", "#911eb4", "#4363d8", "#f58231",
-    "#46f0f0", "#008080", "#f032e6", "#9a6324", "#808000",
-]
 
 mpl.rcParams["font.family"] = ["Heiti TC"]
 mpl.rcParams["axes.unicode_minus"] = False
@@ -68,8 +60,8 @@ def render(dx, dy, cat):
 
 
 def sample_disk(rng, k):
-    """在半徑 RADIUS 的圓內均勻灑 k 個點。"""
-    r = RADIUS * np.sqrt(rng.random(k))
+    """在半徑 HALF_WIDTH 的圓內均勻灑 k 個點。"""
+    r = HALF_WIDTH * np.sqrt(rng.random(k))
     t = rng.random(k) * 2 * np.pi
     return r * np.cos(t), r * np.sin(t)
 

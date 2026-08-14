@@ -11,14 +11,15 @@ import numpy as np
 import torch
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from ae import ConvAE, Patches, mse_loss  # noqa: E402
+from config.dataset import PATCHES, result  # noqa: E402
 
-PATCHES = "model/patches.npz"
-OUT = "model/v0_l16/result/latents.npz"
-CKPT = "model/v0_l16/result/ae.pt"
+OUT = result("v0_l16", "latents.npz")
+CKPT = result("v0_l16", "ae.pt")
 
 LATENT_DIM = 16
-EPOCHS = 30
+EPOCHS = 100
 BATCH = 256
 LR = 1e-3
 VAL_FRAC = 0.1

@@ -1,0 +1,10 @@
+23700 個 patch，device=mps
+  epoch   1  train NLL 0.40510  val NLL 0.07672  val deviance 0.13906
+  epoch   5  train NLL 0.03960  val NLL 0.03867  val deviance 0.06295
+  epoch  10  train NLL 0.03811  val NLL 0.03759  val deviance 0.06079
+  epoch  15  train NLL 0.03781  val NLL 0.03729  val deviance 0.06020
+  epoch  20  train NLL 0.03766  val NLL 0.03715  val deviance 0.05991
+  epoch  25  train NLL 0.03754  val NLL 0.03706  val deviance 0.05974
+  epoch  30  train NLL 0.03743  val NLL 0.03694  val deviance 0.05950
+size factor 與 n_poi 不一致的 patch：0 個（應為 0）
+已存 /Users/yentso/developer/StartOver/model/v0_sizefactor/result/latents.npz

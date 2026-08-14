@@ -1,0 +1,21 @@
+23700 個 patch，device=mps
+  epoch   1  train NLL 0.18419  val NLL 0.05436  val deviance 0.08783
+  epoch   5  train NLL 0.03927  val NLL 0.03834  val deviance 0.05572
+  epoch  10  train NLL 0.03771  val NLL 0.03725  val deviance 0.05346
+  epoch  15  train NLL 0.03737  val NLL 0.03699  val deviance 0.05282
+  epoch  20  train NLL 0.03723  val NLL 0.03689  val deviance 0.05247
+  epoch  25  train NLL 0.03714  val NLL 0.03683  val deviance 0.05219
+  epoch  30  train NLL 0.03706  val NLL 0.03681  val deviance 0.05193
+
+各類別學到的 dispersion（theta 越大越接近 Poisson）
+  餐飲     theta =     0.746   mu=0.01 時 var/mean = 1.0134
+  零售     theta =     0.894   mu=0.01 時 var/mean = 1.0112
+  夜生活    theta =     0.914   mu=0.01 時 var/mean = 1.0109
+  社區/政府  theta =     0.955   mu=0.01 時 var/mean = 1.0105
+  交通     theta =     0.935   mu=0.01 時 var/mean = 1.0107
+  商業服務   theta =     0.965   mu=0.01 時 var/mean = 1.0104
+  地標/戶外  theta =     0.967   mu=0.01 時 var/mean = 1.0103
+  藝文娛樂   theta =     0.957   mu=0.01 時 var/mean = 1.0104
+  醫療     theta =     0.970   mu=0.01 時 var/mean = 1.0103
+  運動休閒   theta =     0.973   mu=0.01 時 var/mean = 1.0103
+已存 /Users/yentso/developer/StartOver/model/v0_nb/result/latents.npz

@@ -9,15 +9,17 @@
 並當成後面版本的對照組：看「單純重建」的 latent 會被什麼主導。
 """
 
+import os
+import sys
+
 import numpy as np
 import torch
 import torch.nn as nn
 
-GRID = 40
-N_CAT = 10
+sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
+from config.dataset import CELL, GRID, N_CAT, HALF_WIDTH  # noqa: E402,F401
+
 IN_CH = N_CAT
-CELL = 15.0
-RADIUS = 300.0
 
 
 class Patches:
@@ -72,20 +74,24 @@ def block(cin, cout, transpose=False):
 class ConvAE(nn.Module):
     def __init__(self, latent_dim=2):
         super().__init__()
+        s1 = (GRID + 2*1 - 3) // 2 + 1
+        s2 = (s1 + 2*1 - 3) // 2 + 1
+        s3 = (s2 + 2*1 - 3) // 2 + 1
+        self.enc_size = s3
         self.encoder = nn.Sequential(
             block(IN_CH, 32),   # 40 -> 20
             block(32, 64),      # 20 -> 10
             block(64, 128),     # 10 -> 5
             nn.Flatten(),
-            nn.Linear(128 * 5 * 5, 256),
+            nn.Linear(128 * s3 * s3, 256),
             nn.GELU(),
             nn.Linear(256, latent_dim),   # latent 前不接激活，離群值才不會被壓回來
         )
         self.decoder = nn.Sequential(
             nn.Linear(latent_dim, 256),
             nn.GELU(),
-            nn.Linear(256, 128 * 5 * 5),
-            nn.Unflatten(1, (128, 5, 5)),
+            nn.Linear(256, 128 * s3 * s3),
+            nn.Unflatten(1, (128, s3, s3)),
             block(128, 64, transpose=True),   # 5 -> 10
             block(64, 32, transpose=True),    # 10 -> 20
             nn.ConvTranspose2d(32, IN_CH, 4, 2, 1),   # 20 -> 40，輸出跟輸入同形狀
@@ -93,7 +99,11 @@ class ConvAE(nn.Module):
 
     def forward(self, x):
         z = self.encoder(x)
-        return z, self.decoder(z)
+        out = self.decoder(z)
+        if out.shape[-1] != x.shape[-1] or out.shape[-2] != x.shape[-2]:
+            import torch.nn.functional as F
+            out = F.interpolate(out, size=(x.shape[-2], x.shape[-1]), mode='bilinear', align_corners=False)
+        return z, out
 
 
 def mse_loss(recon, x):

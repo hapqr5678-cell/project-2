@@ -1,0 +1,9 @@
+23700 個 patch，device=mps
+  epoch   1  train 0.01686  val 0.01005
+  epoch   5  train 0.00897  val 0.00880
+  epoch  10  train 0.00885  val 0.00869
+  epoch  15  train 0.00877  val 0.00862
+  epoch  20  train 0.00871  val 0.00858
+  epoch  25  train 0.00867  val 0.00856
+  epoch  30  train 0.00865  val 0.00855
+已存 /Users/yentso/developer/StartOver/model/v0_weight_mse/result/latents.npz

@@ -19,24 +19,16 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from ae import GRID, CELL, RADIUS, ConvAE, Patches, mse_loss  # noqa: E402
+sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
+from ae import GRID, CELL, HALF_WIDTH, ConvAE, Patches, mse_loss  # noqa: E402
+from config.result_style import REBUILD_GRID  # noqa: E402
+from config.dataset import CAT_COLORS, CAT_ZH, PATCHES, result  # noqa: E402
 
-PATCHES = "model/patches.npz"
-LATENTS = "model/v0_l16/result/latents.npz"
-CKPT = "model/v0_l16/result/ae.pt"
-OUT = "model/v0_l16/result/rebuild_test.png"
+LATENTS = result("v0_l16", "latents.npz")
+CKPT = result("v0_l16", "ae.pt")
+OUT = result("v0_l16", "rebuild_test.png")
 
-LATENT_DIM = 16
 DOT = 18          # 點的基本大小
-
-CAT_ZH = [
-    "餐飲", "零售", "夜生活", "政府", "交通",
-    "商業服務", "地標", "藝文娛樂", "醫療", "運動休閒",
-]
-CAT_COLORS = [
-    "#e6194b", "#3cb44b", "#911eb4", "#4363d8", "#f58231",
-    "#46f0f0", "#008080", "#f032e6", "#9a6324", "#808000",
-]
 IN_COLOR = "#2c7fb8"
 OUT_COLOR = "#c0392b"
 
@@ -46,14 +38,20 @@ mpl.rcParams["figure.dpi"] = 130
 
 
 def style(ax, title, edge):
-    ax.add_patch(plt.Circle((0, 0), RADIUS, fill=False, lw=1.6,
+    ax.add_patch(plt.Circle((0, 0), HALF_WIDTH, fill=False, lw=1.6,
                             color=edge, alpha=0.8))
-    ax.set_xlim(-RADIUS * 1.05, RADIUS * 1.05)
-    ax.set_ylim(-RADIUS * 1.05, RADIUS * 1.05)
+    ax.set_xlim(-HALF_WIDTH * 1.05, HALF_WIDTH * 1.05)
+    ax.set_ylim(-HALF_WIDTH * 1.05, HALF_WIDTH * 1.05)
     ax.set_aspect("equal")
     ax.set_title(title, fontsize=10, color=edge)
     ax.tick_params(labelsize=7)
     ax.grid(alpha=0.15, linewidth=0.5)
+    if REBUILD_GRID:
+        import numpy as _np
+        ticks = _np.arange(-GRID // 2, GRID // 2 + 1) * CELL
+        for t in ticks:
+            ax.axhline(t, color='#888', lw=0.3, alpha=0.35)
+            ax.axvline(t, color='#888', lw=0.3, alpha=0.35)
     for s in ax.spines.values():
         s.set_alpha(0.3)
 
@@ -70,24 +68,41 @@ def draw_true(ax, p, i, title):
     style(ax, title, IN_COLOR)
 
 
-def draw_recon(ax, recon, title):
-    """AE 後：40x40 每一格都畫一點，顏色 = 該格最強的類別，
-    大小/透明度 ∝ 該格的總強度（強度 0 的格子自然看不見）。"""
-    inten = torch.expm1(recon.clamp(min=0))[0].numpy()   # (10,40,40) 還原成 count
-    total = inten.sum(0)
-    top_cat = inten.argmax(0)
-    rel = total / total.max()
+def _spiral_offsets(n, spacing=CELL * 0.18):
+    """回傳 n 個從中心往外的螺旋位移 (dx, dy)。"""
+    if n == 0:
+        return np.empty((0, 2))
+    pts = np.zeros((n, 2))
+    for i in range(1, n):
+        r = spacing * np.sqrt(i)
+        theta = 2.4 * i          # 黃金角 ≈ 137.5°
+        pts[i] = [r * np.cos(theta), r * np.sin(theta)]
+    return pts
 
-    # 格子中心換算回公尺
-    gy, gx = np.mgrid[0:GRID, 0:GRID]
-    x = (gx + 0.5 - GRID / 2) * CELL
-    y = (gy + 0.5 - GRID / 2) * CELL
+
+def draw_recon(ax, recon, title):
+    """AE 後：把每格每類的預測強度四捨五入成整數個 POI，
+    從格子中心往外螺旋排列，每個 POI 畫一個點，呈現方式與左圖一致。"""
+    inten = torch.expm1(recon.clamp(min=0))[0].numpy()   # (10,GRID,GRID) 還原成 count
+    total = inten.sum(0)
+
     for c in range(len(CAT_ZH)):
-        m = top_cat == c
-        if m.any():
-            ax.scatter(x[m], y[m], s=DOT * (0.15 + 1.5 * rel[m]),
-                       c=CAT_COLORS[c], linewidths=0,
-                       alpha=np.clip(rel[m], 0, 1) * 0.9, label=CAT_ZH[c])
+        xs, ys = [], []
+        for gy in range(GRID):
+            for gx in range(GRID):
+                cnt = int(np.round(inten[c, gy, gx]))
+                if cnt <= 0:
+                    continue
+                cx = (gx + 0.5 - GRID / 2) * CELL
+                cy = (gy + 0.5 - GRID / 2) * CELL
+                offsets = _spiral_offsets(cnt)
+                xs.append(cx + offsets[:, 0])
+                ys.append(cy + offsets[:, 1])
+        if xs:
+            xs = np.concatenate(xs)
+            ys = np.concatenate(ys)
+            ax.scatter(xs, ys, s=DOT, c=CAT_COLORS[c], linewidths=0,
+                       alpha=0.85, label=CAT_ZH[c])
     style(ax, title, OUT_COLOR)
     return total
 
@@ -100,8 +115,10 @@ def main():
     data = Patches(PATCHES)
     assert 0 <= n < data.n, f"--n 要在 0~{data.n - 1}"
 
+    sd = torch.load(CKPT, map_location="cpu")
+    LATENT_DIM = sd["encoder.6.weight"].shape[0]
     model = ConvAE(LATENT_DIM)
-    model.load_state_dict(torch.load(CKPT, map_location="cpu"))
+    model.load_state_dict(sd)
     model.eval()
 
     # 跟 train.py 的推論一致：固定朝向、不旋轉

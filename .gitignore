@@ -4,3 +4,4 @@ __pycache__/
 claude.md
 *.npz
 *.pt
+*.parquet
