@@ -17,7 +17,7 @@ import torch
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from ae import VAE, Patches, kl_divergence, poisson_deviance, poisson_nll  # noqa: E402
-from config.dataset import PATCHES, result  # noqa: E402
+from config.dataset import ensure_patches, PATCHES, result  # noqa: E402
 
 OUT = result("v2_vae", "latents.npz")
 CKPT = result("v2_vae", "ae.pt")
@@ -101,6 +101,7 @@ def report_posterior(logvar):
 
 
 def main():
+    ensure_patches()
     data = Patches(PATCHES)
     print(f"{data.n} 個 patch，device={device}，BETA={BETA}")
 

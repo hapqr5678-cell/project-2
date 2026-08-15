@@ -1,6 +1,6 @@
 """對 patch 的類別 count 向量做 HDBSCAN 分群，是 dbscan_grid.py 的變體。
 
-跟 dbscan_grid.py 讀一樣的特徵（直接對 model/patch/patches.npz 現算
+跟 dbscan_grid.py 讀一樣的特徵（直接對 data/patch/patches.npz 現算
 bincount(cat)，不經過模型、不用 log1p、不依賴 build_features.py）。
 
 換成 HDBSCAN 是因為 dbscan_grid.py 印出的診斷已經證實 patch 密度（市

@@ -6,10 +6,10 @@
 3. 輸出 patch 編號（可直接複製給 `rebuild_test.py --n <id>` 或 `patch_lab.py` 使用）。
 
 用法範例：
-  p3 model/patch/find_dense_patches.py
-  p3 model/patch/find_dense_patches.py --top 10 --dedup
-  p3 model/patch/find_dense_patches.py --cat 夜生活 --top 15
-  p3 model/patch/find_dense_patches.py --csv top_dense.csv
+  p3 data/patch/find_dense_patches.py
+  p3 data/patch/find_dense_patches.py --top 10 --dedup
+  p3 data/patch/find_dense_patches.py --cat 夜生活 --top 15
+  p3 data/patch/find_dense_patches.py --csv top_dense.csv
 """
 
 import argparse

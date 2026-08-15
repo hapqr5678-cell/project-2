@@ -1,6 +1,6 @@
 """對 patch 的類別 count 向量做 DBSCAN 分群，跟 AE 的 latent 分群互相對照。
 
-特徵直接對 model/patch/patches.npz 的稀疏點列表算 bincount(cat)，也就是
+特徵直接對 data/patch/patches.npz 的稀疏點列表算 bincount(cat)，也就是
 每個 patch 的 count-based encoding [餐飲:1, 零售:4, 夜生活:0, ...]，不經
 過模型、不用 log1p、不依賴 build_features.py。理由是 DBSCAN 用歐氏距離，
 而 CLAUDE.md 定義的輸入本來就是原始 count，直接對這個空間分群才是跟

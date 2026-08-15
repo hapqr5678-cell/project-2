@@ -25,7 +25,7 @@ import sys
 
 import duckdb
 
-sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/.."))
+sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from config.dataset import SOURCES  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))

@@ -17,7 +17,7 @@ import torch.nn.functional as F
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from ae import ConvAE, Patches, mse_loss  # noqa: E402
-from config.dataset import CAT_ZH, N_CAT, PATCHES, result  # noqa: E402
+from config.dataset import CAT_ZH, ensure_patches, N_CAT, PATCHES, result  # noqa: E402
 
 OUT = result("v1_masked", "latents.npz")
 CKPT = result("v1_masked", "ae.pt")
@@ -93,6 +93,7 @@ def report_emb(emb):
 
 
 def main():
+    ensure_patches()
     data = Patches(PATCHES)
     occ = data.n_occupied
     print(f"{data.n} 個 patch，device={device}")

@@ -17,7 +17,7 @@ import torch
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from ae import ConvAE, Patches, mse_loss  # noqa: E402
-from config.dataset import PATCHES, result  # noqa: E402
+from config.dataset import ensure_patches, PATCHES, result  # noqa: E402
 
 OUT = result("v0_l32_weight_mse", "latents.npz")
 CKPT = result("v0_l32_weight_mse", "ae.pt")
@@ -83,6 +83,7 @@ def run(data, train_idx, val_idx):
 
 
 def main():
+    ensure_patches()
     data = Patches(PATCHES)
     print(f"{data.n} 個 patch，device={device}")
 

@@ -1,6 +1,6 @@
 """用手算特徵表替 v1_masked 的 latent 上色，看 latent 到底編碼了哪個維度。
 
-特徵表跟 v0 共用（model/patch/build_features.py 產的那份），四個代表性特徵：
+特徵表跟 v0 共用（data/patch/build_features.py 產的那份），四個代表性特徵：
   log1p(n_total)  量
   entropy         組成的多樣性
   max_p           組成的單一化程度

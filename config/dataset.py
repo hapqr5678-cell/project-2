@@ -1,7 +1,8 @@
 """資料集來源與共用參數的唯一設定點。
 
 換資料集只要改下面的 DATASET，其他腳本
-（build_patches / build_features / v0 / v0_l16 / v1）都從這裡拿：
+（data/patch/build_patches / build_features / model/v0 / v0_l16 / v1 ...）
+都從這裡拿：
   來源 CSV、類別表（channel 順序）、中文標籤與配色
   幾何參數（半徑、cell、格數、中心間距）
   輸出路徑（patches、特徵表、各版本的 result 目錄）
@@ -13,9 +14,16 @@
     import os, sys
     sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
     from config.dataset import CATEGORIES, PATCHES, result
+
+patches.npz 是否為目前這組參數建出來的，見檔尾 ensure_patches()：
+train.py 開始前呼叫它，設定跟快取對不上就自動重跑 build_patches。
 """
 
+import hashlib
+import json
 import os
+
+import numpy as np
 
 # 要用哪個資料集：SOURCES 的 key
 DATASET = "fsq"
@@ -54,7 +62,7 @@ SOURCES = {
     },
     # Overture Maps 的 places，類別是它的 top-level category
     "overture": {
-        "csv": "dataOverture/overture_clean.csv",
+        "csv": "data/overture/overture_clean.csv",
         "cat_col": "category",
         "categories": [
             "food_and_drink",
@@ -102,7 +110,50 @@ def result(version, name):
     return os.path.join(d, name)
 
 
-PATCHES = os.path.join(ROOT, "model", "patch", "patches.npz")
-# 手算特徵表，跟模型無關；沿用既有位置
-FEATURES = result("v0", "features.npz")
-FEATURES_CSV = result("v0", "features.csv")
+PATCHES = os.path.join(ROOT, "data", "patch", "patches.npz")
+FEATURES = os.path.join(ROOT, "data", "patch", "features.npz")
+FEATURES_CSV = os.path.join(ROOT, "data", "patch", "features.csv")
+
+# 會影響 patches.npz 內容的參數：改了這些，舊的 patches 就作廢
+_PATCH_PARAMS = {
+    "dataset": DATASET,
+    "csv": _src["csv"],
+    "cat_col": CAT_COL,
+    "categories": CATEGORIES,
+    "half_width": HALF_WIDTH,
+    "cell": CELL,
+    "center_step": CENTER_STEP,
+    "min_poi": MIN_POI,
+    "crs": CRS,
+}
+
+
+def patch_fingerprint():
+    """目前這組參數（含來源 CSV 的 mtime）的指紋。
+
+    CSV 的 mtime 也算進去：參數沒變但資料本身換過，一樣要重建。
+    """
+    params = dict(_PATCH_PARAMS)
+    if os.path.exists(CSV):
+        params["csv_mtime"] = os.path.getmtime(CSV)
+    blob = json.dumps(params, sort_keys=True, default=str)
+    return hashlib.sha256(blob.encode()).hexdigest()
+
+
+def patches_fresh():
+    """patches.npz 是否存在，且是用目前這組參數建的。"""
+    if not os.path.exists(PATCHES):
+        return False
+    with np.load(PATCHES) as d:
+        if "config_hash" not in d:
+            return False
+        return d["config_hash"].item() == patch_fingerprint()
+
+
+def ensure_patches():
+    """train 前先確保 patches.npz 對得上目前的 config，對不上就重跑 build_patches。"""
+    if patches_fresh():
+        return
+    print("[config] patches.npz 跟目前設定不一致，重新產生...")
+    from data.patch.build_patches import build
+    build()

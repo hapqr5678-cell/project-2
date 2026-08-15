@@ -48,8 +48,8 @@ from scipy.spatial import cKDTree
 
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from config.dataset import (CAT_COL, CATEGORIES, CELL, CSV,  # noqa: E402
-                            FEATURES, FEATURES_CSV, GRID, HALF_WIDTH,
-                            N_CAT, PATCHES)
+                            ensure_patches, FEATURES, FEATURES_CSV, GRID,
+                            HALF_WIDTH, N_CAT, PATCHES)
 
 OUT_NPZ = FEATURES
 OUT_CSV = FEATURES_CSV
@@ -85,6 +85,7 @@ def global_p():
 
 
 def main():
+    ensure_patches()
     d = np.load(PATCHES)
     dx, dy, cat, offsets = d["dx"], d["dy"], d["cat"].astype(np.int64), d["offsets"]
     n_total = np.diff(offsets).astype(np.int64)
@@ -201,4 +202,5 @@ def main():
               f"{share:>9.1%}")
 
 
-main()
+if __name__ == "__main__":
+    main()
