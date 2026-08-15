@@ -36,7 +36,7 @@ def main():
     else:
         # 預設：東京車站為中心，取正方形範圍
         CENTER_LON, CENTER_LAT = 139.7671, 35.6812
-        HALF_KM = 8
+        HALF_KM = 20
         KM_PER_LON, KM_PER_LAT = 90.3, 111.0
         dlon = HALF_KM / KM_PER_LON
         dlat = HALF_KM / KM_PER_LAT

@@ -13,7 +13,7 @@ sys.path.insert(0, ROOT)
 from config.dataset import (CAT_COLORS, CAT_ZH, CELL, GRID, N_CAT,  # noqa: E402
                             PATCHES, HALF_WIDTH, result)
 
-MODEL_VERSION = "v2_ae"
+MODEL_VERSION = "v2_vae"
 MODELS = {
     "v0": dict(latent_dim=2, log1p=True),
     "v0_poisson_nll": dict(latent_dim=2, log1p=False),
