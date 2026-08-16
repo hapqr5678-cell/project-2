@@ -1,5 +1,5 @@
-"""v2_ae / v2_perceiver / v2_vae 及各自的 tanh 對照組（v2_tanh_ae /
-v2_tanh_perceiver / v2_tanh_vae）共六個版本的 deviance-based pseudo R²。
+"""v2_ae / v2_perceiver / v2_vae 及各自的 tanh 對照組（v2_ae_tanh /
+v2_tanh_perceiver / v2_vae_tanh）共六個版本的 deviance-based pseudo R²。
 
 R² = 1 - deviance_model / deviance_null
 
@@ -84,13 +84,13 @@ def main():
         _, _, _, log_lam = m(x)
     versions["v2_vae"] = torch.exp(log_lam)
 
-    tanh_mod = _load_module("v2_tanh_ae")
+    tanh_mod = _load_module("v2_ae_tanh")
     m = tanh_mod.MLPAE(2)
-    m.load_state_dict(torch.load(result("v2_tanh_ae", "ae.pt"), map_location="cpu"))
+    m.load_state_dict(torch.load(result("v2_ae_tanh", "ae.pt"), map_location="cpu"))
     m.eval()
     with torch.no_grad():
         _, log_lam = m(x)
-    versions["v2_tanh_ae"] = torch.exp(log_lam)
+    versions["v2_ae_tanh"] = torch.exp(log_lam)
 
     tanh_perc_mod = _load_module("v2_tanh_perceiver")
     tok2, pad_mask2 = tanh_perc_mod.Patches(PATCHES).tokens(idx)
@@ -101,13 +101,13 @@ def main():
         _, log_lam = m(tok2, pad_mask2)
     versions["v2_tanh_perceiver"] = torch.exp(log_lam)
 
-    tanh_vae_mod = _load_module("v2_tanh_vae")
+    tanh_vae_mod = _load_module("v2_vae_tanh")
     m = tanh_vae_mod.VAE(2)
-    m.load_state_dict(torch.load(result("v2_tanh_vae", "ae.pt"), map_location="cpu"))
+    m.load_state_dict(torch.load(result("v2_vae_tanh", "ae.pt"), map_location="cpu"))
     m.eval()
     with torch.no_grad():
         _, _, _, log_lam = m(x)
-    versions["v2_tanh_vae"] = torch.exp(log_lam)
+    versions["v2_vae_tanh"] = torch.exp(log_lam)
 
     print(f"deviance_null（空模型，全體平均）= {dev_null_total:.2f}\n")
 

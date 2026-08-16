@@ -1,4 +1,4 @@
-"""不挑單一個案，改看「全體 patch」：對 v2_tanh_ae / v2_tanh_vae /
+"""不挑單一個案，改看「全體 patch」：對 v2_ae_tanh / v2_vae_tanh /
 v2_tanh_perceiver 三個版本，每個都對全部 patch 同時做同一件事——某個
 類別加入 1 / 10 / 30 個——然後把加完之後的新位置畫成 heatmap 風格的
 散點圖：背景是全體 patch 原本的 latent 位置（半透明灰點），前景是加了
@@ -21,7 +21,7 @@ ROOT = os.path.abspath(f"{os.path.dirname(__file__)}/..")
 sys.path.insert(0, ROOT)
 from config.dataset import CAT_ZH, N_CAT, PATCHES, result  # noqa: E402
 
-VERSIONS = ["v2_tanh_ae", "v2_tanh_vae", "v2_tanh_perceiver"]
+VERSIONS = ["v2_ae_tanh", "v2_vae_tanh", "v2_tanh_perceiver"]
 CATS = ["餐飲", "零售", "商業服務", "藝文娛樂"]   # 要跑哪幾個類別，改這個清單即可
 OFFSETS = [1, 2, 3]      # 每個類別各自加入的點數
 ZOOM_PCT = (1, 99)         # latent 圖初始視野

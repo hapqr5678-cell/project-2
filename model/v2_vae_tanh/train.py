@@ -1,4 +1,4 @@
-"""訓練 v2_tanh_vae：跟 v2_vae 的 train.py 完全一樣，只是換了 VERSION/模型
+"""訓練 v2_vae_tanh：跟 v2_vae 的 train.py 完全一樣，只是換了 VERSION/模型
 （fc_mu 多接一個 Tanh()，mu 訓練時就被夾在 (-1,1)）。
 """
 
@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from ae import VAE, Patches, kl_divergence, poisson_deviance, poisson_nll  # noqa: E402
 from config.dataset import ensure_patches, PATCHES, result  # noqa: E402
 
-VERSION = "v2_tanh_vae"
+VERSION = "v2_vae_tanh"
 OUT = result(VERSION, "latents.npz")
 CKPT = result(VERSION, "ae.pt")
 

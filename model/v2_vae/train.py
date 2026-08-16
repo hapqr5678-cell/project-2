@@ -23,7 +23,7 @@ OUT = result("v2_vae", "latents.npz")
 CKPT = result("v2_vae", "ae.pt")
 
 LATENT_DIM = 2
-EPOCHS = 500
+EPOCHS = 1000
 BATCH = 256
 LR = 1e-3
 VAL_FRAC = 0.1

@@ -1,4 +1,4 @@
-"""v2_tanh_ae：跟 v2_ae 完全同架構，唯一差異是 encoder 最後一層接 Tanh()，
+"""v2_ae_tanh：跟 v2_ae 完全同架構，唯一差異是 encoder 最後一層接 Tanh()，
 把 latent 在訓練時就強制夾在 (-1,1) 之間。
 
 這是刻意拿來跟 v2_ae 對照的實驗組：v2_ae 的設計筆記寫明「latent 前不接

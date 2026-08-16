@@ -14,7 +14,6 @@ csv 會把 list 壓成字串，之後 clean 還要自己解析。
 舊的會被刪掉，跑不動時先去 list bucket 看現在有哪些版本。
 """
 
-import argparse
 import os
 import time
 
@@ -24,17 +23,13 @@ RELEASE = "2026-07-22.0"
 SRC = f"s3://overturemaps-us-west-2/release/{RELEASE}/theme=places/type=place/*.parquet"
 OUT = f"{os.path.dirname(os.path.abspath(__file__))}/overture_raw.parquet"
 
+# bounding box，留空（None）則預設：東京車站為中心，取正方形範圍
+XMIN, YMIN, XMAX, YMAX = 138.9 , 35.34, 140.0,36.0
 
 def main():
-    parser = argparse.ArgumentParser(description="從 Overture Maps 抓取給定 bounding box 的 places")
-    parser.add_argument("--box", type=float, nargs=4, metavar=('XMIN', 'YMIN', 'XMAX', 'YMAX'),
-                        help="輸入 bounding box (xmin ymin xmax ymax)，例如: 139.54 35.50 139.98 35.86")
-    args = parser.parse_args()
-
-    if args.box:
-        xmin, ymin, xmax, ymax = args.box
+    if XMIN is not None:
+        xmin, ymin, xmax, ymax = XMIN, YMIN, XMAX, YMAX
     else:
-        # 預設：東京車站為中心，取正方形範圍
         CENTER_LON, CENTER_LAT = 139.7671, 35.6812
         HALF_KM = 20
         KM_PER_LON, KM_PER_LAT = 90.3, 111.0

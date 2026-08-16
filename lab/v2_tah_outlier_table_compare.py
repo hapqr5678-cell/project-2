@@ -1,5 +1,5 @@
 """把 v2_tah_outlier_table_experience.py 存的三個版本 csv 讀進來，畫成一張圖
-比較 v2_tanh_ae / v2_tanh_vae / v2_tanh_perceiver 三者的差異：同一個類別、
+比較 v2_ae_tanh / v2_vae_tanh / v2_tanh_perceiver 三者的差異：同一個類別、
 同一個加入點數下，誰移動得比較多（不穩定性）、誰的重建損失提升得比較多。
 
 兩個指標尺度差很多，分開兩列畫（不共用 y 軸），每欄是一個類別，
@@ -16,13 +16,13 @@ import matplotlib.pyplot as plt
 ROOT = os.path.abspath(f"{os.path.dirname(__file__)}/..")
 sys.path.insert(0, ROOT)
 
-VERSIONS = ["v2_tanh_ae", "v2_tanh_vae", "v2_tanh_perceiver"]
+VERSIONS = ["v2_ae_tanh", "v2_vae_tanh", "v2_tanh_perceiver"]
 METRICS = ["移動距離_不穩定性", "重建損失提升"]
 OUT = os.path.join(ROOT, "lab", "v2_tah_outlier_table_compare.png")
 
 # 驗證過、CVD 安全的三色（dataviz skill 的 categorical 前三格，all-pairs 過關）
-COLORS = {"v2_tanh_ae": "#2a78d6", "v2_tanh_vae": "#eb6834", "v2_tanh_perceiver": "#1baf7a"}
-LABELS = {"v2_tanh_ae": "ae", "v2_tanh_vae": "vae", "v2_tanh_perceiver": "perceiver"}
+COLORS = {"v2_ae_tanh": "#2a78d6", "v2_vae_tanh": "#eb6834", "v2_tanh_perceiver": "#1baf7a"}
+LABELS = {"v2_ae_tanh": "ae", "v2_vae_tanh": "vae", "v2_tanh_perceiver": "perceiver"}
 
 mpl.rcParams["font.family"] = ["Heiti TC"]
 mpl.rcParams["axes.unicode_minus"] = False

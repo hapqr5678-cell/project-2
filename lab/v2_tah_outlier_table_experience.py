@@ -18,7 +18,7 @@ ROOT = os.path.abspath(f"{os.path.dirname(__file__)}/..")
 sys.path.insert(0, ROOT)
 from config.dataset import CAT_ZH, N_CAT, PATCHES, result  # noqa: E402
 
-VERSIONS = ["v2_tanh_ae", "v2_tanh_vae", "v2_tanh_perceiver"]
+VERSIONS = ["v2_ae_tanh", "v2_vae_tanh", "v2_tanh_perceiver"]
 CATS = ["餐飲", "零售", "商業服務", "藝文娛樂"]   # 要跑哪幾個類別，改這個清單即可
 OFFSETS = [1, 2, 3]      # 每個類別各自加入的點數
 BATCH = 512

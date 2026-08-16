@@ -1,6 +1,5 @@
 __pycache__/
 *.pyc
-.bak/
 claude.md
 *.npz
 *.pt

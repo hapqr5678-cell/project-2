@@ -1,4 +1,4 @@
-"""v2_tanh_ae / v2_tanh_vae / v2_tanh_perceiver 三個「latent 訓練時就夾在
+"""v2_ae_tanh / v2_vae_tanh / v2_tanh_perceiver 三個「latent 訓練時就夾在
 (-1,1)」的版本，各自從全體 latent 中最典型（robust 距離最小）的 patch
 出發，對每個類別分別加入 1 / 5 / 10 個該類別的 POI，看 latent 怎麼移動
 ——對照三種架構（MLP / 機率化 mu / cross-attention）「訓練時就限制範圍」
@@ -21,7 +21,7 @@ ROOT = os.path.abspath(f"{os.path.dirname(__file__)}/..")
 sys.path.insert(0, ROOT)
 from config.dataset import CAT_ZH, N_CAT, PATCHES, result  # noqa: E402
 
-VERSIONS = ["v2_tanh_ae", "v2_tanh_vae", "v2_tanh_perceiver"]
+VERSIONS = ["v2_ae_tanh", "v2_vae_tanh", "v2_tanh_perceiver"]
 ADD_STEPS = [0,1,5, 10, 30, 50]   # 累積加入的點數
 ZOOM_PCT = (1, 99)          # latent 圖初始視野
 DOT = 3.0

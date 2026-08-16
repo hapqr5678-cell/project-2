@@ -1,4 +1,4 @@
-"""畫 latent space 的純散點圖（不上色）。v2_tanh_ae 的 z 本來就被 tanh 夾在
+"""畫 latent space 的純散點圖（不上色）。v2_ae_tanh 的 z 本來就被 tanh 夾在
 (-1,1) 附近，這裡一樣做 min-max 正規化到 [-1,1]，跟 v2_ae/v2_perceiver/
 v2_vae 的畫法保持一致，才能直接比較「訓練時就夾住」跟「畫圖時才正規化」
 的分群形狀差異。
@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
 from config.dataset import result  # noqa: E402
 
-VERSION = "v2_tanh_ae"
+VERSION = "v2_ae_tanh"
 LATENTS = result(VERSION, "latents.npz")
 OUT = result(VERSION, "latent_plot_plain.png")
 

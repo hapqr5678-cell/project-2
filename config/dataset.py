@@ -1,24 +1,3 @@
-"""資料集來源與共用參數的唯一設定點。
-
-換資料集只要改下面的 DATASET，其他腳本
-（data/patch/build_patches / build_features / model/v0 / v0_l16 / v1 ...）
-都從這裡拿：
-  來源 CSV、類別表（channel 順序）、中文標籤與配色
-  幾何參數（半徑、cell、格數、中心間距）
-  輸出路徑（patches、特徵表、各版本的 result 目錄）
-
-注意：輸出路徑不分資料集，換 DATASET 重跑會蓋掉前一份的 patches 與 result。
-
-路徑都是絕對路徑（以本檔位置推算 repo root），所以腳本從哪個目錄跑都一樣。
-用法：
-    import os, sys
-    sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
-    from config.dataset import CATEGORIES, PATCHES, result
-
-patches.npz 是否為目前這組參數建出來的，見檔尾 ensure_patches()：
-train.py 開始前呼叫它，設定跟快取對不上就自動重跑 build_patches。
-"""
-
 import hashlib
 import json
 import os
@@ -26,18 +5,18 @@ import os
 import numpy as np
 
 # 要用哪個資料集：SOURCES 的 key
-DATASET = "fsq"
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+DATASET = "fsq"
 HALF_WIDTH = 50.0
 CELL = 15
 GRID = int(HALF_WIDTH * 2 / CELL)
 CENTER_STEP = 100       # patch 中心的格點間距(公尺)
 MIN_POI = 10           # 圓內少於這個數量的中心直接丟掉
-CRS = "EPSG:6677"      # 日本平面直角座標系第9系，涵蓋東京都，單位公尺
 
+CRS = "EPSG:6677"      # 日本平面直角座標系第9系，涵蓋東京都，單位公尺
 SOURCES = {
     # Foursquare 打卡紀錄清乾淨後的唯一地點清單，類別是 FSQ 的最大類
     "fsq": {

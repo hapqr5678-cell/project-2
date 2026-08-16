@@ -1,4 +1,4 @@
-"""訓練 v2_tanh_ae：跟 v2_ae 的 train.py 完全一樣，只是換了 VERSION/模型
+"""訓練 v2_ae_tanh：跟 v2_ae 的 train.py 完全一樣，只是換了 VERSION/模型
 （encoder 多一個 Tanh()，latent 訓練時就被夾在 (-1,1)）。
 超參數刻意保持一致，這樣兩邊的差異只來自 tanh 這一個變因。
 """
@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from ae import MLPAE, Patches, poisson_deviance, poisson_nll  # noqa: E402
 from config.dataset import ensure_patches, PATCHES, result  # noqa: E402
 
-VERSION = "v2_tanh_ae"
+VERSION = "v2_ae_tanh"
 OUT = result(VERSION, "latents.npz")
 CKPT = result(VERSION, "ae.pt")
 
