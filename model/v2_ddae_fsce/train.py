@@ -31,14 +31,14 @@ LATENT_DIM = 2
 EPOCHS = 1000
 BATCH = 256
 LR = 1e-3
-WEIGHT_DECAY = 1e-4
+WEIGHT_DECAY = 1e-6
 VAL_FRAC = 0.1
 SEED = 0
 
 N_NEIGHBORS = 15         # 建高維 fuzzy graph 的 kNN 數，跟 data/patch/umap_grid.py 一致
 GRAPH_METRIC = "cosine"  # 對整包 count 向量的組成比例敏感、對總量不敏感
 EDGE_BATCH = 256          # 每個 step 抽的正樣本邊數，負樣本抽等量
-LAMBDA_FSCE = 0.5        # FSCE loss 的權重，warm-up 結束後的最終值
+LAMBDA_FSCE = 0.1        # FSCE loss 的權重，warm-up 結束後的最終值
 WARMUP_EPOCHS = 500        # lambda 從 0 線性升到 LAMBDA_FSCE 所花的 epoch 數
 
 NOISE_P = 0.3            # 破壞強度：thinning 是每個 POI 被丟掉的機率

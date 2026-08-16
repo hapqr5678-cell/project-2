@@ -3,6 +3,11 @@
 全部跟 v2_dae 對齊，這樣兩邊的 latent 才是在同一組資料/loss 下比較，
 差別只有模型容量這件事。
 
+容量加倍之後 encoder 的權重範數長得很大（各層 7~12），latent 也跟著攤到
+±40，所以這一版帶 weight decay 1e-3 一起訓練。注意 Adam 的 weight_decay
+是 coupled L2，decay 項會再被自適應步長放大，比 AdamW 同名數值猛得多：
+1e-2 會直接把 latent 壓成一條直線（秩塌到 1），1e-3 才留得住 2 維結構。
+
 驗證與最後輸出 latent 的推論階段一律不加噪——噪聲是正則化手段，不是資料
 本身的性質。破壞是每個 step 重新抽的（generator 綁 SEED+epoch，可重現）。
 """
@@ -23,9 +28,10 @@ OUT = result(VERSION, "latents.npz")
 CKPT = result(VERSION, "ae.pt")
 
 LATENT_DIM = 2
-EPOCHS = 900
+EPOCHS = 1000
 BATCH = 256
 LR = 1e-3
+WEIGHT_DECAY = 0
 VAL_FRAC = 0.1
 SEED = 0
 
@@ -43,7 +49,7 @@ def run(data, train_idx, val_idx):
     """
     torch.manual_seed(SEED)
     model = MLPAE(LATENT_DIM).to(device)
-    opt = torch.optim.Adam(model.parameters(), lr=LR)
+    opt = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
 
     for epoch in range(EPOCHS):
         model.train()
