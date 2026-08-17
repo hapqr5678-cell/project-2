@@ -1,0 +1,6 @@
+{
+    "files.exclude": {
+        "**/*.pt": true,
+        "**/*.npz": true
+  }
+}

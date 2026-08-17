@@ -13,7 +13,7 @@ sys.path.insert(0, ROOT)
 from config.dataset import (CAT_COLORS, CAT_ZH, CELL, GRID, N_CAT,  # noqa: E402
                             PATCHES, HALF_WIDTH, result)
 
-MODEL_VERSION = "v2_vae"
+MODEL_VERSION = "v2_ddae_fsce_euc"
 MODELS = {
     "v0": dict(latent_dim=2, log1p=True),
     "v0_poisson_nll": dict(latent_dim=2, log1p=False),
@@ -25,6 +25,9 @@ MODELS = {
     "v2_l16_ae": dict(latent_dim=16, v2=True),
     "v2_vae": dict(latent_dim=2, v2=True, vae=True),
     "v2_perceiver": dict(latent_dim=2, v2=True, perceiver=True),
+    "v2_ddae": dict(latent_dim=2, v2=True),
+    "v2_ddae_fsce_euc": dict(latent_dim=2, v2=True),
+    "v2_ddae_tanh_fsce": dict(latent_dim=2, v2=True),
 }
 cfg = MODELS[MODEL_VERSION]
 PATCH_IDX = None     # None = 從 robust 距離最小（最典型）的 patch 起手；或填 patch 編號
@@ -195,8 +198,6 @@ def update():
 def draw_base_map():
     ax_map.clear()
     dx0, dy0, cat0 = state["base"]
-    ax_map.add_patch(plt.Circle((0, 0), HALF_WIDTH, fill=False, lw=1.6,
-                                color="#555", alpha=0.8))
     for k in range(N_CAT):
         m = cat0 == k
         if m.any():

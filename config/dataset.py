@@ -4,18 +4,23 @@ import os
 
 import numpy as np
 
-# 要用哪個資料集：SOURCES 的 key
-
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 DATASET = "fsq"
-HALF_WIDTH = 50.0
-CELL = 15
-GRID = int(HALF_WIDTH * 2 / CELL)
-CENTER_STEP = 100       # patch 中心的格點間距(公尺)
-MIN_POI = 10           # 圓內少於這個數量的中心直接丟掉
 
+if DATASET == "fsq":
+    HALF_WIDTH = 50.0
+    CELL = 15
+    CENTER_STEP = 100       # patch 中心的格點間距(公尺)
+    MIN_POI = 10           # 圓內少於這個數量的中心直接丟掉
+elif DATASET == "overture":
+    HALF_WIDTH = 200.0
+    CELL = 15
+    CENTER_STEP = 400       # patch 中心的格點間距(公尺)
+    MIN_POI = 15           # 圓內少於這個數量的中心直接丟掉
+
+
+GRID = int(HALF_WIDTH * 2 / CELL)
 CRS = "EPSG:6677"      # 日本平面直角座標系第9系，涵蓋東京都，單位公尺
 SOURCES = {
     # Foursquare 打卡紀錄清乾淨後的唯一地點清單，類別是 FSQ 的最大類

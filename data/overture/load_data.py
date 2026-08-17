@@ -22,9 +22,9 @@ import duckdb
 RELEASE = "2026-07-22.0"
 SRC = f"s3://overturemaps-us-west-2/release/{RELEASE}/theme=places/type=place/*.parquet"
 OUT = f"{os.path.dirname(os.path.abspath(__file__))}/overture_raw.parquet"
-
+XMIN = None
 # bounding box，留空（None）則預設：東京車站為中心，取正方形範圍
-XMIN, YMIN, XMAX, YMAX = 138.9 , 35.34, 140.0,36.0
+# XMIN, YMIN, XMAX, YMAX = 138.9 , 35.34, 140.0,36.0
 
 def main():
     if XMIN is not None:
@@ -61,8 +61,6 @@ def main():
             operating_status,
             ST_Y(geometry)                      AS lat,
             ST_X(geometry)                      AS lon,
-            addresses[1].locality               AS locality,
-            list_distinct([s.dataset FOR s IN sources]) AS datasets
         FROM read_parquet('{SRC}')
         WHERE bbox.xmin BETWEEN {xmin} AND {xmax}
           AND bbox.ymin BETWEEN {ymin} AND {ymax}

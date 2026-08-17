@@ -1,16 +1,19 @@
-"""訓練 v2_ddae_tanh_fsce：denoising、tanh、FSCE 三個變因全開的加深版
-（encoder/decoder 各 4 層隱藏層）。
 
-建 fuzzy graph 的距離度量已從 cosine 改成 euclidean（GRAPH_METRIC），
-理由跟 v2_ddae_fsce_euc 一樣：Poisson NLL 的 log_lam 是自由的 N_CAT 維，
-要重建 count 就必須讓 Σλ≈總數，於是逼 encoder 把 log(總數) 編進 z；但
-cosine 的圖對尺度完全不敏感，總數差很多但組成相同的兩個 patch 在圖上是
-鄰居，FSCE 反過來逼 encoder 把它們疊在一起。2 維裡有 1 維被總量吃掉，
-剩 1 維要塞 N_CAT-1 個自由度的組成。換成 euclidean 讓圖也承認總量，
-兩個 loss 就不再打架。
+"""訓練 v2_ddae_fsce_euc：v2_ddae_fsce 的尺度敏感變體，所有超參數
+（模型容量、LAMBDA_FSCE、WARMUP_EPOCHS、NOISE_P/NOISE_MODE、WEIGHT_DECAY…）
+全部跟 v2_ddae_fsce 對齊，差別只有 GRAPH_METRIC 這一件事。
 
-注意這一版多了 tanh：latent 被夾在 (-1,1)²，總量與組成要一起擠進這個
-有界的盒子，比 v2_ddae_fsce_euc 的無界 latent 更緊。
+為什麼要有這一版：v2_ddae_fsce 的兩個 loss 對同一組 2 維 latent 提出相反
+要求。Poisson NLL 的 log_lam 是自由的 N_CAT 維，要重建 count 就必須讓
+Σλ≈總數，於是逼 encoder 把 log(總數) 編進 z；但 FSCE 的圖是 cosine 建的、
+對尺度完全不敏感，總數差很多但組成相同的兩個 patch 在圖上是鄰居，FSCE 反過來
+逼 encoder 把它們疊在一起。2 維裡有 1 維被總量吃掉，剩 1 維要塞 N_CAT-1 個
+自由度的組成。
+
+這一版的收法是讓圖也承認總量（GRAPH_METRIC 換成 euclidean），把矛盾消掉：
+z 裡那一維 log(總數) 從「被 recon 硬塞、被 FSCE 抵抗」變成兩個 loss 共同
+要求的東西。likelihood 完全沒動，所以 val deviance 跟 v2_ddae_fsce 仍然是
+同一把尺，可以直接比。
 
 所有餵進 encoder 的輸入（reconstruction batch 跟 FSCE 的 pair 兩邊都算）
 都先過 corrupt()，Poisson NLL 的目標仍然是乾淨的原始 count；fuzzy graph
@@ -33,23 +36,23 @@ from ae import (MLPAE, Patches, build_fsce_graph, corrupt,  # noqa: E402
 from config.dataset import ensure_patches, PATCHES, result  # noqa: E402
 from config.train_log import open_log  # noqa: E402
 
-VERSION = "v2_ddae_tanh_fsce"
+VERSION = "v2_ddae_fsce_euc"
 OUT = result(VERSION, "latents.npz")
 CKPT = result(VERSION, "ae.pt")
 
 LATENT_DIM = 2
-EPOCHS = 200
+EPOCHS = 1000
 BATCH = 256
 LR = 1e-3
-WEIGHT_DECAY = 1e-4
+WEIGHT_DECAY = 1e-6
 VAL_FRAC = 0.1
 SEED = 0
 
 N_NEIGHBORS = 15         # 建高維 fuzzy graph 的 kNN 數，跟 data/patch/umap_grid.py 一致
 GRAPH_METRIC = "euclidean"  # 在 log1p 上算，組成與總量都敏感——跟 Poisson NLL 的要求一致
 EDGE_BATCH = 256          # 每個 step 抽的正樣本邊數，負樣本抽等量
-LAMBDA_FSCE = 0        # FSCE loss 的權重，warm-up 結束後的最終值
-WARMUP_EPOCHS = 100        # lambda 從 0 線性升到 LAMBDA_FSCE 所花的 epoch 數
+LAMBDA_FSCE = 0.01        # FSCE loss 的權重，warm-up 結束後的最終值
+WARMUP_EPOCHS = 200        # lambda 從 0 線性升到 LAMBDA_FSCE 所花的 epoch 數
 
 NOISE_P = 0.3            # 破壞強度：thinning 是每個 POI 被丟掉的機率
 NOISE_MODE = "thinning"  # "thinning"（逐 POI 丟）或 "mask"（整類歸零）

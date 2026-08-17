@@ -1,8 +1,8 @@
 """畫 latent space 的純散點圖（不上色），直接用 encoder 輸出的原始座標，
 不做任何正規化——座標軸上的數字就是 latent 的真實尺度。
 
-跟 v2_dae_fsce 的同名腳本一樣刻意不正規化：v2_ddae_fsce 的 encoder 出口
-沒有 tanh，latent 能跑多遠本身就是要看的資訊，正規化會把這件事整個抹掉。
+跟 v2_ddae_fsce 的同名腳本一樣刻意不正規化：v2_ddae_fsce_euc 的 encoder
+出口沒有 tanh，latent 能跑多遠本身就是要看的資訊，正規化會把這件事整個抹掉。
 """
 
 import os
@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
 from config.dataset import result  # noqa: E402
 
-VERSION = "v2_ddae_fsce"
+VERSION = "v2_ddae_fsce_euc"
 LATENTS = result(VERSION, "latents.npz")
 OUT = result(VERSION, "latent_plot_plain.png")
 

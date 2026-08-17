@@ -1,14 +1,11 @@
-"""v2_ddae_fsce：v2_dae_fsce 的加深變體，encoder/decoder 各自從 2 層隱藏層
-加深到 4 層（HIDDEN 維度不變），其餘（denoising 的破壞方式、FSCE loss、
-decoder、Poisson NLL）完全一樣。
+"""v2_ddae_fsce_euc：v2_ddae_fsce 的尺度敏感變體，模型結構、破壞方式、
+loss 形式完全一樣，唯一差別是建 fuzzy graph 的距離度量從 cosine 換成
+euclidean（見 train.py 的 GRAPH_METRIC）。
 
-為什麼要有這一版：v2_dae_fsce 已經把「加噪」跟「FSCE 拉近高維鄰接」兩個
-手段疊在一起，這一版再疊上「模型容量加倍」，檢驗淺層 MLP 是不是限制了
-FSCE 能拉出的分群品質——如果容量才是瓶頸，加深應該讓 FSCE 的效果更明顯；
-如果不是，加深不會有明顯差異甚至因為更容易過擬合而變差。
-
-FSCE 的高維鄰接關係是用「整包 count 向量的 log1p、cosine 距離」kNN 建的
+FSCE 的高維鄰接關係是用「整包 count 向量的 log1p、euclidean 距離」kNN 建的
 fuzzy simplicial set，用乾淨 count 建、只建一次、整個訓練共用同一張圖。
+log1p 之後的 euclidean 對總量是敏感的：組成相同、總數差 k 倍的兩個 patch，
+彼此距離約 √N_CAT·log k，不會被判成鄰居。
 
 破壞方式有兩種，用 NOISE_MODE 切換（意義同 v2_dae）：
   "thinning"  binomial thinning：每個 POI 以 1-NOISE_P 的機率被保留。
@@ -145,7 +142,7 @@ def poisson_deviance(log_lam, x):
     return cell.mean(dim=1)
 
 
-def build_fsce_graph(x, n_neighbors=15, metric="cosine"):
+def build_fsce_graph(x, n_neighbors=15, metric="euclidean"):
     """x 是高維空間的特徵矩陣 (N,D)（這裡傳乾淨 count 的 log1p），在上面建一次
     UMAP 的 fuzzy simplicial set。回傳 edge_i、edge_j：邊兩端的 patch 編號 (E,)
     LongTensor；edge_w：這條邊在高維空間的模糊隸屬度 (E,)∈(0,1] FloatTensor，
