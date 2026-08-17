@@ -1,0 +1,250 @@
+[dataset]
+  dataset = fsq
+  csv = data/tky_clean.csv
+  cat_col = category
+  categories = ['Dining and Drinking', 'Retail', 'Nightlife Spot', 'Community and Government', 'Travel and Transportation', 'Business and Professional Services', 'Landmarks and Outdoors', 'Arts and Entertainment', 'Health and Medicine', 'Sports and Recreation']
+  half_width = 50.0
+  cell = 15
+  center_step = 100
+  min_poi = 10
+  crs = EPSG:6677
+
+[hparams]
+  LATENT_DIM = 2
+  EPOCHS = 1200
+  BATCH = 256
+  LR = 0.001
+  WEIGHT_DECAY = 0.0001
+  VAL_FRAC = 0.1
+  SEED = 0
+  ALPHA_INIT = 0.5
+  NOISE_P = 0.3
+  NOISE_MODE = thinning
+
+1233 個 patch，device=mps，噪聲 thinning p=0.3
+OD：100.0% 的 patch 有觀測，總量中位數 44，最大 10449
+參數量 49749
+epoch    1 | train_nll 0.85381 | val_dev 4.41944 | expl_dev -1.98834 | knock_dev 4.41952 | alpha 0.4996 | w_od 0.9987
+epoch    5 | train_nll 0.05774 | val_dev 2.33137 | expl_dev -0.57642 | knock_dev 2.33136 | alpha 0.5008 | w_od 0.9955
+epoch   10 | train_nll -0.73682 | val_dev 1.53954 | expl_dev -0.04101 | knock_dev 1.54013 | alpha 0.5002 | w_od 0.9944
+epoch   15 | train_nll -0.95359 | val_dev 1.20095 | expl_dev 0.18794 | knock_dev 1.22082 | alpha 0.4968 | w_od 0.9888
+epoch   20 | train_nll -0.97555 | val_dev 1.17684 | expl_dev 0.20425 | knock_dev 1.18705 | alpha 0.4965 | w_od 0.9916
+epoch   25 | train_nll -0.98673 | val_dev 1.16914 | expl_dev 0.20945 | knock_dev 1.19893 | alpha 0.4963 | w_od 0.9954
+epoch   30 | train_nll -1.00265 | val_dev 1.15358 | expl_dev 0.21997 | knock_dev 1.17831 | alpha 0.4958 | w_od 0.9992
+epoch   35 | train_nll -1.01490 | val_dev 1.15321 | expl_dev 0.22022 | knock_dev 1.20135 | alpha 0.4957 | w_od 1.0036
+epoch   40 | train_nll -1.02527 | val_dev 1.13389 | expl_dev 0.23329 | knock_dev 1.15920 | alpha 0.4953 | w_od 1.0068
+epoch   45 | train_nll -1.02836 | val_dev 1.13089 | expl_dev 0.23531 | knock_dev 1.16440 | alpha 0.4952 | w_od 1.0102
+epoch   50 | train_nll -1.03327 | val_dev 1.12396 | expl_dev 0.24000 | knock_dev 1.16734 | alpha 0.4950 | w_od 1.0130
+epoch   55 | train_nll -1.03734 | val_dev 1.12128 | expl_dev 0.24181 | knock_dev 1.16888 | alpha 0.4949 | w_od 1.0176
+epoch   60 | train_nll -1.03945 | val_dev 1.09852 | expl_dev 0.25720 | knock_dev 1.14396 | alpha 0.4948 | w_od 1.0215
+epoch   65 | train_nll -1.08108 | val_dev 1.00486 | expl_dev 0.32053 | knock_dev 1.04680 | alpha 0.4939 | w_od 1.0233
+epoch   70 | train_nll -1.09230 | val_dev 0.98955 | expl_dev 0.33088 | knock_dev 1.03328 | alpha 0.4943 | w_od 1.0258
+epoch   75 | train_nll -1.13407 | val_dev 0.92428 | expl_dev 0.37502 | knock_dev 0.99076 | alpha 0.4944 | w_od 1.0286
+epoch   80 | train_nll -1.18839 | val_dev 0.85079 | expl_dev 0.42471 | knock_dev 0.90929 | alpha 0.4942 | w_od 1.0319
+epoch   85 | train_nll -1.20396 | val_dev 0.83472 | expl_dev 0.43558 | knock_dev 0.90445 | alpha 0.4941 | w_od 1.0362
+epoch   90 | train_nll -1.22088 | val_dev 0.82321 | expl_dev 0.44336 | knock_dev 0.92414 | alpha 0.4940 | w_od 1.0398
+epoch   95 | train_nll -1.22509 | val_dev 0.83538 | expl_dev 0.43514 | knock_dev 0.93676 | alpha 0.4937 | w_od 1.0441
+epoch  100 | train_nll -1.23516 | val_dev 0.81910 | expl_dev 0.44614 | knock_dev 0.90072 | alpha 0.4933 | w_od 1.0475
+epoch  105 | train_nll -1.23741 | val_dev 0.81565 | expl_dev 0.44847 | knock_dev 0.90372 | alpha 0.4931 | w_od 1.0515
+epoch  110 | train_nll -1.23986 | val_dev 0.81418 | expl_dev 0.44947 | knock_dev 0.91035 | alpha 0.4930 | w_od 1.0547
+epoch  115 | train_nll -1.24238 | val_dev 0.81383 | expl_dev 0.44970 | knock_dev 0.89060 | alpha 0.4927 | w_od 1.0573
+epoch  120 | train_nll -1.24717 | val_dev 0.80507 | expl_dev 0.45563 | knock_dev 0.88735 | alpha 0.4926 | w_od 1.0610
+epoch  125 | train_nll -1.24813 | val_dev 0.80917 | expl_dev 0.45285 | knock_dev 0.89662 | alpha 0.4925 | w_od 1.0640
+epoch  130 | train_nll -1.25325 | val_dev 0.79554 | expl_dev 0.46207 | knock_dev 0.86347 | alpha 0.4924 | w_od 1.0668
+epoch  135 | train_nll -1.25153 | val_dev 0.80415 | expl_dev 0.45625 | knock_dev 0.86916 | alpha 0.4922 | w_od 1.0697
+epoch  140 | train_nll -1.25235 | val_dev 0.79972 | expl_dev 0.45924 | knock_dev 0.87348 | alpha 0.4920 | w_od 1.0726
+epoch  145 | train_nll -1.25556 | val_dev 0.79222 | expl_dev 0.46432 | knock_dev 0.86277 | alpha 0.4919 | w_od 1.0760
+epoch  150 | train_nll -1.26199 | val_dev 0.78265 | expl_dev 0.47079 | knock_dev 0.83906 | alpha 0.4917 | w_od 1.0797
+epoch  155 | train_nll -1.26181 | val_dev 0.78860 | expl_dev 0.46676 | knock_dev 0.83865 | alpha 0.4914 | w_od 1.0822
+epoch  160 | train_nll -1.26175 | val_dev 0.78383 | expl_dev 0.46999 | knock_dev 0.82642 | alpha 0.4912 | w_od 1.0841
+epoch  165 | train_nll -1.26208 | val_dev 0.77508 | expl_dev 0.47591 | knock_dev 0.83986 | alpha 0.4912 | w_od 1.0858
+epoch  170 | train_nll -1.26464 | val_dev 0.78307 | expl_dev 0.47051 | knock_dev 0.83470 | alpha 0.4911 | w_od 1.0879
+epoch  175 | train_nll -1.26241 | val_dev 0.77143 | expl_dev 0.47837 | knock_dev 0.81469 | alpha 0.4910 | w_od 1.0905
+epoch  180 | train_nll -1.26750 | val_dev 0.77640 | expl_dev 0.47501 | knock_dev 0.82806 | alpha 0.4909 | w_od 1.0927
+epoch  185 | train_nll -1.26786 | val_dev 0.77333 | expl_dev 0.47709 | knock_dev 0.82727 | alpha 0.4907 | w_od 1.0947
+epoch  190 | train_nll -1.26302 | val_dev 0.77092 | expl_dev 0.47872 | knock_dev 0.82382 | alpha 0.4906 | w_od 1.0974
+epoch  195 | train_nll -1.26987 | val_dev 0.76695 | expl_dev 0.48141 | knock_dev 0.80433 | alpha 0.4903 | w_od 1.0988
+epoch  200 | train_nll -1.27310 | val_dev 0.76263 | expl_dev 0.48433 | knock_dev 0.82156 | alpha 0.4902 | w_od 1.0999
+epoch  205 | train_nll -1.27269 | val_dev 0.76702 | expl_dev 0.48135 | knock_dev 0.81393 | alpha 0.4900 | w_od 1.1029
+epoch  210 | train_nll -1.26992 | val_dev 0.76143 | expl_dev 0.48514 | knock_dev 0.81156 | alpha 0.4900 | w_od 1.1047
+epoch  215 | train_nll -1.27518 | val_dev 0.76421 | expl_dev 0.48326 | knock_dev 0.80414 | alpha 0.4899 | w_od 1.1071
+epoch  220 | train_nll -1.27240 | val_dev 0.75748 | expl_dev 0.48781 | knock_dev 0.82176 | alpha 0.4900 | w_od 1.1089
+epoch  225 | train_nll -1.27743 | val_dev 0.74515 | expl_dev 0.49615 | knock_dev 0.79857 | alpha 0.4898 | w_od 1.1094
+epoch  230 | train_nll -1.27965 | val_dev 0.74974 | expl_dev 0.49304 | knock_dev 0.79876 | alpha 0.4897 | w_od 1.1114
+epoch  235 | train_nll -1.27586 | val_dev 0.74725 | expl_dev 0.49472 | knock_dev 0.78839 | alpha 0.4895 | w_od 1.1128
+epoch  240 | train_nll -1.27909 | val_dev 0.74263 | expl_dev 0.49785 | knock_dev 0.79767 | alpha 0.4895 | w_od 1.1148
+epoch  245 | train_nll -1.28293 | val_dev 0.73586 | expl_dev 0.50243 | knock_dev 0.80273 | alpha 0.4896 | w_od 1.1171
+epoch  250 | train_nll -1.28127 | val_dev 0.74344 | expl_dev 0.49730 | knock_dev 0.79796 | alpha 0.4895 | w_od 1.1186
+epoch  255 | train_nll -1.28474 | val_dev 0.73333 | expl_dev 0.50414 | knock_dev 0.79357 | alpha 0.4894 | w_od 1.1205
+epoch  260 | train_nll -1.27948 | val_dev 0.73127 | expl_dev 0.50553 | knock_dev 0.76985 | alpha 0.4892 | w_od 1.1234
+epoch  265 | train_nll -1.28138 | val_dev 0.73608 | expl_dev 0.50228 | knock_dev 0.78004 | alpha 0.4892 | w_od 1.1245
+epoch  270 | train_nll -1.27943 | val_dev 0.74193 | expl_dev 0.49832 | knock_dev 0.81036 | alpha 0.4892 | w_od 1.1255
+epoch  275 | train_nll -1.28651 | val_dev 0.74553 | expl_dev 0.49589 | knock_dev 0.79810 | alpha 0.4892 | w_od 1.1282
+epoch  280 | train_nll -1.28375 | val_dev 0.72425 | expl_dev 0.51028 | knock_dev 0.77998 | alpha 0.4891 | w_od 1.1302
+epoch  285 | train_nll -1.28469 | val_dev 0.73077 | expl_dev 0.50587 | knock_dev 0.78217 | alpha 0.4890 | w_od 1.1310
+epoch  290 | train_nll -1.29136 | val_dev 0.72758 | expl_dev 0.50802 | knock_dev 0.77291 | alpha 0.4888 | w_od 1.1330
+epoch  295 | train_nll -1.28581 | val_dev 0.72362 | expl_dev 0.51070 | knock_dev 0.77798 | alpha 0.4887 | w_od 1.1362
+epoch  300 | train_nll -1.28775 | val_dev 0.72006 | expl_dev 0.51311 | knock_dev 0.78589 | alpha 0.4889 | w_od 1.1382
+epoch  305 | train_nll -1.28180 | val_dev 0.75012 | expl_dev 0.49278 | knock_dev 0.80935 | alpha 0.4888 | w_od 1.1397
+epoch  310 | train_nll -1.28401 | val_dev 0.73673 | expl_dev 0.50184 | knock_dev 0.81150 | alpha 0.4889 | w_od 1.1426
+epoch  315 | train_nll -1.27602 | val_dev 0.72838 | expl_dev 0.50748 | knock_dev 0.76650 | alpha 0.4887 | w_od 1.1434
+epoch  320 | train_nll -1.28926 | val_dev 0.72054 | expl_dev 0.51279 | knock_dev 0.77834 | alpha 0.4886 | w_od 1.1438
+epoch  325 | train_nll -1.28694 | val_dev 0.72639 | expl_dev 0.50883 | knock_dev 0.77835 | alpha 0.4885 | w_od 1.1444
+epoch  330 | train_nll -1.29036 | val_dev 0.72038 | expl_dev 0.51289 | knock_dev 0.79534 | alpha 0.4886 | w_od 1.1461
+epoch  335 | train_nll -1.28824 | val_dev 0.72723 | expl_dev 0.50826 | knock_dev 0.77235 | alpha 0.4884 | w_od 1.1494
+epoch  340 | train_nll -1.28365 | val_dev 0.71492 | expl_dev 0.51659 | knock_dev 0.78110 | alpha 0.4884 | w_od 1.1500
+epoch  345 | train_nll -1.28701 | val_dev 0.73074 | expl_dev 0.50589 | knock_dev 0.80831 | alpha 0.4882 | w_od 1.1519
+epoch  350 | train_nll -1.29122 | val_dev 0.72517 | expl_dev 0.50966 | knock_dev 0.78124 | alpha 0.4882 | w_od 1.1528
+epoch  355 | train_nll -1.29370 | val_dev 0.74535 | expl_dev 0.49601 | knock_dev 0.80318 | alpha 0.4880 | w_od 1.1535
+epoch  360 | train_nll -1.29279 | val_dev 0.73233 | expl_dev 0.50481 | knock_dev 0.79190 | alpha 0.4880 | w_od 1.1562
+epoch  365 | train_nll -1.29803 | val_dev 0.72800 | expl_dev 0.50774 | knock_dev 0.77098 | alpha 0.4878 | w_od 1.1581
+epoch  370 | train_nll -1.30138 | val_dev 0.74253 | expl_dev 0.49792 | knock_dev 0.81992 | alpha 0.4878 | w_od 1.1587
+epoch  375 | train_nll -1.29130 | val_dev 0.73124 | expl_dev 0.50555 | knock_dev 0.79489 | alpha 0.4876 | w_od 1.1592
+epoch  380 | train_nll -1.29457 | val_dev 0.72434 | expl_dev 0.51022 | knock_dev 0.80017 | alpha 0.4875 | w_od 1.1600
+epoch  385 | train_nll -1.29409 | val_dev 0.71299 | expl_dev 0.51789 | knock_dev 0.78742 | alpha 0.4874 | w_od 1.1617
+epoch  390 | train_nll -1.29918 | val_dev 0.71514 | expl_dev 0.51644 | knock_dev 0.79271 | alpha 0.4874 | w_od 1.1631
+epoch  395 | train_nll -1.29533 | val_dev 0.73459 | expl_dev 0.50328 | knock_dev 0.77053 | alpha 0.4874 | w_od 1.1644
+epoch  400 | train_nll -1.28775 | val_dev 0.72032 | expl_dev 0.51294 | knock_dev 0.80708 | alpha 0.4874 | w_od 1.1659
+epoch  405 | train_nll -1.29632 | val_dev 0.71417 | expl_dev 0.51709 | knock_dev 0.77604 | alpha 0.4872 | w_od 1.1669
+epoch  410 | train_nll -1.29611 | val_dev 0.73682 | expl_dev 0.50178 | knock_dev 0.80351 | alpha 0.4871 | w_od 1.1678
+epoch  415 | train_nll -1.29492 | val_dev 0.71610 | expl_dev 0.51579 | knock_dev 0.78011 | alpha 0.4870 | w_od 1.1680
+epoch  420 | train_nll -1.29783 | val_dev 0.72258 | expl_dev 0.51141 | knock_dev 0.78645 | alpha 0.4870 | w_od 1.1697
+epoch  425 | train_nll -1.29898 | val_dev 0.73682 | expl_dev 0.50178 | knock_dev 0.79446 | alpha 0.4868 | w_od 1.1710
+epoch  430 | train_nll -1.29786 | val_dev 0.72275 | expl_dev 0.51129 | knock_dev 0.80821 | alpha 0.4869 | w_od 1.1714
+epoch  435 | train_nll -1.29794 | val_dev 0.75592 | expl_dev 0.48886 | knock_dev 0.82716 | alpha 0.4867 | w_od 1.1730
+epoch  440 | train_nll -1.29333 | val_dev 0.71778 | expl_dev 0.51465 | knock_dev 0.78770 | alpha 0.4867 | w_od 1.1763
+epoch  445 | train_nll -1.29897 | val_dev 0.71479 | expl_dev 0.51667 | knock_dev 0.78350 | alpha 0.4869 | w_od 1.1764
+epoch  450 | train_nll -1.29929 | val_dev 0.72386 | expl_dev 0.51054 | knock_dev 0.80455 | alpha 0.4869 | w_od 1.1765
+epoch  455 | train_nll -1.29897 | val_dev 0.70900 | expl_dev 0.52059 | knock_dev 0.78922 | alpha 0.4866 | w_od 1.1770
+epoch  460 | train_nll -1.30023 | val_dev 0.72367 | expl_dev 0.51067 | knock_dev 0.79184 | alpha 0.4864 | w_od 1.1781
+epoch  465 | train_nll -1.30531 | val_dev 0.71365 | expl_dev 0.51745 | knock_dev 0.78556 | alpha 0.4863 | w_od 1.1784
+epoch  470 | train_nll -1.30219 | val_dev 0.71767 | expl_dev 0.51473 | knock_dev 0.78046 | alpha 0.4862 | w_od 1.1792
+epoch  475 | train_nll -1.30099 | val_dev 0.74681 | expl_dev 0.49502 | knock_dev 0.84769 | alpha 0.4863 | w_od 1.1814
+epoch  480 | train_nll -1.29977 | val_dev 0.72569 | expl_dev 0.50930 | knock_dev 0.79427 | alpha 0.4859 | w_od 1.1845
+epoch  485 | train_nll -1.30057 | val_dev 0.71319 | expl_dev 0.51776 | knock_dev 0.78485 | alpha 0.4860 | w_od 1.1848
+epoch  490 | train_nll -1.29845 | val_dev 0.71374 | expl_dev 0.51739 | knock_dev 0.79475 | alpha 0.4857 | w_od 1.1845
+epoch  495 | train_nll -1.30280 | val_dev 0.71001 | expl_dev 0.51990 | knock_dev 0.78981 | alpha 0.4856 | w_od 1.1855
+epoch  500 | train_nll -1.30646 | val_dev 0.70662 | expl_dev 0.52220 | knock_dev 0.78584 | alpha 0.4856 | w_od 1.1866
+epoch  505 | train_nll -1.30074 | val_dev 0.71467 | expl_dev 0.51675 | knock_dev 0.80898 | alpha 0.4855 | w_od 1.1880
+epoch  510 | train_nll -1.29876 | val_dev 0.70857 | expl_dev 0.52088 | knock_dev 0.80933 | alpha 0.4854 | w_od 1.1882
+epoch  515 | train_nll -1.30552 | val_dev 0.70240 | expl_dev 0.52505 | knock_dev 0.78064 | alpha 0.4852 | w_od 1.1885
+epoch  520 | train_nll -1.29934 | val_dev 0.71256 | expl_dev 0.51818 | knock_dev 0.78543 | alpha 0.4849 | w_od 1.1896
+epoch  525 | train_nll -1.29753 | val_dev 0.70490 | expl_dev 0.52336 | knock_dev 0.79351 | alpha 0.4846 | w_od 1.1903
+epoch  530 | train_nll -1.30089 | val_dev 0.72690 | expl_dev 0.50848 | knock_dev 0.79855 | alpha 0.4846 | w_od 1.1919
+epoch  535 | train_nll -1.30720 | val_dev 0.70665 | expl_dev 0.52218 | knock_dev 0.77368 | alpha 0.4844 | w_od 1.1929
+epoch  540 | train_nll -1.30462 | val_dev 0.71751 | expl_dev 0.51483 | knock_dev 0.78552 | alpha 0.4845 | w_od 1.1946
+epoch  545 | train_nll -1.30797 | val_dev 0.72023 | expl_dev 0.51300 | knock_dev 0.83013 | alpha 0.4845 | w_od 1.1978
+epoch  550 | train_nll -1.30746 | val_dev 0.72131 | expl_dev 0.51227 | knock_dev 0.80650 | alpha 0.4842 | w_od 1.1980
+epoch  555 | train_nll -1.30138 | val_dev 0.70625 | expl_dev 0.52245 | knock_dev 0.76962 | alpha 0.4840 | w_od 1.2000
+epoch  560 | train_nll -1.30213 | val_dev 0.71105 | expl_dev 0.51920 | knock_dev 0.77042 | alpha 0.4837 | w_od 1.2025
+epoch  565 | train_nll -1.30480 | val_dev 0.70588 | expl_dev 0.52270 | knock_dev 0.78366 | alpha 0.4837 | w_od 1.2038
+epoch  570 | train_nll -1.30749 | val_dev 0.70602 | expl_dev 0.52260 | knock_dev 0.79751 | alpha 0.4837 | w_od 1.2043
+epoch  575 | train_nll -1.31199 | val_dev 0.70845 | expl_dev 0.52096 | knock_dev 0.81035 | alpha 0.4836 | w_od 1.2055
+epoch  580 | train_nll -1.30549 | val_dev 0.71384 | expl_dev 0.51731 | knock_dev 0.81157 | alpha 0.4836 | w_od 1.2066
+epoch  585 | train_nll -1.30601 | val_dev 0.72646 | expl_dev 0.50878 | knock_dev 0.79927 | alpha 0.4834 | w_od 1.2067
+epoch  590 | train_nll -1.30322 | val_dev 0.69952 | expl_dev 0.52700 | knock_dev 0.78691 | alpha 0.4832 | w_od 1.2079
+epoch  595 | train_nll -1.30811 | val_dev 0.70328 | expl_dev 0.52446 | knock_dev 0.79310 | alpha 0.4830 | w_od 1.2088
+epoch  600 | train_nll -1.31462 | val_dev 0.69618 | expl_dev 0.52926 | knock_dev 0.77382 | alpha 0.4827 | w_od 1.2115
+epoch  605 | train_nll -1.31324 | val_dev 0.69571 | expl_dev 0.52958 | knock_dev 0.77910 | alpha 0.4827 | w_od 1.2143
+epoch  610 | train_nll -1.31127 | val_dev 0.70086 | expl_dev 0.52609 | knock_dev 0.77195 | alpha 0.4826 | w_od 1.2161
+epoch  615 | train_nll -1.30990 | val_dev 0.69951 | expl_dev 0.52701 | knock_dev 0.77233 | alpha 0.4825 | w_od 1.2175
+epoch  620 | train_nll -1.31132 | val_dev 0.69904 | expl_dev 0.52732 | knock_dev 0.78823 | alpha 0.4825 | w_od 1.2203
+epoch  625 | train_nll -1.31357 | val_dev 0.70366 | expl_dev 0.52420 | knock_dev 0.78131 | alpha 0.4820 | w_od 1.2212
+epoch  630 | train_nll -1.30992 | val_dev 0.70505 | expl_dev 0.52326 | knock_dev 0.77843 | alpha 0.4817 | w_od 1.2233
+epoch  635 | train_nll -1.30759 | val_dev 0.70531 | expl_dev 0.52308 | knock_dev 0.78227 | alpha 0.4817 | w_od 1.2245
+epoch  640 | train_nll -1.30580 | val_dev 0.70801 | expl_dev 0.52126 | knock_dev 0.79589 | alpha 0.4818 | w_od 1.2257
+epoch  645 | train_nll -1.31158 | val_dev 0.70420 | expl_dev 0.52383 | knock_dev 0.79009 | alpha 0.4815 | w_od 1.2264
+epoch  650 | train_nll -1.30739 | val_dev 0.71150 | expl_dev 0.51890 | knock_dev 0.78185 | alpha 0.4812 | w_od 1.2278
+epoch  655 | train_nll -1.31155 | val_dev 0.69739 | expl_dev 0.52844 | knock_dev 0.80278 | alpha 0.4812 | w_od 1.2294
+epoch  660 | train_nll -1.30782 | val_dev 0.70352 | expl_dev 0.52429 | knock_dev 0.77887 | alpha 0.4809 | w_od 1.2292
+epoch  665 | train_nll -1.30712 | val_dev 0.70029 | expl_dev 0.52648 | knock_dev 0.77651 | alpha 0.4808 | w_od 1.2289
+epoch  670 | train_nll -1.30836 | val_dev 0.70749 | expl_dev 0.52161 | knock_dev 0.79780 | alpha 0.4806 | w_od 1.2322
+epoch  675 | train_nll -1.31729 | val_dev 0.69961 | expl_dev 0.52694 | knock_dev 0.78320 | alpha 0.4803 | w_od 1.2332
+epoch  680 | train_nll -1.31497 | val_dev 0.70848 | expl_dev 0.52094 | knock_dev 0.77910 | alpha 0.4802 | w_od 1.2345
+epoch  685 | train_nll -1.30797 | val_dev 0.70445 | expl_dev 0.52366 | knock_dev 0.80739 | alpha 0.4802 | w_od 1.2361
+epoch  690 | train_nll -1.31390 | val_dev 0.69579 | expl_dev 0.52952 | knock_dev 0.77870 | alpha 0.4800 | w_od 1.2386
+epoch  695 | train_nll -1.31119 | val_dev 0.70809 | expl_dev 0.52120 | knock_dev 0.80541 | alpha 0.4798 | w_od 1.2397
+epoch  700 | train_nll -1.31692 | val_dev 0.72305 | expl_dev 0.51109 | knock_dev 0.81413 | alpha 0.4799 | w_od 1.2419
+epoch  705 | train_nll -1.30496 | val_dev 0.73825 | expl_dev 0.50081 | knock_dev 0.79510 | alpha 0.4797 | w_od 1.2418
+epoch  710 | train_nll -1.31184 | val_dev 0.72067 | expl_dev 0.51270 | knock_dev 0.80294 | alpha 0.4796 | w_od 1.2427
+epoch  715 | train_nll -1.31379 | val_dev 0.71903 | expl_dev 0.51381 | knock_dev 0.79698 | alpha 0.4793 | w_od 1.2445
+epoch  720 | train_nll -1.31340 | val_dev 0.69913 | expl_dev 0.52726 | knock_dev 0.78986 | alpha 0.4793 | w_od 1.2460
+epoch  725 | train_nll -1.32009 | val_dev 0.71045 | expl_dev 0.51961 | knock_dev 0.79304 | alpha 0.4793 | w_od 1.2471
+epoch  730 | train_nll -1.31011 | val_dev 0.69198 | expl_dev 0.53210 | knock_dev 0.77030 | alpha 0.4791 | w_od 1.2481
+epoch  735 | train_nll -1.31483 | val_dev 0.70878 | expl_dev 0.52074 | knock_dev 0.80468 | alpha 0.4790 | w_od 1.2469
+epoch  740 | train_nll -1.31184 | val_dev 0.70702 | expl_dev 0.52193 | knock_dev 0.78966 | alpha 0.4787 | w_od 1.2495
+epoch  745 | train_nll -1.31328 | val_dev 0.69571 | expl_dev 0.52957 | knock_dev 0.78487 | alpha 0.4785 | w_od 1.2511
+epoch  750 | train_nll -1.31064 | val_dev 0.71854 | expl_dev 0.51414 | knock_dev 0.80639 | alpha 0.4784 | w_od 1.2524
+epoch  755 | train_nll -1.31415 | val_dev 0.69685 | expl_dev 0.52881 | knock_dev 0.79365 | alpha 0.4783 | w_od 1.2554
+epoch  760 | train_nll -1.31864 | val_dev 0.68449 | expl_dev 0.53716 | knock_dev 0.76470 | alpha 0.4781 | w_od 1.2572
+epoch  765 | train_nll -1.30644 | val_dev 0.69805 | expl_dev 0.52799 | knock_dev 0.77785 | alpha 0.4782 | w_od 1.2588
+epoch  770 | train_nll -1.31034 | val_dev 0.69834 | expl_dev 0.52780 | knock_dev 0.78390 | alpha 0.4784 | w_od 1.2598
+epoch  775 | train_nll -1.30155 | val_dev 0.73845 | expl_dev 0.50067 | knock_dev 0.82927 | alpha 0.4784 | w_od 1.2600
+epoch  780 | train_nll -1.31185 | val_dev 0.70143 | expl_dev 0.52571 | knock_dev 0.79431 | alpha 0.4782 | w_od 1.2611
+epoch  785 | train_nll -1.30868 | val_dev 0.70570 | expl_dev 0.52282 | knock_dev 0.79498 | alpha 0.4781 | w_od 1.2615
+epoch  790 | train_nll -1.30736 | val_dev 0.72741 | expl_dev 0.50814 | knock_dev 0.78730 | alpha 0.4780 | w_od 1.2638
+epoch  795 | train_nll -1.31212 | val_dev 0.72269 | expl_dev 0.51133 | knock_dev 0.81601 | alpha 0.4779 | w_od 1.2661
+epoch  800 | train_nll -1.31556 | val_dev 0.70253 | expl_dev 0.52497 | knock_dev 0.79127 | alpha 0.4778 | w_od 1.2677
+epoch  805 | train_nll -1.31802 | val_dev 0.70740 | expl_dev 0.52167 | knock_dev 0.82002 | alpha 0.4780 | w_od 1.2706
+epoch  810 | train_nll -1.31550 | val_dev 0.70909 | expl_dev 0.52053 | knock_dev 0.80732 | alpha 0.4776 | w_od 1.2716
+epoch  815 | train_nll -1.30583 | val_dev 0.73084 | expl_dev 0.50582 | knock_dev 0.83680 | alpha 0.4778 | w_od 1.2724
+epoch  820 | train_nll -1.31762 | val_dev 0.71043 | expl_dev 0.51962 | knock_dev 0.81478 | alpha 0.4775 | w_od 1.2728
+epoch  825 | train_nll -1.31047 | val_dev 0.71808 | expl_dev 0.51445 | knock_dev 0.81506 | alpha 0.4773 | w_od 1.2748
+epoch  830 | train_nll -1.31929 | val_dev 0.71034 | expl_dev 0.51969 | knock_dev 0.80440 | alpha 0.4771 | w_od 1.2767
+epoch  835 | train_nll -1.31624 | val_dev 0.71821 | expl_dev 0.51436 | knock_dev 0.81654 | alpha 0.4770 | w_od 1.2777
+epoch  840 | train_nll -1.31808 | val_dev 0.71285 | expl_dev 0.51799 | knock_dev 0.79389 | alpha 0.4769 | w_od 1.2799
+epoch  845 | train_nll -1.32208 | val_dev 0.70932 | expl_dev 0.52037 | knock_dev 0.80915 | alpha 0.4764 | w_od 1.2811
+epoch  850 | train_nll -1.30429 | val_dev 0.72174 | expl_dev 0.51197 | knock_dev 0.83116 | alpha 0.4763 | w_od 1.2848
+epoch  855 | train_nll -1.31582 | val_dev 0.73093 | expl_dev 0.50576 | knock_dev 0.83587 | alpha 0.4763 | w_od 1.2872
+epoch  860 | train_nll -1.32048 | val_dev 0.70252 | expl_dev 0.52497 | knock_dev 0.80128 | alpha 0.4763 | w_od 1.2893
+epoch  865 | train_nll -1.32058 | val_dev 0.70448 | expl_dev 0.52364 | knock_dev 0.80462 | alpha 0.4758 | w_od 1.2901
+epoch  870 | train_nll -1.31952 | val_dev 0.71090 | expl_dev 0.51930 | knock_dev 0.81917 | alpha 0.4759 | w_od 1.2921
+epoch  875 | train_nll -1.32007 | val_dev 0.71581 | expl_dev 0.51598 | knock_dev 0.82201 | alpha 0.4758 | w_od 1.2932
+epoch  880 | train_nll -1.32237 | val_dev 0.68989 | expl_dev 0.53351 | knock_dev 0.77529 | alpha 0.4752 | w_od 1.2947
+epoch  885 | train_nll -1.31812 | val_dev 0.70380 | expl_dev 0.52410 | knock_dev 0.82259 | alpha 0.4751 | w_od 1.2956
+epoch  890 | train_nll -1.31673 | val_dev 0.71153 | expl_dev 0.51888 | knock_dev 0.80538 | alpha 0.4747 | w_od 1.2977
+epoch  895 | train_nll -1.31668 | val_dev 0.71131 | expl_dev 0.51903 | knock_dev 0.81379 | alpha 0.4748 | w_od 1.3002
+epoch  900 | train_nll -1.31586 | val_dev 0.70436 | expl_dev 0.52372 | knock_dev 0.81285 | alpha 0.4746 | w_od 1.3030
+epoch  905 | train_nll -1.31860 | val_dev 0.68033 | expl_dev 0.53998 | knock_dev 0.77325 | alpha 0.4745 | w_od 1.3051
+epoch  910 | train_nll -1.31731 | val_dev 0.68829 | expl_dev 0.53459 | knock_dev 0.80741 | alpha 0.4743 | w_od 1.3070
+epoch  915 | train_nll -1.31555 | val_dev 0.70314 | expl_dev 0.52455 | knock_dev 0.81206 | alpha 0.4742 | w_od 1.3079
+epoch  920 | train_nll -1.31644 | val_dev 0.70565 | expl_dev 0.52285 | knock_dev 0.81337 | alpha 0.4738 | w_od 1.3085
+epoch  925 | train_nll -1.31554 | val_dev 0.69057 | expl_dev 0.53305 | knock_dev 0.78449 | alpha 0.4737 | w_od 1.3101
+epoch  930 | train_nll -1.32487 | val_dev 0.68594 | expl_dev 0.53618 | knock_dev 0.78602 | alpha 0.4735 | w_od 1.3126
+epoch  935 | train_nll -1.32065 | val_dev 0.68454 | expl_dev 0.53713 | knock_dev 0.79555 | alpha 0.4733 | w_od 1.3155
+epoch  940 | train_nll -1.31767 | val_dev 0.71897 | expl_dev 0.51385 | knock_dev 0.84005 | alpha 0.4733 | w_od 1.3179
+epoch  945 | train_nll -1.31881 | val_dev 0.71378 | expl_dev 0.51736 | knock_dev 0.82505 | alpha 0.4730 | w_od 1.3193
+epoch  950 | train_nll -1.32590 | val_dev 0.70726 | expl_dev 0.52176 | knock_dev 0.79447 | alpha 0.4730 | w_od 1.3210
+epoch  955 | train_nll -1.32078 | val_dev 0.71059 | expl_dev 0.51951 | knock_dev 0.79836 | alpha 0.4727 | w_od 1.3228
+epoch  960 | train_nll -1.31727 | val_dev 0.73165 | expl_dev 0.50527 | knock_dev 0.82160 | alpha 0.4732 | w_od 1.3243
+epoch  965 | train_nll -1.31724 | val_dev 0.68944 | expl_dev 0.53381 | knock_dev 0.80206 | alpha 0.4731 | w_od 1.3253
+epoch  970 | train_nll -1.32719 | val_dev 0.71142 | expl_dev 0.51895 | knock_dev 0.80405 | alpha 0.4727 | w_od 1.3283
+epoch  975 | train_nll -1.32072 | val_dev 0.72604 | expl_dev 0.50907 | knock_dev 0.82582 | alpha 0.4725 | w_od 1.3310
+epoch  980 | train_nll -1.32318 | val_dev 0.72498 | expl_dev 0.50978 | knock_dev 0.83145 | alpha 0.4723 | w_od 1.3330
+epoch  985 | train_nll -1.32536 | val_dev 0.69442 | expl_dev 0.53045 | knock_dev 0.78064 | alpha 0.4720 | w_od 1.3355
+epoch  990 | train_nll -1.31900 | val_dev 0.69686 | expl_dev 0.52879 | knock_dev 0.79934 | alpha 0.4718 | w_od 1.3391
+epoch  995 | train_nll -1.32220 | val_dev 0.69778 | expl_dev 0.52818 | knock_dev 0.79274 | alpha 0.4715 | w_od 1.3421
+epoch 1000 | train_nll -1.32649 | val_dev 0.68429 | expl_dev 0.53730 | knock_dev 0.78433 | alpha 0.4714 | w_od 1.3438
+epoch 1005 | train_nll -1.32930 | val_dev 0.68145 | expl_dev 0.53922 | knock_dev 0.77646 | alpha 0.4712 | w_od 1.3450
+epoch 1010 | train_nll -1.32578 | val_dev 0.68285 | expl_dev 0.53827 | knock_dev 0.78261 | alpha 0.4712 | w_od 1.3473
+epoch 1015 | train_nll -1.31605 | val_dev 0.70405 | expl_dev 0.52394 | knock_dev 0.79459 | alpha 0.4712 | w_od 1.3496
+epoch 1020 | train_nll -1.32058 | val_dev 0.70437 | expl_dev 0.52372 | knock_dev 0.79743 | alpha 0.4712 | w_od 1.3513
+epoch 1025 | train_nll -1.32373 | val_dev 0.71910 | expl_dev 0.51376 | knock_dev 0.81992 | alpha 0.4710 | w_od 1.3521
+epoch 1030 | train_nll -1.32029 | val_dev 0.70534 | expl_dev 0.52307 | knock_dev 0.80756 | alpha 0.4705 | w_od 1.3555
+epoch 1035 | train_nll -1.31905 | val_dev 0.71507 | expl_dev 0.51648 | knock_dev 0.80683 | alpha 0.4706 | w_od 1.3596
+epoch 1040 | train_nll -1.32346 | val_dev 0.72415 | expl_dev 0.51035 | knock_dev 0.83269 | alpha 0.4705 | w_od 1.3626
+epoch 1045 | train_nll -1.32098 | val_dev 0.70838 | expl_dev 0.52101 | knock_dev 0.81200 | alpha 0.4703 | w_od 1.3640
+epoch 1050 | train_nll -1.32414 | val_dev 0.72314 | expl_dev 0.51103 | knock_dev 0.83434 | alpha 0.4701 | w_od 1.3650
+epoch 1055 | train_nll -1.32607 | val_dev 0.71714 | expl_dev 0.51508 | knock_dev 0.83456 | alpha 0.4698 | w_od 1.3676
+epoch 1060 | train_nll -1.32716 | val_dev 0.72115 | expl_dev 0.51237 | knock_dev 0.83242 | alpha 0.4696 | w_od 1.3701
+epoch 1065 | train_nll -1.32139 | val_dev 0.71010 | expl_dev 0.51985 | knock_dev 0.82561 | alpha 0.4696 | w_od 1.3742
+epoch 1070 | train_nll -1.32340 | val_dev 0.72182 | expl_dev 0.51192 | knock_dev 0.85294 | alpha 0.4693 | w_od 1.3768
+epoch 1075 | train_nll -1.32046 | val_dev 0.73216 | expl_dev 0.50493 | knock_dev 0.84715 | alpha 0.4690 | w_od 1.3809
+epoch 1080 | train_nll -1.32589 | val_dev 0.70471 | expl_dev 0.52349 | knock_dev 0.81876 | alpha 0.4690 | w_od 1.3830
+epoch 1085 | train_nll -1.32416 | val_dev 0.73826 | expl_dev 0.50080 | knock_dev 0.83738 | alpha 0.4693 | w_od 1.3847
+epoch 1090 | train_nll -1.32472 | val_dev 0.71916 | expl_dev 0.51372 | knock_dev 0.83395 | alpha 0.4692 | w_od 1.3862
+epoch 1095 | train_nll -1.32032 | val_dev 0.72679 | expl_dev 0.50856 | knock_dev 0.83610 | alpha 0.4687 | w_od 1.3893
+epoch 1100 | train_nll -1.32823 | val_dev 0.72611 | expl_dev 0.50902 | knock_dev 0.84945 | alpha 0.4684 | w_od 1.3925
+
+[中斷] epoch 1103 收到 Ctrl-C，用目前模型存 checkpoint 跟 latent
+已存 /Users/yentso/developer/StartOver/model/v3_gat_literal/result/latents.npz

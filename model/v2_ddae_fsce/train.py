@@ -36,7 +36,7 @@ from ae import (MLPAE, Patches, build_fsce_graph, corrupt,  # noqa: E402
 from config.dataset import ensure_patches, PATCHES, result  # noqa: E402
 from config.train_log import open_log  # noqa: E402
 
-VERSION = "v2_ddae_fsce_euc"
+VERSION = "v2_ddae_fsce"
 OUT = result(VERSION, "latents.npz")
 CKPT = result(VERSION, "ae.pt")
 
