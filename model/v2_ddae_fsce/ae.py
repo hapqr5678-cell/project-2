@@ -26,7 +26,6 @@ sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from config.dataset import N_CAT, HALF_WIDTH  # noqa: E402,F401
 
 HIDDEN = 64
-N_HIDDEN_LAYERS = 4   # v2_dae_fsce 是 2 層，這一版加倍
 
 
 class Patches:
@@ -90,30 +89,34 @@ def corrupt(x, p, mode="thinning", generator=None):
     return noisy / keep
 
 
-def _mlp_block(d_in, d_out, n_layers):
-    """疊 n_layers 個 Linear(HIDDEN,HIDDEN)+GELU，前面加一層 d_in->HIDDEN，
-    回傳 list of nn.Module（不含最後把 HIDDEN 投影到 d_out 的那一層）。
-    """
-    layers = [nn.Linear(d_in, HIDDEN), nn.GELU()]
-    for _ in range(n_layers - 1):
-        layers += [nn.Linear(HIDDEN, HIDDEN), nn.GELU()]
-    return layers
-
-
 class MLPAE(nn.Module):
     """跟 v2_dae_fsce 的 MLPAE 唯一差異：encoder/decoder 各自從 2 層隱藏層
-    加深到 N_HIDDEN_LAYERS 層（HIDDEN 維度不變），latent 前不接激活。
+    加深到 4 層（HIDDEN 維度不變），latent 前不接激活。
     denoising 完全發生在資料端（見 corrupt()），模型本身不需要知道。
     """
 
     def __init__(self, latent_dim=2):
         super().__init__()
         self.encoder = nn.Sequential(
-            *_mlp_block(N_CAT, HIDDEN, N_HIDDEN_LAYERS),
+            nn.Linear(N_CAT, HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.GELU(),
             nn.Linear(HIDDEN, latent_dim),   # latent 前不接激活，離群值才不會被壓回來
         )
         self.decoder = nn.Sequential(
-            *_mlp_block(latent_dim, HIDDEN, N_HIDDEN_LAYERS),
+            nn.Linear(latent_dim, HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.GELU(),
             nn.Linear(HIDDEN, N_CAT),   # 輸出是 log λ
         )
 

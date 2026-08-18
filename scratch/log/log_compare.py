@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 log1 = "model/v2_ddae_fsce/result/result64.log"
 log2 = "model/v2_ddae_fsce/result/result.log"
 
+MIN_EPOCH = 50
 
 def parse_metrics(log_path):
     """
@@ -28,7 +29,6 @@ def parse_metrics(log_path):
     return epochs, train_nlls, val_devs
 
 
-MIN_EPOCH = 50
 
 
 def main():

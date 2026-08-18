@@ -3,12 +3,10 @@ import os
 import sys
 import matplotlib.pyplot as plt
 
-# 可以用 argv 指定要畫哪一份 log：python scratch/log/train_vs_val.py model/v4_proto/result/result.log
-# 不給就沿用原本的預設。給了的話輸出檔名會帶版本名，不會蓋掉前一張圖。
-log = sys.argv[1] if len(sys.argv) > 1 else 'model/v5_refine/result/result_v1_naive_T3.log'
-
+file = ''
 MIN_EPOCH = 10
 
+log = sys.argv[1] if len(sys.argv) > 1 else file
 
 def parse_metrics(log_path):
     """

@@ -7,15 +7,6 @@ from config.dataset import _PATCH_PARAMS, result
 
 
 def open_log(version, hparams):
-    """開一個新的 result.log，寫入 dataset 設定跟這次訓練的超參數。
-
-    version：模型版本字串，決定寫到 model/<version>/result/result.log
-    （沿用 config.dataset.result() 的路徑規則）。
-    hparams：dict，這次訓練用的超參數（EPOCHS、LR……），攤平寫進 header。
-
-    回傳 log(msg)：呼叫時同時 print 到 stdout、寫進這個 log 檔（覆蓋舊檔
-    重開，逐行 append）並立刻 flush，訓練中途中斷也讀得到目前為止的紀錄。
-    """
     f = open(result(version, "result.log"), "w")
 
     def _section(title, d):
