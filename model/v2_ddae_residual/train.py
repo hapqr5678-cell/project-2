@@ -1,26 +1,8 @@
 
-"""訓練 v2_ddae_fsce_euc：v2_ddae_fsce 的尺度敏感變體，所有超參數
-（模型容量、LAMBDA_FSCE、WARMUP_EPOCHS、NOISE_P/NOISE_MODE、WEIGHT_DECAY…）
-全部跟 v2_ddae_fsce 對齊，差別只有 GRAPH_METRIC 這一件事。
-
-為什麼要有這一版：v2_ddae_fsce 的兩個 loss 對同一組 2 維 latent 提出相反
-要求。Poisson NLL 的 log_lam 是自由的 N_CAT 維，要重建 count 就必須讓
-Σλ≈總數，於是逼 encoder 把 log(總數) 編進 z；但 FSCE 的圖是 cosine 建的、
-對尺度完全不敏感，總數差很多但組成相同的兩個 patch 在圖上是鄰居，FSCE 反過來
-逼 encoder 把它們疊在一起。2 維裡有 1 維被總量吃掉，剩 1 維要塞 N_CAT-1 個
-自由度的組成。
-
-這一版的收法是讓圖也承認總量（GRAPH_METRIC 換成 euclidean），把矛盾消掉：
-z 裡那一維 log(總數) 從「被 recon 硬塞、被 FSCE 抵抗」變成兩個 loss 共同
-要求的東西。likelihood 完全沒動，所以 val deviance 跟 v2_ddae_fsce 仍然是
-同一把尺，可以直接比。
-
-所有餵進 encoder 的輸入（reconstruction batch 跟 FSCE 的 pair 兩邊都算）
-都先過 corrupt()，Poisson NLL 的目標仍然是乾淨的原始 count；fuzzy graph
-用乾淨 count 建（鄰接關係是資料的性質，不是噪聲的性質）。
-
-驗證與最後輸出 latent 的推論階段一律不加噪。破壞是每個 step 重新抽的
-（generator 綁 SEED+epoch，可重現）。
+"""訓練 v2_ddae_residual：v2_ddae_fsce 的架構變體，encoder/decoder 每層都
+加了 residual shortcut（見 ae.py 的 ResidualLinear），其餘超參數（模型
+容量、LAMBDA_FSCE、WARMUP_EPOCHS、NOISE_P/NOISE_MODE、WEIGHT_DECAY…）
+跟 v2_ddae_fsce 完全對齊，方便直接比較 val_dev / expl_dev。
 """
 
 import os
@@ -36,7 +18,7 @@ from ae import (MLPAE, Patches, build_fsce_graph, corrupt,  # noqa: E402
 from config.dataset import ensure_patches, PATCHES, result  # noqa: E402
 from config.train_log import open_log  # noqa: E402
 
-VERSION = "v2_ddae_fsce"
+VERSION = "v2_ddae_residual"
 OUT = result(VERSION, "latents.npz")
 CKPT = result(VERSION, "ae.pt")
 
@@ -51,7 +33,7 @@ SEED = 0
 N_NEIGHBORS = 15         # 建高維 fuzzy graph 的 kNN 數，跟 data/patch/umap_grid.py 一致
 GRAPH_METRIC = "euclidean"  # 在 log1p 上算，組成與總量都敏感——跟 Poisson NLL 的要求一致
 EDGE_BATCH = 256          # 每個 step 抽的正樣本邊數，負樣本抽等量
-LAMBDA_FSCE = 0.01       # FSCE loss 的權重，warm-up 結束後的最終值
+LAMBDA_FSCE = 0.0      # FSCE loss 的權重，warm-up 結束後的最終值
 WARMUP_EPOCHS = 200        # lambda 從 0 線性升到 LAMBDA_FSCE 所花的 epoch 數
 
 NOISE_P = 0.3            # 破壞強度：thinning 是每個 POI 被丟掉的機率

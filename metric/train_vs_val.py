@@ -3,7 +3,7 @@ import os
 import sys
 import matplotlib.pyplot as plt
 
-file = ''
+file = 'model/v3_gat/result/result.log'
 MIN_EPOCH = 10
 
 log = sys.argv[1] if len(sys.argv) > 1 else file

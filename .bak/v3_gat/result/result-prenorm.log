@@ -1,0 +1,90 @@
+[dataset]
+  dataset = fsq
+  csv = data/tky_clean.csv
+  cat_col = category
+  categories = ['Dining and Drinking', 'Retail', 'Nightlife Spot', 'Community and Government', 'Travel and Transportation', 'Business and Professional Services', 'Landmarks and Outdoors', 'Arts and Entertainment', 'Health and Medicine', 'Sports and Recreation']
+  half_width = 50.0
+  cell = 15
+  center_step = 100
+  min_poi = 10
+  crs = EPSG:6677
+
+[hparams]
+  LATENT_DIM = 2
+  EPOCHS = 1000
+  BATCH = 256
+  LR = 0.001
+  WEIGHT_DECAY = 1e-06
+  VAL_FRAC = 0.1
+  SEED = 0
+  N_NEIGHBORS = 15
+  GRAPH_METRIC = euclidean
+  EDGE_BATCH = 256
+  LAMBDA_FSCE = 0.01
+  WARMUP_EPOCHS = 200
+  NOISE_P = 0.3
+  NOISE_MODE = thinning
+  GAT_HIDDEN = 32
+  CAT_EMB_DIM = 8
+  N_GAT_LAYERS = 2
+  GAT_HEADS = 4
+  READOUT_DIM = 8
+  FUSION_HEADS = 4
+  ALPHA_CAP = 0.1
+
+1233 個 patch，device=cpu，噪聲 thinning p=0.3
+FSCE graph：24900 條邊，a=1.5769 b=0.8951
+epoch    1 | train_nll 1.07939 | train_fsce 2.69097 | val_dev 4.73296 | expl_dev -2.20033 | alpha 0.0500
+epoch    5 | train_nll -0.69450 | train_fsce 4.57541 | val_dev 1.82348 | expl_dev -0.23300 | alpha 0.0497
+epoch   10 | train_nll -0.95348 | train_fsce 1.08274 | val_dev 1.19254 | expl_dev 0.19363 | alpha 0.0495
+epoch   15 | train_nll -0.99374 | train_fsce 1.25004 | val_dev 1.14533 | expl_dev 0.22555 | alpha 0.0494
+epoch   20 | train_nll -1.01187 | train_fsce 1.21890 | val_dev 1.12863 | expl_dev 0.23684 | alpha 0.0494
+epoch   25 | train_nll -1.02224 | train_fsce 1.20786 | val_dev 1.12593 | expl_dev 0.23867 | alpha 0.0494
+epoch   30 | train_nll -1.02877 | train_fsce 1.13390 | val_dev 1.11521 | expl_dev 0.24592 | alpha 0.0494
+epoch   35 | train_nll -1.03527 | train_fsce 1.05886 | val_dev 1.11166 | expl_dev 0.24832 | alpha 0.0493
+epoch   40 | train_nll -1.05158 | train_fsce 0.76004 | val_dev 1.07263 | expl_dev 0.27471 | alpha 0.0493
+epoch   45 | train_nll -1.09170 | train_fsce 0.60229 | val_dev 1.00489 | expl_dev 0.32052 | alpha 0.0492
+epoch   50 | train_nll -1.10679 | train_fsce 0.58546 | val_dev 0.99022 | expl_dev 0.33044 | alpha 0.0491
+epoch   55 | train_nll -1.12712 | train_fsce 0.61589 | val_dev 0.97310 | expl_dev 0.34201 | alpha 0.0490
+epoch   60 | train_nll -1.15011 | train_fsce 0.59282 | val_dev 0.94026 | expl_dev 0.36421 | alpha 0.0490
+epoch   65 | train_nll -1.18731 | train_fsce 0.60923 | val_dev 0.89942 | expl_dev 0.39183 | alpha 0.0489
+epoch   70 | train_nll -1.20930 | train_fsce 0.59262 | val_dev 0.84502 | expl_dev 0.42861 | alpha 0.0488
+epoch   75 | train_nll -1.23103 | train_fsce 0.58485 | val_dev 0.86769 | expl_dev 0.41329 | alpha 0.0487
+epoch   80 | train_nll -1.22710 | train_fsce 0.55400 | val_dev 0.82996 | expl_dev 0.43880 | alpha 0.0486
+epoch   85 | train_nll -1.23463 | train_fsce 0.55299 | val_dev 0.80532 | expl_dev 0.45546 | alpha 0.0484
+epoch   90 | train_nll -1.25013 | train_fsce 0.54982 | val_dev 0.77925 | expl_dev 0.47309 | alpha 0.0483
+epoch   95 | train_nll -1.23800 | train_fsce 0.61278 | val_dev 0.79755 | expl_dev 0.46072 | alpha 0.0481
+epoch  100 | train_nll -1.26277 | train_fsce 0.56071 | val_dev 0.76219 | expl_dev 0.48463 | alpha 0.0479
+epoch  105 | train_nll -1.25704 | train_fsce 0.57287 | val_dev 0.77500 | expl_dev 0.47596 | alpha 0.0479
+epoch  110 | train_nll -1.24215 | train_fsce 0.65133 | val_dev 0.79032 | expl_dev 0.46560 | alpha 0.0478
+epoch  115 | train_nll -1.26923 | train_fsce 0.57953 | val_dev 0.74757 | expl_dev 0.49451 | alpha 0.0477
+epoch  120 | train_nll -1.25328 | train_fsce 0.59281 | val_dev 0.81411 | expl_dev 0.44952 | alpha 0.0477
+epoch  125 | train_nll -1.23162 | train_fsce 0.60547 | val_dev 0.80027 | expl_dev 0.45887 | alpha 0.0476
+epoch  130 | train_nll -1.25679 | train_fsce 0.61593 | val_dev 0.78930 | expl_dev 0.46629 | alpha 0.0474
+epoch  135 | train_nll -1.26225 | train_fsce 0.60978 | val_dev 0.75499 | expl_dev 0.48949 | alpha 0.0474
+epoch  140 | train_nll -1.25538 | train_fsce 0.58142 | val_dev 0.80199 | expl_dev 0.45771 | alpha 0.0474
+epoch  145 | train_nll -1.26442 | train_fsce 0.59851 | val_dev 0.80311 | expl_dev 0.45695 | alpha 0.0473
+epoch  150 | train_nll -1.26058 | train_fsce 0.60566 | val_dev 0.77754 | expl_dev 0.47424 | alpha 0.0473
+epoch  155 | train_nll -1.26685 | train_fsce 0.59153 | val_dev 0.76482 | expl_dev 0.48285 | alpha 0.0472
+epoch  160 | train_nll -1.26991 | train_fsce 0.57144 | val_dev 0.75198 | expl_dev 0.49152 | alpha 0.0472
+epoch  165 | train_nll -1.27525 | train_fsce 0.59189 | val_dev 0.75084 | expl_dev 0.49230 | alpha 0.0471
+epoch  170 | train_nll -1.27621 | train_fsce 0.58588 | val_dev 0.75918 | expl_dev 0.48666 | alpha 0.0469
+epoch  175 | train_nll -1.26641 | train_fsce 0.61861 | val_dev 0.78633 | expl_dev 0.46830 | alpha 0.0469
+epoch  180 | train_nll -1.25443 | train_fsce 0.64842 | val_dev 0.79480 | expl_dev 0.46257 | alpha 0.0468
+epoch  185 | train_nll -1.26511 | train_fsce 0.63018 | val_dev 0.77666 | expl_dev 0.47484 | alpha 0.0467
+epoch  190 | train_nll -1.27816 | train_fsce 0.62929 | val_dev 0.76758 | expl_dev 0.48098 | alpha 0.0467
+epoch  195 | train_nll -1.27693 | train_fsce 0.60188 | val_dev 0.76419 | expl_dev 0.48327 | alpha 0.0467
+epoch  200 | train_nll -1.27676 | train_fsce 0.58189 | val_dev 0.75338 | expl_dev 0.49058 | alpha 0.0467
+epoch  205 | train_nll -1.27690 | train_fsce 0.56751 | val_dev 0.76971 | expl_dev 0.47954 | alpha 0.0466
+epoch  210 | train_nll -1.22741 | train_fsce 0.63534 | val_dev 0.83827 | expl_dev 0.43318 | alpha 0.0466
+epoch  215 | train_nll -1.22214 | train_fsce 0.65025 | val_dev 0.84064 | expl_dev 0.43157 | alpha 0.0466
+epoch  220 | train_nll -1.25151 | train_fsce 0.63273 | val_dev 0.78725 | expl_dev 0.46768 | alpha 0.0465
+epoch  225 | train_nll -1.27025 | train_fsce 0.58456 | val_dev 0.75746 | expl_dev 0.48782 | alpha 0.0465
+epoch  230 | train_nll -1.27361 | train_fsce 0.55814 | val_dev 0.75006 | expl_dev 0.49282 | alpha 0.0465
+epoch  235 | train_nll -1.27756 | train_fsce 0.54964 | val_dev 0.74095 | expl_dev 0.49898 | alpha 0.0464
+epoch  240 | train_nll -1.26437 | train_fsce 0.55777 | val_dev 0.82801 | expl_dev 0.44011 | alpha 0.0464
+epoch  245 | train_nll -1.26717 | train_fsce 0.54878 | val_dev 0.75234 | expl_dev 0.49128 | alpha 0.0463
+epoch  250 | train_nll -1.27374 | train_fsce 0.53653 | val_dev 0.73834 | expl_dev 0.50075 | alpha 0.0463
+
+[中斷] epoch 254 收到 Ctrl-C，用目前模型存 checkpoint 跟 latent
+已存 /Users/yentso/developer/StartOver/model/v3_gat/result/latents.npz

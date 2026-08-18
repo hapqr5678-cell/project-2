@@ -95,7 +95,7 @@ epoch  320 | train_nll -1.28939 | train_fsce 0.50325 | val_dev 0.73072 | expl_de
 epoch  325 | train_nll -1.29451 | train_fsce 0.48624 | val_dev 0.73254 | expl_dev 0.50467
 epoch  330 | train_nll -1.29508 | train_fsce 0.47645 | val_dev 0.74349 | expl_dev 0.49727
 epoch  335 | train_nll -1.29676 | train_fsce 0.48490 | val_dev 0.73163 | expl_dev 0.50528
-epoch  340 | tr ain_nll -1.29422 | train_fsce 0.49047 | val_dev 0.74205 | expl_dev 0.49824
+epoch  340 | train_nll -1.29422 | train_fsce 0.49047 | val_dev 0.74205 | expl_dev 0.49824
 epoch  345 | train_nll -1.29726 | train_fsce 0.49732 | val_dev 0.77350 | expl_dev 0.47698
 epoch  350 | train_nll -1.27769 | train_fsce 0.52618 | val_dev 0.79671 | expl_dev 0.46128
 epoch  355 | train_nll -1.29494 | train_fsce 0.48781 | val_dev 0.75939 | expl_dev 0.48651
@@ -227,5 +227,5 @@ epoch  980 | train_nll -1.34222 | train_fsce 0.51950 | val_dev 0.64359 | expl_de
 epoch  985 | train_nll -1.34552 | train_fsce 0.51355 | val_dev 0.65342 | expl_dev 0.55817
 epoch  990 | train_nll -1.33892 | train_fsce 0.52138 | val_dev 0.65896 | expl_dev 0.55443
 epoch  995 | train_nll -1.34097 | train_fsce 0.53885 | val_dev 0.65389 | expl_dev 0.55785
-epoch 1000 | train_nll -1.34357 | train_fsce 0.49791 | val_dev 0.65389 | expl_dev 0.56858
-已存 /Users/yentso/developer/StartOver/model/v2_ddae_fsce_euc/result/latents.npz
+epoch 1000 | train_nll -1.34357 | train_fsce 0.49791 | val_dev 0.63803 | expl_dev 0.56858
+已存 /Users/yentso/developer/StartOver/model/v2_ddae_fsce/result/latents.npz

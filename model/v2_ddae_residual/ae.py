@@ -1,4 +1,12 @@
-"""
+"""跟 v2_ddae_fsce 的唯一差異：encoder/decoder 的每一層都加了 residual
+shortcut（見 ResidualLinear）。維度相同的層（HIDDEN→HIDDEN）shortcut 是
+identity；維度改變的層（N_CAT→HIDDEN、HIDDEN→latent_dim 等）shortcut 是
+另一個不帶 bias 的 Linear，把輸入投影到輸出維度後再相加（ResNet 的
+projection shortcut）。encoder 跟 decoder 的 residual 各自關在自己的
+nn.Sequential 內部，兩者之間唯一的張量交換只有 forward() 裡的
+z = encoder(x)，所以不會有 x 或 encoder 中間層繞過 z 直接漏給 decoder
+的情況。
+
 破壞方式有兩種，用 NOISE_MODE 切換（意義同 v2_dae）：
   "thinning"  binomial thinning：每個 POI 以 1-NOISE_P 的機率被保留。
   "mask"      整個類別歸零：每一類以 NOISE_P 的機率整維被抹成 0。
@@ -81,43 +89,57 @@ def corrupt(x, p, mode="thinning", generator=None):
     return noisy / keep
 
 
+class ResidualLinear(nn.Module):
+    """pre-norm 的 residual block：輸出 = shortcut(x) + act(linear(norm(x)))。
+    LayerNorm 只作用在 residual branch 的入口，主幹（shortcut）維持一條沒有
+    任何 normalize 的通路，梯度可以直接流回前面的層。in_dim/out_dim 相同時
+    shortcut 是 identity；不同時 shortcut 是另一個不帶 bias 的 Linear，把 x
+    投影到 out_dim 維後再相加（ResNet 的 projection shortcut）。
+
+    in_dim/out_dim：輸入/輸出維度。activate：是否對 linear 的輸出套 GELU
+    （latent、log_lam 這種輸出層要傳 False，維持沒有激活函數）。prenorm：
+    是否在 residual branch 入口放 LayerNorm(in_dim)。encoder 第一層（輸入是
+    raw count，normalize 掉會抹掉整包 patch 的總量資訊）跟 decoder 第一層
+    （輸入是 2 維 latent，LayerNorm 會把它壓成 ±1）都要傳 False。
+    """
+
+    def __init__(self, in_dim, out_dim, activate=True, prenorm=True):
+        super().__init__()
+        self.norm = nn.LayerNorm(in_dim) if prenorm else nn.Identity()
+        self.linear = nn.Linear(in_dim, out_dim)
+        if in_dim == out_dim:
+            self.shortcut = nn.Identity()
+        else:
+            self.shortcut = nn.Linear(in_dim, out_dim, bias=False)
+            nn.init.zeros_(self.shortcut.weight)
+        self.act = nn.GELU() if activate else nn.Identity()
+
+    def forward(self, x):
+        """x 是 (B,in_dim)，回傳 (B,out_dim)。"""
+        return self.shortcut(x) + self.act(self.linear(self.norm(x)))
+
+
 class MLPAE(nn.Module):
-    """跟 v2_dae_fsce 的 MLPAE 唯一差異：encoder/decoder 各自從 2 層隱藏層
-    加深到 4 層（HIDDEN 維度不變），latent 前不接激活。
+    """跟 v2_ddae_fsce 的 MLPAE 差異只有每層都套了 ResidualLinear（見模組
+    docstring）；層數、HIDDEN 維度、latent 前不接激活都沒變。
     denoising 完全發生在資料端（見 corrupt()），模型本身不需要知道。
     """
 
     def __init__(self, latent_dim=2):
         super().__init__()
         self.encoder = nn.Sequential(
-            nn.Linear(N_CAT, HIDDEN),
-            nn.LayerNorm(HIDDEN),
-            nn.GELU(),
-            nn.Linear(HIDDEN, HIDDEN),
-            nn.LayerNorm(HIDDEN),
-            nn.GELU(),
-            nn.Linear(HIDDEN, HIDDEN),
-            nn.LayerNorm(HIDDEN),
-            nn.GELU(),
-            nn.Linear(HIDDEN, HIDDEN),
-            nn.LayerNorm(HIDDEN),
-            nn.GELU(),
-            nn.Linear(HIDDEN, latent_dim),   # latent 前不接 norm/激活，離群值才不會被壓回來
+            ResidualLinear(N_CAT, HIDDEN, prenorm=False),   # 輸入是 raw count，normalize 會抹掉 patch 的總量
+            ResidualLinear(HIDDEN, HIDDEN),
+            ResidualLinear(HIDDEN, HIDDEN),
+            ResidualLinear(HIDDEN, HIDDEN),
+            ResidualLinear(HIDDEN, latent_dim, activate=False),   # latent 前不接激活，離群值才不會被壓回來
         )
         self.decoder = nn.Sequential(
-            nn.Linear(latent_dim, HIDDEN),
-            nn.LayerNorm(HIDDEN),
-            nn.GELU(),
-            nn.Linear(HIDDEN, HIDDEN),
-            nn.LayerNorm(HIDDEN),
-            nn.GELU(),
-            nn.Linear(HIDDEN, HIDDEN),
-            nn.LayerNorm(HIDDEN),
-            nn.GELU(),
-            nn.Linear(HIDDEN, HIDDEN),
-            nn.LayerNorm(HIDDEN),
-            nn.GELU(),
-            nn.Linear(HIDDEN, N_CAT),   # 輸出是 log λ，不接 norm
+            ResidualLinear(latent_dim, HIDDEN, prenorm=False),   # 輸入是 2 維 latent，LayerNorm 會把它壓成 ±1
+            ResidualLinear(HIDDEN, HIDDEN),
+            ResidualLinear(HIDDEN, HIDDEN),
+            ResidualLinear(HIDDEN, HIDDEN),
+            ResidualLinear(HIDDEN, N_CAT, activate=False),   # 輸出是 log λ
         )
 
     def encode(self, x):
