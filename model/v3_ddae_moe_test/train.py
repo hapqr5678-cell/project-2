@@ -1,7 +1,9 @@
-"""Train v3_ddae_mot with a strict 2D bottleneck and residual decoder MoE.
+"""Train the warm-started residual decoder MoE experiment.
 
-FSCE、共用 decoder、router 與兩個 residual experts 全部只能讀取同一個
-二維 latent z；沒有 reconstruction-only latent 或 hidden skip connection。
+The initial model exactly reproduces the v2_ddae_fsce checkpoint.  Only the
+router and zero-initialized residual experts train for the first 50 epochs;
+the complete model is then fine-tuned at a lower learning rate.  The best
+validation-deviance checkpoint, including the epoch-0 baseline, is retained.
 """
 
 from __future__ import annotations
@@ -20,11 +22,12 @@ from ae import (  # noqa: E402
     MOE_SCALE,
     N_EXPERTS,
     ROUTER_TEMPERATURE,
-    MLPAE,
     Patches,
+    ResidualDecoderMoEAE,
     build_fsce_graph,
     corrupt,
     fsce_loss,
+    load_baseline_checkpoint,
     moe_balance_loss,
     poisson_deviance,
     poisson_nll,
@@ -33,17 +36,20 @@ from config.dataset import PATCHES, ensure_patches, result  # noqa: E402
 from config.train_log import open_log  # noqa: E402
 
 
-VERSION = "v3_ddae_mot"
+VERSION = "v3_ddae_moe_test"
+BASELINE_VERSION = "v2_ddae_fsce"
+BASELINE_CKPT = result(BASELINE_VERSION, "ae.pt")
 OUT = result(VERSION, "latents.npz")
 CKPT = result(VERSION, "ae.pt")
 
 LATENT_DIM = 2
 EPOCHS = 1000
 BATCH = 256
-LR_BASE = 1e-3
 LR_MOE = 3e-4
-MIN_LR_FACTOR = 0.1
+LR_FINETUNE = 1e-4
+MIN_LR = 1e-5
 WEIGHT_DECAY = 1e-6
+FREEZE_BASE_EPOCHS = 50
 VAL_FRAC = 0.1
 SEED = 0
 GRAD_CLIP = 5.0
@@ -56,10 +62,8 @@ WARMUP_EPOCHS = 200
 
 NOISE_P = 0.3
 NOISE_MODE = "thinning"
-LAMBDA_BALANCE = 0.001
+LAMBDA_BALANCE = 0.0
 REPORT_EVERY = 5
-SCHEDULER_PATIENCE = 12
-EARLY_STOP_PATIENCE = 250
 
 device = (
     "mps"
@@ -74,31 +78,36 @@ def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--epochs", type=int, default=EPOCHS)
     parser.add_argument(
+        "--baseline-checkpoint", default=BASELINE_CKPT
+    )
+    parser.add_argument(
         "--no-save",
         action="store_true",
-        help="Run training without writing checkpoint or latents.",
+        help="Run the experiment without writing checkpoint or latents.",
     )
     return parser.parse_args()
 
 
-def validation_metrics(model, data, val_idx, log_lam_null):
+def evaluate(model, data, indices, log_lam_null=None):
     model.eval()
     nll_values, deviance_values, null_values = [], [], []
     with torch.no_grad():
-        for start in range(0, len(val_idx), BATCH):
-            batch = val_idx[start : start + BATCH]
+        for start in range(0, len(indices), BATCH):
+            batch = indices[start : start + BATCH]
             x = data.agg(batch).to(device)
             _, log_lam = model(x)
             nll_values.append(poisson_nll(log_lam, x).cpu())
             deviance_values.append(poisson_deviance(log_lam, x).cpu())
-            null_values.append(poisson_deviance(
-                log_lam_null.expand(len(batch), -1), x
-            ).cpu())
-    return (
-        torch.cat(nll_values).mean().item(),
-        torch.cat(deviance_values).mean().item(),
-        torch.cat(null_values).mean().item(),
+            if log_lam_null is not None:
+                null_values.append(poisson_deviance(
+                    log_lam_null.expand(len(batch), -1), x
+                ).cpu())
+    nll = torch.cat(nll_values).mean().item()
+    deviance = torch.cat(deviance_values).mean().item()
+    null_deviance = (
+        torch.cat(null_values).mean().item() if null_values else None
     )
+    return nll, deviance, null_deviance
 
 
 def infer_all(model, data):
@@ -106,8 +115,8 @@ def infer_all(model, data):
     z_values, error_values, gate_values = [], [], []
     with torch.no_grad():
         for start in range(0, data.n, BATCH):
-            idx = torch.arange(start, min(start + BATCH, data.n))
-            x = data.agg(idx).to(device)
+            indices = torch.arange(start, min(start + BATCH, data.n))
+            x = data.agg(indices).to(device)
             z, log_lam, gates = model.forward_with_gates(x)
             z_values.append(z.cpu())
             error_values.append(poisson_deviance(log_lam, x).cpu())
@@ -129,37 +138,21 @@ def run(
     fsce_a,
     fsce_b,
     epochs,
+    baseline_checkpoint,
     log,
 ):
     torch.manual_seed(SEED)
-    model = MLPAE(
+    model = ResidualDecoderMoEAE(
         latent_dim=LATENT_DIM,
         n_experts=N_EXPERTS,
         router_temperature=ROUTER_TEMPERATURE,
         moe_scale=MOE_SCALE,
     ).to(device)
+    missing = load_baseline_checkpoint(
+        model, baseline_checkpoint, map_location=device
+    )
+    log(f"loaded baseline {baseline_checkpoint}; new MoE tensors={len(missing)}")
 
-    moe_parameters = (
-        list(model.router.parameters())
-        + list(model.residual_experts.parameters())
-    )
-    moe_parameter_ids = {id(parameter) for parameter in moe_parameters}
-    base_parameters = [
-        parameter for parameter in model.parameters()
-        if id(parameter) not in moe_parameter_ids
-    ]
-    optimizer = torch.optim.Adam([
-        {"params": base_parameters, "lr": LR_BASE},
-        {"params": moe_parameters, "lr": LR_MOE},
-    ], weight_decay=WEIGHT_DECAY)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer,
-        mode="min",
-        factor=0.5,
-        patience=SCHEDULER_PATIENCE,
-        min_lr=[LR_BASE * MIN_LR_FACTOR, LR_MOE * MIN_LR_FACTOR],
-    )
-    n_edges = len(edge_i)
     log_lam_null = (
         data.agg(train_idx)
         .mean(dim=0, keepdim=True)
@@ -168,13 +161,42 @@ def run(
         .to(device)
     )
 
-    best_dev = float("inf")
+    # The zero-initialized experts make this the exact baseline validation score.
+    initial_nll, initial_dev, initial_null = evaluate(
+        model, data, val_idx, log_lam_null
+    )
+    initial_explained = 1.0 - initial_dev / initial_null
+    log(
+        f"epoch    0 | baseline_val_nll {initial_nll:.5f} | "
+        f"val_dev {initial_dev:.5f} | expl_dev {initial_explained:.5f}"
+    )
+    best_dev = initial_dev
     best_epoch = 0
-    best_state = None
-    last_improvement = 0
+    best_state = copy.deepcopy(model.state_dict())
+
+    model.set_base_trainable(False)
+    optimizer = torch.optim.Adam(
+        model.parameters(), lr=LR_MOE, weight_decay=WEIGHT_DECAY
+    )
+    scheduler = None
+    n_edges = len(edge_i)
 
     for epoch in range(epochs):
         try:
+            if epoch == FREEZE_BASE_EPOCHS:
+                model.set_base_trainable(True)
+                for group in optimizer.param_groups:
+                    group["lr"] = LR_FINETUNE
+                scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+                    optimizer,
+                    T_max=max(epochs - FREEZE_BASE_EPOCHS, 1),
+                    eta_min=MIN_LR,
+                )
+                log(
+                    f"unfroze baseline at epoch {epoch + 1}; "
+                    f"lr={LR_FINETUNE}"
+                )
+
             model.train()
             fsce_weight_t = LAMBDA_FSCE * min(
                 1.0, (epoch + 1) / max(WARMUP_EPOCHS, 1)
@@ -212,7 +234,7 @@ def run(
                 negative_j = torch.randint(
                     0, len(train_idx), (EDGE_BATCH,), generator=generator
                 )
-                # edge_i/edge_j are local indices of the train-only FSCE graph.
+                # FSCE graph indices are local to train_idx; map back to patches.
                 left_patch = train_idx[torch.cat([positive_i, negative_i])]
                 right_patch = train_idx[torch.cat([positive_j, negative_j])]
                 left_count = corrupt(
@@ -244,8 +266,7 @@ def run(
                 )
                 if not torch.isfinite(loss):
                     raise FloatingPointError(
-                        f"non-finite loss at epoch {epoch + 1}: "
-                        f"recon={reconstruction.item()} fsce={fuzzy.item()}"
+                        f"non-finite loss at epoch {epoch + 1}"
                     )
                 optimizer.zero_grad()
                 loss.backward()
@@ -259,55 +280,45 @@ def run(
                 gate_sum += gates.detach().sum(dim=0)
                 gate_count += batch_size
 
+            if scheduler is not None:
+                scheduler.step()
+
             should_report = (
                 (epoch + 1) % REPORT_EVERY == 0
                 or epoch == 0
                 or epoch + 1 == epochs
             )
             if should_report:
-                val_nll, val_dev, null_dev = validation_metrics(
+                val_nll, val_dev, val_null = evaluate(
                     model, data, val_idx, log_lam_null
                 )
-                scheduler.step(val_dev)
-                explained = 1.0 - val_dev / null_dev
+                explained = 1.0 - val_dev / val_null
                 improved = val_dev < best_dev
                 if improved:
                     best_dev = val_dev
                     best_epoch = epoch + 1
-                    last_improvement = epoch + 1
                     best_state = copy.deepcopy(model.state_dict())
                 usage = ",".join(
                     f"{value:.3f}"
                     for value in (gate_sum / gate_count).tolist()
                 )
-                base_lr, moe_lr = (
-                    group["lr"] for group in optimizer.param_groups
-                )
+                current_lr = optimizer.param_groups[0]["lr"]
                 marker = " | BEST" if improved else ""
                 log(
                     f"epoch {epoch + 1:4d} | "
                     f"train_nll {total_nll / len(train_idx):.5f} | "
                     f"train_fsce {total_fsce / len(train_idx):.5f} | "
                     f"moe_balance {total_balance / len(train_idx):.6f} | "
-                    f"gate_usage [{usage}] | "
-                    f"lr {base_lr:.2e}/{moe_lr:.2e} | "
+                    f"gate_usage [{usage}] | lr {current_lr:.2e} | "
                     f"val_nll {val_nll:.5f} | val_dev {val_dev:.5f} | "
                     f"expl_dev {explained:.5f}{marker}"
                 )
-                if epoch + 1 - last_improvement >= EARLY_STOP_PATIENCE:
-                    log(
-                        f"early stop at epoch {epoch + 1}; "
-                        f"no improvement for {EARLY_STOP_PATIENCE} epochs"
-                    )
-                    break
         except KeyboardInterrupt:
             log(
                 f"[interrupted] epoch {epoch + 1}; restoring best checkpoint"
             )
             break
 
-    if best_state is None:
-        raise RuntimeError("training ended before validation produced a checkpoint")
     model.load_state_dict(best_state)
     log(f"restored best epoch {best_epoch}, val_dev={best_dev:.5f}")
     return model, best_epoch, best_dev
@@ -317,14 +328,21 @@ def main():
     args = parse_args()
     if args.epochs <= 0:
         raise ValueError("--epochs must be positive")
+    if not os.path.exists(args.baseline_checkpoint):
+        raise FileNotFoundError(
+            f"baseline checkpoint not found: {args.baseline_checkpoint}"
+        )
 
     log = open_log(VERSION, {
+        "BASELINE_VERSION": BASELINE_VERSION,
         "LATENT_DIM": LATENT_DIM,
         "EPOCHS": args.epochs,
         "BATCH": BATCH,
-        "LR_BASE": LR_BASE,
         "LR_MOE": LR_MOE,
+        "LR_FINETUNE": LR_FINETUNE,
+        "MIN_LR": MIN_LR,
         "WEIGHT_DECAY": WEIGHT_DECAY,
+        "FREEZE_BASE_EPOCHS": FREEZE_BASE_EPOCHS,
         "VAL_FRAC": VAL_FRAC,
         "SEED": SEED,
         "N_NEIGHBORS": N_NEIGHBORS,
@@ -338,7 +356,6 @@ def main():
         "ROUTER_TEMPERATURE": ROUTER_TEMPERATURE,
         "MOE_SCALE": MOE_SCALE,
         "LAMBDA_BALANCE": LAMBDA_BALANCE,
-        "EARLY_STOP_PATIENCE": EARLY_STOP_PATIENCE,
     })
 
     ensure_patches()
@@ -349,7 +366,7 @@ def main():
     val_idx = permutation[:n_validation]
     train_idx = permutation[n_validation:]
 
-    # Build the graph after splitting, using training patches only.
+    # Build FSCE only from training patches; returned indices are train-local.
     x_train = np.log1p(data.agg(train_idx).numpy())
     edge_i, edge_j, edge_weight, fsce_a, fsce_b = build_fsce_graph(
         x_train, n_neighbors=N_NEIGHBORS, metric=GRAPH_METRIC
@@ -369,17 +386,25 @@ def main():
         fsce_a,
         fsce_b,
         epochs=args.epochs,
+        baseline_checkpoint=args.baseline_checkpoint,
         log=log,
     )
     z, error, gates = infer_all(model, data)
-    if not all(
-        np.isfinite(value).all()
-        for value in (z, error, gates)
-    ):
+    if not all(np.isfinite(value).all() for value in (z, error, gates)):
         raise FloatingPointError("final inference contains NaN or infinity")
 
     if not args.no_save:
-        torch.save(model.state_dict(), CKPT)
+        checkpoint = {
+            "model_state": model.state_dict(),
+            "best_epoch": best_epoch,
+            "best_val_deviance": best_dev,
+            "baseline_checkpoint": os.path.abspath(args.baseline_checkpoint),
+            "latent_dim": LATENT_DIM,
+            "n_experts": N_EXPERTS,
+            "router_temperature": ROUTER_TEMPERATURE,
+            "moe_scale": MOE_SCALE,
+        }
+        torch.save(checkpoint, CKPT)
         is_train = np.zeros(data.n, dtype=bool)
         is_train[train_idx.numpy()] = True
         np.savez(

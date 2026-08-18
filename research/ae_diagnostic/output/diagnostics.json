@@ -1,0 +1,481 @@
+{
+  "n_patches": 1233,
+  "n_train": 1110,
+  "n_validation": 123,
+  "split_source": "saved masks from v3_ddae_moe_test2",
+  "intrinsic_dimension": {
+    "standardized_log1p": {
+      "5": 4.851706507064247,
+      "10": 4.875086684308347,
+      "15": 4.89250476391321,
+      "20": 4.953708568846146,
+      "30": 5.0341470820626535
+    },
+    "clr_composition": {
+      "5": 4.754977525043463,
+      "10": 5.0671538541350385,
+      "15": 5.252996206720417,
+      "20": 5.3734212493900335,
+      "30": 5.580007339257606
+    }
+  },
+  "pca_rate_distortion": [
+    {
+      "dimension": 1,
+      "explained_variance": 0.16480517732748368,
+      "val_poisson_deviance": 1.2304349793089275
+    },
+    {
+      "dimension": 2,
+      "explained_variance": 0.31249051648973486,
+      "val_poisson_deviance": 1.0162105010137727
+    },
+    {
+      "dimension": 3,
+      "explained_variance": 0.4245037807782662,
+      "val_poisson_deviance": 0.981817772620997
+    },
+    {
+      "dimension": 4,
+      "explained_variance": 0.5261100457652731,
+      "val_poisson_deviance": 0.7994464965883163
+    },
+    {
+      "dimension": 5,
+      "explained_variance": 0.6246970090607566,
+      "val_poisson_deviance": 0.7658325364688566
+    },
+    {
+      "dimension": 6,
+      "explained_variance": 0.7171141912584514,
+      "val_poisson_deviance": 0.547094070994991
+    },
+    {
+      "dimension": 7,
+      "explained_variance": 0.8020183454732526,
+      "val_poisson_deviance": 0.39377042160726394
+    },
+    {
+      "dimension": 8,
+      "explained_variance": 0.8802314568276669,
+      "val_poisson_deviance": 0.2401828741951842
+    },
+    {
+      "dimension": 9,
+      "explained_variance": 0.9491521623438889,
+      "val_poisson_deviance": 0.13328945543828105
+    },
+    {
+      "dimension": 10,
+      "explained_variance": 1.0,
+      "val_poisson_deviance": 1.0796744501417549e-10
+    }
+  ],
+  "count_diagnostics": {
+    "category_mean": [
+      9.579279279279278,
+      3.8468468468468466,
+      2.151351351351351,
+      0.3342342342342342,
+      1.0432432432432432,
+      0.7576576576576577,
+      0.3621621621621622,
+      0.790990990990991,
+      0.1837837837837838,
+      0.06306306306306306
+    ],
+    "category_variance_to_mean": [
+      3.5228317137462026,
+      4.589606434896068,
+      4.4363974969527975,
+      2.042268720272023,
+      3.9966267514495253,
+      1.3779475891232347,
+      1.3604565091584537,
+      2.2885194854277833,
+      1.0132074470906371,
+      1.0235733608141073
+    ],
+    "zero_fraction": [
+      0.0036036036036036037,
+      0.13063063063063063,
+      0.3324324324324324,
+      0.7612612612612613,
+      0.5837837837837838,
+      0.5297297297297298,
+      0.7378378378378379,
+      0.5747747747747748,
+      0.8333333333333334,
+      0.9396396396396396
+    ],
+    "total_variance_to_mean": 5.9775238992265844
+  },
+  "all_data_graph_scope": {
+    "directed_edges": 18495,
+    "fraction_edges_touching_validation": 0.2008110300081103,
+    "fraction_train_neighbors_in_validation": 0.11225225225225226,
+    "fraction_validation_neighbors_in_train": 0.8850948509485095,
+    "negative_pair_probability_touches_validation": 0.18956198459634976
+  },
+  "model_comparison": [
+    {
+      "model": "v3_ddae_moe_test",
+      "val_deviance": 0.639790179404786,
+      "mean_delta": -0.021843081870214727,
+      "ci_low": -0.07453003339772302,
+      "ci_high": 0.031836874210616435,
+      "probability_better": 0.7945
+    },
+    {
+      "model": "v2_ddae_fsce",
+      "val_deviance": 0.6616332612750007,
+      "mean_delta": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "probability_better": 0.0
+    },
+    {
+      "model": "v3_ddae_mot",
+      "val_deviance": 0.6743092582356639,
+      "mean_delta": 0.012675996960663214,
+      "ci_low": -0.03921515472929894,
+      "ci_high": 0.06211031451518454,
+      "probability_better": 0.3064
+    },
+    {
+      "model": "v3_ddae_moe_test2",
+      "val_deviance": 0.6900151040011305,
+      "mean_delta": 0.028381842726129827,
+      "ci_low": -0.04262867435752376,
+      "ci_high": 0.12566285414424366,
+      "probability_better": 0.2686
+    },
+    {
+      "model": "v3_gat_taryn",
+      "val_deviance": 0.7505987774792725,
+      "mean_delta": 0.08896551620427186,
+      "ci_low": 0.03112073561282662,
+      "ci_high": 0.14611237781137468,
+      "probability_better": 0.0012
+    },
+    {
+      "model": "v2_ae",
+      "val_deviance": 0.785653556992368,
+      "mean_delta": 0.12402029571736731,
+      "ci_low": 0.04655848718967622,
+      "ci_high": 0.21335023780451798,
+      "probability_better": 0.0006
+    },
+    {
+      "model": "v2_dae",
+      "val_deviance": 0.8086999041762778,
+      "mean_delta": 0.14706664290127716,
+      "ci_low": 0.07728437501028544,
+      "ci_high": 0.22560225871611175,
+      "probability_better": 0.0
+    },
+    {
+      "model": "v2_dae_fuzzy",
+      "val_deviance": 0.8100211290809197,
+      "mean_delta": 0.14838786780591903,
+      "ci_low": 0.07473849044825004,
+      "ci_high": 0.24165945065972516,
+      "probability_better": 0.0
+    }
+  ],
+  "latent_geometry": {
+    "v2_ae": {
+      "trustworthiness": 0.7718085522332371,
+      "continuity": 0.8481740653605285,
+      "knn_overlap": 0.11776155717761556
+    },
+    "v2_dae": {
+      "trustworthiness": 0.7866143407085677,
+      "continuity": 0.8476717629736874,
+      "knn_overlap": 0.1437685861043525
+    },
+    "v2_dae_fuzzy": {
+      "trustworthiness": 0.7952869549286271,
+      "continuity": 0.8525218564767337,
+      "knn_overlap": 0.16307110029737767
+    },
+    "v2_ddae_fsce": {
+      "trustworthiness": 0.8404690121743871,
+      "continuity": 0.842677113984347,
+      "knn_overlap": 0.21968099486347661
+    },
+    "v3_ddae_moe_test": {
+      "trustworthiness": 0.7977487773108212,
+      "continuity": 0.8481302295237265,
+      "knn_overlap": 0.16734252500675856
+    },
+    "v3_ddae_moe_test2": {
+      "trustworthiness": 0.8032178900261183,
+      "continuity": 0.8518726303066051,
+      "knn_overlap": 0.1692889970262233
+    },
+    "v3_ddae_mot": {
+      "trustworthiness": 0.81823821046117,
+      "continuity": 0.8508460852720973,
+      "knn_overlap": 0.19794539064612057
+    },
+    "v3_gat_taryn": {
+      "trustworthiness": 0.7516950527169506,
+      "continuity": 0.8254250981390995,
+      "knn_overlap": 0.11770748851040821
+    }
+  },
+  "training_logs": [
+    {
+      "model": "v2_ae",
+      "log": "result.log",
+      "n_evaluations": 7,
+      "best_epoch": 30,
+      "best_val_deviance": 0.85534,
+      "final_val_deviance": 0.85534,
+      "tail_mean": 0.85534,
+      "tail_std": 0.0
+    },
+    {
+      "model": "v2_ae_fsce",
+      "log": "result.log",
+      "n_evaluations": 201,
+      "best_epoch": 340,
+      "best_val_deviance": 0.72754,
+      "final_val_deviance": 1.00288,
+      "tail_mean": 0.9615404878048781,
+      "tail_std": 0.03141411099738615
+    },
+    {
+      "model": "v2_ddae",
+      "log": "result.log",
+      "n_evaluations": 201,
+      "best_epoch": 855,
+      "best_val_deviance": 0.64495,
+      "final_val_deviance": 0.6983,
+      "tail_mean": 0.6912148780487805,
+      "tail_std": 0.034208413959284284
+    },
+    {
+      "model": "v2_ddae_fsce",
+      "log": "result-no-fsce.log",
+      "n_evaluations": 201,
+      "best_epoch": 515,
+      "best_val_deviance": 0.63746,
+      "final_val_deviance": 0.66439,
+      "tail_mean": 0.6640926829268292,
+      "tail_std": 0.012471182787608854
+    },
+    {
+      "model": "v2_ddae_fsce",
+      "log": "result-no-layernorm.log",
+      "n_evaluations": 201,
+      "best_epoch": 1000,
+      "best_val_deviance": 0.63803,
+      "final_val_deviance": 0.63803,
+      "tail_mean": 0.6656812195121953,
+      "tail_std": 0.01709260588604352
+    },
+    {
+      "model": "v2_ddae_fsce",
+      "log": "result-withfsce.log",
+      "n_evaluations": 201,
+      "best_epoch": 1000,
+      "best_val_deviance": 0.61387,
+      "final_val_deviance": 0.61387,
+      "tail_mean": 0.6513434146341462,
+      "tail_std": 0.01792695311671173
+    },
+    {
+      "model": "v2_ddae_fsce",
+      "log": "result.log",
+      "n_evaluations": 201,
+      "best_epoch": 995,
+      "best_val_deviance": 0.6287,
+      "final_val_deviance": 0.66163,
+      "tail_mean": 0.6725390243902438,
+      "tail_std": 0.02347393840037053
+    },
+    {
+      "model": "v2_ddae_fsce",
+      "log": "result_base.log",
+      "n_evaluations": 201,
+      "best_epoch": 1000,
+      "best_val_deviance": 0.61387,
+      "final_val_deviance": 0.61387,
+      "tail_mean": 0.6513434146341462,
+      "tail_std": 0.01792695311671173
+    },
+    {
+      "model": "v2_ddae_residual",
+      "log": "result-withfsce.log",
+      "n_evaluations": 201,
+      "best_epoch": 885,
+      "best_val_deviance": 0.6327,
+      "final_val_deviance": 0.6589,
+      "tail_mean": 0.6598107317073171,
+      "tail_std": 0.014606463533354652
+    },
+    {
+      "model": "v2_ddae_residual",
+      "log": "result.log",
+      "n_evaluations": 201,
+      "best_epoch": 950,
+      "best_val_deviance": 0.64558,
+      "final_val_deviance": 0.66333,
+      "tail_mean": 0.6810790243902438,
+      "tail_std": 0.019929744830890085
+    },
+    {
+      "model": "v2_vae",
+      "log": "result.log",
+      "n_evaluations": 201,
+      "best_epoch": 820,
+      "best_val_deviance": 0.73968,
+      "final_val_deviance": 0.77932,
+      "tail_mean": 0.7618278048780487,
+      "tail_std": 0.012322571872826529
+    },
+    {
+      "model": "v3_ddae_gat",
+      "log": "result-no-fsce.log",
+      "n_evaluations": 201,
+      "best_epoch": 515,
+      "best_val_deviance": 0.63746,
+      "final_val_deviance": 0.66439,
+      "tail_mean": 0.6640926829268292,
+      "tail_std": 0.012471182787608854
+    },
+    {
+      "model": "v3_ddae_gat",
+      "log": "result-no-layernorm.log",
+      "n_evaluations": 201,
+      "best_epoch": 1000,
+      "best_val_deviance": 0.63803,
+      "final_val_deviance": 0.63803,
+      "tail_mean": 0.6656812195121953,
+      "tail_std": 0.01709260588604352
+    },
+    {
+      "model": "v3_ddae_gat",
+      "log": "result-withfsce.log",
+      "n_evaluations": 201,
+      "best_epoch": 1000,
+      "best_val_deviance": 0.61387,
+      "final_val_deviance": 0.61387,
+      "tail_mean": 0.6513434146341462,
+      "tail_std": 0.01792695311671173
+    },
+    {
+      "model": "v3_ddae_gat",
+      "log": "result_base.log",
+      "n_evaluations": 201,
+      "best_epoch": 1000,
+      "best_val_deviance": 0.61387,
+      "final_val_deviance": 0.61387,
+      "tail_mean": 0.6513434146341462,
+      "tail_std": 0.01792695311671173
+    },
+    {
+      "model": "v3_ddae_moe_test",
+      "log": "result.log",
+      "n_evaluations": 202,
+      "best_epoch": 565,
+      "best_val_deviance": 0.63979,
+      "final_val_deviance": 0.64833,
+      "tail_mean": 0.6470929268292683,
+      "tail_std": 0.001242381269784846
+    },
+    {
+      "model": "v3_ddae_moe_test2",
+      "log": "result.log",
+      "n_evaluations": 118,
+      "best_epoch": 335,
+      "best_val_deviance": 0.69002,
+      "final_val_deviance": 0.71143,
+      "tail_mean": 0.7114065217391305,
+      "tail_std": 0.006302938426347199
+    },
+    {
+      "model": "v3_ddae_mot",
+      "log": "noise_compare.log",
+      "n_evaluations": 168,
+      "best_epoch": 675,
+      "best_val_deviance": 0.64667,
+      "final_val_deviance": 0.71507,
+      "tail_mean": 0.7503527272727273,
+      "tail_std": 0.05249503871038238
+    },
+    {
+      "model": "v3_ddae_mot",
+      "log": "result.log",
+      "n_evaluations": 201,
+      "best_epoch": 785,
+      "best_val_deviance": 0.67431,
+      "final_val_deviance": 0.70119,
+      "tail_mean": 0.7030243902439024,
+      "tail_std": 0.012690436369325622
+    }
+  ],
+  "moe_test2": {
+    "latent_total_correlations": [
+      0.17776167407488197,
+      0.8306795172538116
+    ],
+    "gate_usage": [
+      0.3396296678640978,
+      0.6603703319541807
+    ],
+    "gate_entropy": 0.5542504224749651,
+    "gate_max_probability": 0.7215051229407148,
+    "selected_val_deviance": 0.690015070459373,
+    "exact_total_rescaled_val_deviance": 0.6600883692043543,
+    "total_log_correlation": 0.9479537986227831,
+    "total_relative_mae": 0.10600862993108151,
+    "conditional_pearson_dispersion": [
+      0.5017557988959722,
+      0.5252232187000688,
+      0.5993752140933832,
+      1.004301160698205,
+      0.366731421615812,
+      0.9877613917688651,
+      6.309293423691643,
+      1.080524556200999,
+      0.5100578957397109,
+      1.2609417634640394
+    ],
+    "observed_zero_fraction": [
+      0.008130081300813009,
+      0.0975609756097561,
+      0.22764227642276422,
+      0.7886178861788617,
+      0.5203252032520326,
+      0.5365853658536586,
+      0.7479674796747967,
+      0.6422764227642277,
+      0.8780487804878049,
+      0.9512195121951219
+    ],
+    "poisson_expected_zero_fraction": [
+      0.006314325260538675,
+      0.156809980034141,
+      0.28225432489005287,
+      0.7669932177752343,
+      0.5744009985975481,
+      0.52811749643892,
+      0.7397379435501608,
+      0.5800253723231247,
+      0.857391732174585,
+      0.9402762878300298
+    ],
+    "deviance_share_total": 0.04337108352589341,
+    "deviance_share_composition": 0.9566289164741066,
+    "err_val_mean": 0.6900150775909424,
+    "uniform_err_val_mean": 0.874657392501831,
+    "oracle_err_val_mean": 0.9594191312789917,
+    "expert_err_val_mean": [
+      1.8594088554382324,
+      1.2283638715744019
+    ]
+  }
+}

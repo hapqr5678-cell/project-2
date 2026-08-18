@@ -3,6 +3,9 @@
   "thinning"  binomial thinning：每個 POI 以 1-NOISE_P 的機率被保留。
   "mask"      整個類別歸零：每一類以 NOISE_P 的機率整維被抹成 0。
 兩種都會除以 1-NOISE_P 做尺度補償，讓訓練/推論的輸入尺度一致。
+
+v2_ddae_fsce_moe：在 v2_ddae_fsce 的 baseline 上加入 residual decoder MoE，
+其餘結構與超參數完全不變。
 """
 
 import os
@@ -18,6 +21,8 @@ sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../.."))
 from config.dataset import N_CAT, HALF_WIDTH  # noqa: E402,F401
 
 HIDDEN = 64
+
+# ----- MoE 新增常數（唯一實驗變因） -----
 N_EXPERTS = 2
 ROUTER_TEMPERATURE = 0.7
 MOE_SCALE = 0.1
@@ -84,33 +89,11 @@ def corrupt(x, p, mode="thinning", generator=None):
     return noisy / keep
 
 
-def moe_balance_loss(gates):
-    """讓 batch 平均 expert 使用率接近均勻，避免 router collapse。"""
-    mean_usage = gates.mean(dim=0)
-    target = torch.full_like(mean_usage, 1.0 / gates.shape[1])
-    return (mean_usage - target).pow(2).mean()
-
-
 class MLPAE(nn.Module):
-    """嚴格 2D latent bottleneck + residual decoder MoE。
+    """原始 v2_ddae_fsce 的 baseline 模型，保留供公平性檢查使用。"""
 
-    Encoder 的所有資訊都必須先壓進二維 z；共用 decoder、router 與兩個
-    residual experts 都只能讀取這個 z，不允許 hidden skip connection。
-    """
-
-    def __init__(self, latent_dim=2, n_experts=N_EXPERTS,
-                 router_temperature=ROUTER_TEMPERATURE,
-                 moe_scale=MOE_SCALE):
+    def __init__(self, latent_dim=2):
         super().__init__()
-        if n_experts < 2:
-            raise ValueError("n_experts 必須至少為 2")
-        if router_temperature <= 0:
-            raise ValueError("router_temperature 必須大於 0")
-        if moe_scale < 0:
-            raise ValueError("moe_scale 不可為負")
-
-        self.router_temperature = router_temperature
-        self.moe_scale = moe_scale
         self.encoder = nn.Sequential(
             nn.Linear(N_CAT, HIDDEN),
             nn.LayerNorm(HIDDEN),
@@ -124,7 +107,7 @@ class MLPAE(nn.Module):
             nn.Linear(HIDDEN, HIDDEN),
             nn.LayerNorm(HIDDEN),
             nn.GELU(),
-            nn.Linear(HIDDEN, latent_dim),
+            nn.Linear(HIDDEN, latent_dim),   # latent 前不接 norm/激活，離群值才不會被壓回來
         )
         self.decoder = nn.Sequential(
             nn.Linear(latent_dim, HIDDEN),
@@ -141,11 +124,81 @@ class MLPAE(nn.Module):
             nn.GELU(),
             nn.Linear(HIDDEN, N_CAT),   # 輸出是 log λ，不接 norm
         )
+
+    def encode(self, x):
+        """x 是 (B,N_CAT) 的 count 向量，回傳 (B,latent_dim) 的 z——只跑 encoder。"""
+        return self.encoder(x)
+
+    def forward(self, x):
+        """x 是 (B,N_CAT) 的 count 向量（訓練時是加噪版、推論時是乾淨版），
+        回傳 (z, log_lam)：z 是 (B,latent_dim) 的 latent，log_lam 是 (B,N_CAT)。
+        """
+        z = self.encoder(x)
+        return z, self.decoder(z)
+
+
+class MoEMLPAE(nn.Module):
+    """v2_ddae_fsce + residual decoder MoE。
+
+    encoder 與 shared decoder 結構完全同 MLPAE（LayerNorm + GELU，4 層 hidden）。
+    Module 建立順序嚴格為 encoder → decoder → router → experts，
+    確保相同 seed 下 encoder/decoder 初始參數與 baseline MLPAE 完全一致。
+
+    輸出：log_lam = base_log_lam + MOE_SCALE * Σ(gate_e * residual_e(z))
+    residual experts 最後一層 zero-init，因此初始輸出 ≡ baseline。
+    """
+
+    def __init__(self, latent_dim=2,
+                 n_experts=N_EXPERTS,
+                 router_temperature=ROUTER_TEMPERATURE,
+                 moe_scale=MOE_SCALE):
+        super().__init__()
+        self.n_experts = n_experts
+        self.router_temperature = router_temperature
+        self.moe_scale = moe_scale
+
+        # ---- 1. encoder（與 MLPAE 完全相同） ----
+        self.encoder = nn.Sequential(
+            nn.Linear(N_CAT, HIDDEN),
+            nn.LayerNorm(HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.LayerNorm(HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.LayerNorm(HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.LayerNorm(HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, latent_dim),
+        )
+
+        # ---- 2. shared decoder（與 MLPAE 完全相同） ----
+        self.decoder = nn.Sequential(
+            nn.Linear(latent_dim, HIDDEN),
+            nn.LayerNorm(HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.LayerNorm(HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.LayerNorm(HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, HIDDEN),
+            nn.LayerNorm(HIDDEN),
+            nn.GELU(),
+            nn.Linear(HIDDEN, N_CAT),
+        )
+
+        # ---- 3. router（只讀取 z） ----
         self.router = nn.Sequential(
             nn.Linear(latent_dim, HIDDEN),
             nn.GELU(),
             nn.Linear(HIDDEN, n_experts),
         )
+
+        # ---- 4. residual experts（只讀取 z，最後一層 zero-init） ----
         self.residual_experts = nn.ModuleList([
             nn.Sequential(
                 nn.Linear(latent_dim, HIDDEN),
@@ -154,35 +207,36 @@ class MLPAE(nn.Module):
             )
             for _ in range(n_experts)
         ])
-        # 初始時 MoE residual 恰為 0，先讓共享模型學穩再逐步產生分工。
         for expert in self.residual_experts:
             nn.init.zeros_(expert[-1].weight)
             nn.init.zeros_(expert[-1].bias)
 
     def encode(self, x):
-        """回傳模型唯一的二維 latent z。"""
+        """x 是 (B,N_CAT) 的 count 向量，回傳 (B,latent_dim) 的 z——只跑 encoder。"""
         return self.encoder(x)
 
-    def decode_all(self, z):
+    def forward_with_gates(self, x):
+        """回傳 (z, log_lam, gates)。
+
+        log_lam = base_log_lam + MOE_SCALE * Σ_e(gate_e * residual_e(z))
+        gates: (B, n_experts)，softmax 後的 router 輸出。
+        """
+        z = self.encoder(x)
         base_log_lam = self.decoder(z)
         gates = torch.softmax(
-            self.router(z) / self.router_temperature, dim=-1)
+            self.router(z) / self.router_temperature, dim=-1
+        )
         residuals = torch.stack(
-            [expert(z) for expert in self.residual_experts], dim=1)
-        residual = (gates.unsqueeze(-1) * residuals).sum(dim=1)
-        return base_log_lam + self.moe_scale * residual, gates
+            [expert(z) for expert in self.residual_experts], dim=1
+        )  # (B, n_experts, N_CAT)
+        residual = (gates.unsqueeze(-1) * residuals).sum(dim=1)  # (B, N_CAT)
+        log_lam = base_log_lam + self.moe_scale * residual
+        return z, log_lam, gates
 
     def forward(self, x):
-        """回傳唯一的二維 z 與重建 log_lam。"""
-        z = self.encode(x)
-        log_lam, _ = self.decode_all(z)
+        """與 MLPAE 相同的介面：回傳 (z, log_lam)。"""
+        z, log_lam, _ = self.forward_with_gates(x)
         return z, log_lam
-
-    def forward_with_gates(self, x):
-        """回傳二維 z、log_lam 與 expert gate 權重。"""
-        z = self.encode(x)
-        log_lam, gates = self.decode_all(z)
-        return z, log_lam, gates
 
 
 def poisson_nll(log_lam, x):

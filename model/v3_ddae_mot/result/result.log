@@ -13,222 +13,226 @@
   LATENT_DIM = 2
   EPOCHS = 1000
   BATCH = 256
-  LR = 0.001
+  LR_BASE = 0.001
+  LR_MOE = 0.0003
   WEIGHT_DECAY = 1e-06
   VAL_FRAC = 0.1
   SEED = 0
   N_NEIGHBORS = 15
   GRAPH_METRIC = euclidean
   EDGE_BATCH = 256
-  LAMBDA_FSCE = 0.01
+  LAMBDA_FSCE = 0.005
   WARMUP_EPOCHS = 200
   NOISE_P = 0.3
   NOISE_MODE = thinning
-  N_EXPERTS = 3
-  ROUTER_TEMPERATURE = 1.0
-  LAMBDA_BALANCE = 0.01
+  N_EXPERTS = 2
+  ROUTER_TEMPERATURE = 0.7
+  MOE_SCALE = 0.1
+  LAMBDA_BALANCE = 0.001
+  EARLY_STOP_PATIENCE = 250
 
-1233 個 patch，device=cpu，噪聲 thinning p=0.3
-FSCE graph：24904 條邊，a=1.5769 b=0.8951
-epoch    1 | train_nll 1.00869 | train_fsce 3.21508 | moe_balance 0.018011 | gate_usage [0.365,0.155,0.479] | val_dev 3.18595 | expl_dev -1.15427
-epoch    5 | train_nll -0.82088 | train_fsce 1.37408 | moe_balance 0.009702 | gate_usage [0.344,0.211,0.445] | val_dev 1.37877 | expl_dev 0.06770
-epoch   10 | train_nll -1.00677 | train_fsce 1.01114 | moe_balance 0.000269 | gate_usage [0.311,0.347,0.342] | val_dev 1.05515 | expl_dev 0.28653
-epoch   15 | train_nll -1.07961 | train_fsce 0.93115 | moe_balance 0.001377 | gate_usage [0.294,0.384,0.323] | val_dev 0.97183 | expl_dev 0.34287
-epoch   20 | train_nll -1.12693 | train_fsce 0.86867 | moe_balance 0.002463 | gate_usage [0.267,0.353,0.381] | val_dev 0.91517 | expl_dev 0.38118
-epoch   25 | train_nll -1.17665 | train_fsce 0.85714 | moe_balance 0.011400 | gate_usage [0.236,0.284,0.480] | val_dev 0.87405 | expl_dev 0.40898
-epoch   30 | train_nll -1.20310 | train_fsce 0.94598 | moe_balance 0.019682 | gate_usage [0.204,0.268,0.528] | val_dev 0.79031 | expl_dev 0.46561
-epoch   35 | train_nll -1.21725 | train_fsce 0.99548 | moe_balance 0.019697 | gate_usage [0.220,0.248,0.532] | val_dev 0.81557 | expl_dev 0.44853
-epoch   40 | train_nll -1.23339 | train_fsce 0.83425 | moe_balance 0.019506 | gate_usage [0.213,0.257,0.530] | val_dev 0.77607 | expl_dev 0.47524
-epoch   45 | train_nll -1.24644 | train_fsce 0.82168 | moe_balance 0.013828 | gate_usage [0.220,0.285,0.495] | val_dev 0.74865 | expl_dev 0.49378
-epoch   50 | train_nll -1.24692 | train_fsce 0.87700 | moe_balance 0.021580 | gate_usage [0.214,0.246,0.540] | val_dev 0.77518 | expl_dev 0.47584
-epoch   55 | train_nll -1.25778 | train_fsce 0.78174 | moe_balance 0.008835 | gate_usage [0.232,0.309,0.458] | val_dev 0.73182 | expl_dev 0.50516
-epoch   60 | train_nll -1.23753 | train_fsce 0.94169 | moe_balance 0.026334 | gate_usage [0.224,0.212,0.564] | val_dev 0.75853 | expl_dev 0.48710
-epoch   65 | train_nll -1.23346 | train_fsce 0.95624 | moe_balance 0.026846 | gate_usage [0.242,0.194,0.564] | val_dev 0.81363 | expl_dev 0.44984
-epoch   70 | train_nll -1.24489 | train_fsce 0.87562 | moe_balance 0.032126 | gate_usage [0.222,0.191,0.586] | val_dev 0.80028 | expl_dev 0.45887
-epoch   75 | train_nll -1.23805 | train_fsce 0.88036 | moe_balance 0.030230 | gate_usage [0.243,0.181,0.576] | val_dev 0.83406 | expl_dev 0.43602
-epoch   80 | train_nll -1.25779 | train_fsce 0.74805 | moe_balance 0.019536 | gate_usage [0.245,0.226,0.529] | val_dev 0.75435 | expl_dev 0.48992
-epoch   85 | train_nll -1.26073 | train_fsce 0.74897 | moe_balance 0.005966 | gate_usage [0.288,0.269,0.443] | val_dev 0.71991 | expl_dev 0.51321
-epoch   90 | train_nll -1.25906 | train_fsce 0.70913 | moe_balance 0.007596 | gate_usage [0.270,0.275,0.455] | val_dev 0.75600 | expl_dev 0.48881
-epoch   95 | train_nll -1.26963 | train_fsce 0.73593 | moe_balance 0.007224 | gate_usage [0.294,0.253,0.453] | val_dev 0.72829 | expl_dev 0.50754
-epoch  100 | train_nll -1.26202 | train_fsce 0.75738 | moe_balance 0.016548 | gate_usage [0.286,0.205,0.509] | val_dev 0.75492 | expl_dev 0.48954
-epoch  105 | train_nll -1.25816 | train_fsce 0.74247 | moe_balance 0.014718 | gate_usage [0.294,0.208,0.498] | val_dev 0.82092 | expl_dev 0.44491
-epoch  110 | train_nll -1.26328 | train_fsce 0.75018 | moe_balance 0.014953 | gate_usage [0.296,0.206,0.498] | val_dev 0.76579 | expl_dev 0.48219
-epoch  115 | train_nll -1.26813 | train_fsce 0.71028 | moe_balance 0.009257 | gate_usage [0.314,0.226,0.460] | val_dev 0.73881 | expl_dev 0.50043
-epoch  120 | train_nll -1.26809 | train_fsce 0.77254 | moe_balance 0.010540 | gate_usage [0.331,0.208,0.461] | val_dev 0.76678 | expl_dev 0.48152
-epoch  125 | train_nll -1.26252 | train_fsce 0.76468 | moe_balance 0.014471 | gate_usage [0.335,0.185,0.480] | val_dev 0.77398 | expl_dev 0.47665
-epoch  130 | train_nll -1.26958 | train_fsce 0.81080 | moe_balance 0.011636 | gate_usage [0.350,0.193,0.457] | val_dev 0.76273 | expl_dev 0.48426
-epoch  135 | train_nll -1.26325 | train_fsce 0.77118 | moe_balance 0.013224 | gate_usage [0.351,0.185,0.464] | val_dev 0.76969 | expl_dev 0.47955
-epoch  140 | train_nll -1.26813 | train_fsce 0.70269 | moe_balance 0.013888 | gate_usage [0.336,0.187,0.477] | val_dev 0.76677 | expl_dev 0.48153
-epoch  145 | train_nll -1.26177 | train_fsce 0.72856 | moe_balance 0.013395 | gate_usage [0.349,0.185,0.466] | val_dev 0.77459 | expl_dev 0.47624
-epoch  150 | train_nll -1.26550 | train_fsce 0.68993 | moe_balance 0.005054 | gate_usage [0.349,0.239,0.411] | val_dev 0.76159 | expl_dev 0.48503
-epoch  155 | train_nll -1.27895 | train_fsce 0.69397 | moe_balance 0.005057 | gate_usage [0.330,0.247,0.423] | val_dev 0.75019 | expl_dev 0.49274
-epoch  160 | train_nll -1.27488 | train_fsce 0.70534 | moe_balance 0.007912 | gate_usage [0.344,0.220,0.437] | val_dev 0.75459 | expl_dev 0.48976
-epoch  165 | train_nll -1.27804 | train_fsce 0.69498 | moe_balance 0.006992 | gate_usage [0.340,0.227,0.433] | val_dev 0.77235 | expl_dev 0.47776
-epoch  170 | train_nll -1.27932 | train_fsce 0.72357 | moe_balance 0.009289 | gate_usage [0.355,0.207,0.438] | val_dev 0.76884 | expl_dev 0.48013
-epoch  175 | train_nll -1.26693 | train_fsce 0.72321 | moe_balance 0.010967 | gate_usage [0.365,0.193,0.443] | val_dev 0.78745 | expl_dev 0.46754
-epoch  180 | train_nll -1.26965 | train_fsce 0.66348 | moe_balance 0.006762 | gate_usage [0.364,0.221,0.415] | val_dev 0.79006 | expl_dev 0.46578
-epoch  185 | train_nll -1.27505 | train_fsce 0.67259 | moe_balance 0.005327 | gate_usage [0.359,0.234,0.407] | val_dev 0.75997 | expl_dev 0.48612
-epoch  190 | train_nll -1.27651 | train_fsce 0.69226 | moe_balance 0.010548 | gate_usage [0.362,0.196,0.443] | val_dev 0.75960 | expl_dev 0.48637
-epoch  195 | train_nll -1.27950 | train_fsce 0.66839 | moe_balance 0.011820 | gate_usage [0.348,0.193,0.459] | val_dev 0.76482 | expl_dev 0.48285
-epoch  200 | train_nll -1.28329 | train_fsce 0.67397 | moe_balance 0.011265 | gate_usage [0.350,0.196,0.454] | val_dev 0.77055 | expl_dev 0.47897
-epoch  205 | train_nll -1.27957 | train_fsce 0.63796 | moe_balance 0.004257 | gate_usage [0.348,0.247,0.405] | val_dev 0.76061 | expl_dev 0.48569
-epoch  210 | train_nll -1.29045 | train_fsce 0.64196 | moe_balance 0.008482 | gate_usage [0.338,0.219,0.443] | val_dev 0.72515 | expl_dev 0.50967
-epoch  215 | train_nll -1.29530 | train_fsce 0.62517 | moe_balance 0.007633 | gate_usage [0.346,0.221,0.433] | val_dev 0.74341 | expl_dev 0.49732
-epoch  220 | train_nll -1.28706 | train_fsce 0.64423 | moe_balance 0.002947 | gate_usage [0.348,0.261,0.391] | val_dev 0.73549 | expl_dev 0.50267
-epoch  225 | train_nll -1.28955 | train_fsce 0.63318 | moe_balance 0.003479 | gate_usage [0.343,0.255,0.401] | val_dev 0.76855 | expl_dev 0.48032
-epoch  230 | train_nll -1.29324 | train_fsce 0.62932 | moe_balance 0.004562 | gate_usage [0.333,0.252,0.415] | val_dev 0.75854 | expl_dev 0.48709
-epoch  235 | train_nll -1.29481 | train_fsce 0.63711 | moe_balance 0.006970 | gate_usage [0.340,0.228,0.432] | val_dev 0.74874 | expl_dev 0.49372
-epoch  240 | train_nll -1.28766 | train_fsce 0.64304 | moe_balance 0.006533 | gate_usage [0.337,0.232,0.431] | val_dev 0.74069 | expl_dev 0.49916
-epoch  245 | train_nll -1.29756 | train_fsce 0.62730 | moe_balance 0.006770 | gate_usage [0.344,0.227,0.429] | val_dev 0.73289 | expl_dev 0.50444
-epoch  250 | train_nll -1.29616 | train_fsce 0.65037 | moe_balance 0.005902 | gate_usage [0.342,0.234,0.424] | val_dev 0.75803 | expl_dev 0.48743
-epoch  255 | train_nll -1.29612 | train_fsce 0.64625 | moe_balance 0.001780 | gate_usage [0.331,0.283,0.386] | val_dev 0.74495 | expl_dev 0.49628
-epoch  260 | train_nll -1.29851 | train_fsce 0.64667 | moe_balance 0.001815 | gate_usage [0.344,0.276,0.379] | val_dev 0.75536 | expl_dev 0.48924
-epoch  265 | train_nll -1.30159 | train_fsce 0.59668 | moe_balance 0.003609 | gate_usage [0.349,0.252,0.399] | val_dev 0.74973 | expl_dev 0.49305
-epoch  270 | train_nll -1.29569 | train_fsce 0.62149 | moe_balance 0.002875 | gate_usage [0.338,0.267,0.394] | val_dev 0.73236 | expl_dev 0.50480
-epoch  275 | train_nll -1.29407 | train_fsce 0.63140 | moe_balance 0.001183 | gate_usage [0.324,0.298,0.378] | val_dev 0.72651 | expl_dev 0.50875
-epoch  280 | train_nll -1.30521 | train_fsce 0.62385 | moe_balance 0.005044 | gate_usage [0.343,0.242,0.415] | val_dev 0.73133 | expl_dev 0.50549
-epoch  285 | train_nll -1.29731 | train_fsce 0.63686 | moe_balance 0.006381 | gate_usage [0.339,0.232,0.429] | val_dev 0.72981 | expl_dev 0.50652
-epoch  290 | train_nll -1.30110 | train_fsce 0.61639 | moe_balance 0.002771 | gate_usage [0.335,0.268,0.397] | val_dev 0.73517 | expl_dev 0.50289
-epoch  295 | train_nll -1.30083 | train_fsce 0.61873 | moe_balance 0.002190 | gate_usage [0.336,0.274,0.390] | val_dev 0.73259 | expl_dev 0.50464
-epoch  300 | train_nll -1.30161 | train_fsce 0.62508 | moe_balance 0.003354 | gate_usage [0.343,0.261,0.396] | val_dev 0.74372 | expl_dev 0.49711
-epoch  305 | train_nll -1.30343 | train_fsce 0.62553 | moe_balance 0.006960 | gate_usage [0.340,0.228,0.432] | val_dev 0.74446 | expl_dev 0.49661
-epoch  310 | train_nll -1.29049 | train_fsce 0.64424 | moe_balance 0.010410 | gate_usage [0.345,0.202,0.452] | val_dev 0.73922 | expl_dev 0.50015
-epoch  315 | train_nll -1.29981 | train_fsce 0.66525 | moe_balance 0.008757 | gate_usage [0.363,0.207,0.431] | val_dev 0.74270 | expl_dev 0.49780
-epoch  320 | train_nll -1.29373 | train_fsce 0.63276 | moe_balance 0.011348 | gate_usage [0.334,0.203,0.463] | val_dev 0.74319 | expl_dev 0.49747
-epoch  325 | train_nll -1.30177 | train_fsce 0.65996 | moe_balance 0.010517 | gate_usage [0.346,0.202,0.452] | val_dev 0.72904 | expl_dev 0.50704
-epoch  330 | train_nll -1.29615 | train_fsce 0.62429 | moe_balance 0.007204 | gate_usage [0.359,0.220,0.421] | val_dev 0.73552 | expl_dev 0.50266
-epoch  335 | train_nll -1.30465 | train_fsce 0.64373 | moe_balance 0.008021 | gate_usage [0.343,0.220,0.438] | val_dev 0.72242 | expl_dev 0.51151
-epoch  340 | train_nll -1.30062 | train_fsce 0.59960 | moe_balance 0.005822 | gate_usage [0.343,0.236,0.421] | val_dev 0.72257 | expl_dev 0.51141
-epoch  345 | train_nll -1.21310 | train_fsce 0.61608 | moe_balance 0.001832 | gate_usage [0.372,0.285,0.343] | val_dev 0.80749 | expl_dev 0.45399
-epoch  350 | train_nll -1.28983 | train_fsce 0.60125 | moe_balance 0.002879 | gate_usage [0.278,0.315,0.406] | val_dev 0.71659 | expl_dev 0.51546
-epoch  355 | train_nll -1.30819 | train_fsce 0.58559 | moe_balance 0.005882 | gate_usage [0.296,0.263,0.441] | val_dev 0.71738 | expl_dev 0.51492
-epoch  360 | train_nll -1.30807 | train_fsce 0.59068 | moe_balance 0.006336 | gate_usage [0.320,0.243,0.438] | val_dev 0.73097 | expl_dev 0.50573
-epoch  365 | train_nll -1.30504 | train_fsce 0.56994 | moe_balance 0.008283 | gate_usage [0.298,0.245,0.457] | val_dev 0.73460 | expl_dev 0.50328
-epoch  370 | train_nll -1.30122 | train_fsce 0.57507 | moe_balance 0.014050 | gate_usage [0.276,0.226,0.498] | val_dev 0.72782 | expl_dev 0.50786
-epoch  375 | train_nll -1.30395 | train_fsce 0.60292 | moe_balance 0.007964 | gate_usage [0.309,0.238,0.453] | val_dev 0.72549 | expl_dev 0.50944
-epoch  380 | train_nll -1.30512 | train_fsce 0.56791 | moe_balance 0.004703 | gate_usage [0.307,0.267,0.427] | val_dev 0.72186 | expl_dev 0.51189
-epoch  385 | train_nll -1.30291 | train_fsce 0.58786 | moe_balance 0.002047 | gate_usage [0.306,0.299,0.395] | val_dev 0.70708 | expl_dev 0.52189
-epoch  390 | train_nll -1.30498 | train_fsce 0.58365 | moe_balance 0.001066 | gate_usage [0.320,0.303,0.377] | val_dev 0.70332 | expl_dev 0.52443
-epoch  395 | train_nll -1.30022 | train_fsce 0.59630 | moe_balance 0.000545 | gate_usage [0.314,0.323,0.364] | val_dev 0.70418 | expl_dev 0.52385
-epoch  400 | train_nll -1.29950 | train_fsce 0.60294 | moe_balance 0.002529 | gate_usage [0.270,0.338,0.391] | val_dev 0.71153 | expl_dev 0.51888
-epoch  405 | train_nll -1.30308 | train_fsce 0.57898 | moe_balance 0.002479 | gate_usage [0.284,0.315,0.401] | val_dev 0.76044 | expl_dev 0.48581
-epoch  410 | train_nll -1.31106 | train_fsce 0.58197 | moe_balance 0.003008 | gate_usage [0.292,0.298,0.410] | val_dev 0.69778 | expl_dev 0.52818
-epoch  415 | train_nll -1.30686 | train_fsce 0.59426 | moe_balance 0.003602 | gate_usage [0.312,0.274,0.414] | val_dev 0.71104 | expl_dev 0.51921
-epoch  420 | train_nll -1.31388 | train_fsce 0.59239 | moe_balance 0.003780 | gate_usage [0.309,0.273,0.418] | val_dev 0.68991 | expl_dev 0.53350
-epoch  425 | train_nll -1.31282 | train_fsce 0.58967 | moe_balance 0.004720 | gate_usage [0.311,0.262,0.426] | val_dev 0.69971 | expl_dev 0.52687
-epoch  430 | train_nll -1.31206 | train_fsce 0.57242 | moe_balance 0.003814 | gate_usage [0.294,0.287,0.418] | val_dev 0.73426 | expl_dev 0.50351
-epoch  435 | train_nll -1.30167 | train_fsce 0.58982 | moe_balance 0.003989 | gate_usage [0.286,0.290,0.424] | val_dev 0.71874 | expl_dev 0.51400
-epoch  440 | train_nll -1.30898 | train_fsce 0.59822 | moe_balance 0.004740 | gate_usage [0.309,0.264,0.427] | val_dev 0.70769 | expl_dev 0.52148
-epoch  445 | train_nll -1.31454 | train_fsce 0.61416 | moe_balance 0.004549 | gate_usage [0.312,0.264,0.424] | val_dev 0.70684 | expl_dev 0.52205
-epoch  450 | train_nll -1.32178 | train_fsce 0.58060 | moe_balance 0.005289 | gate_usage [0.291,0.276,0.433] | val_dev 0.69707 | expl_dev 0.52866
-epoch  455 | train_nll -1.31418 | train_fsce 0.59546 | moe_balance 0.003995 | gate_usage [0.310,0.268,0.421] | val_dev 0.70231 | expl_dev 0.52511
-epoch  460 | train_nll -1.31457 | train_fsce 0.61950 | moe_balance 0.003115 | gate_usage [0.336,0.264,0.400] | val_dev 0.71612 | expl_dev 0.51577
-epoch  465 | train_nll -1.31518 | train_fsce 0.61031 | moe_balance 0.003957 | gate_usage [0.326,0.259,0.415] | val_dev 0.72148 | expl_dev 0.51215
-epoch  470 | train_nll -1.32147 | train_fsce 0.61840 | moe_balance 0.002701 | gate_usage [0.321,0.277,0.402] | val_dev 0.69215 | expl_dev 0.53198
-epoch  475 | train_nll -1.31404 | train_fsce 0.59165 | moe_balance 0.002362 | gate_usage [0.301,0.300,0.399] | val_dev 0.72204 | expl_dev 0.51177
-epoch  480 | train_nll -1.29538 | train_fsce 0.58266 | moe_balance 0.000974 | gate_usage [0.312,0.310,0.378] | val_dev 0.71418 | expl_dev 0.51708
-epoch  485 | train_nll -1.31004 | train_fsce 0.60192 | moe_balance 0.003414 | gate_usage [0.313,0.275,0.411] | val_dev 0.71396 | expl_dev 0.51723
-epoch  490 | train_nll -1.30815 | train_fsce 0.62472 | moe_balance 0.002429 | gate_usage [0.324,0.278,0.398] | val_dev 0.69641 | expl_dev 0.52910
-epoch  495 | train_nll -1.30784 | train_fsce 0.61192 | moe_balance 0.003725 | gate_usage [0.334,0.259,0.407] | val_dev 0.73011 | expl_dev 0.50631
-epoch  500 | train_nll -1.27683 | train_fsce 0.65418 | moe_balance 0.005889 | gate_usage [0.359,0.230,0.411] | val_dev 0.76199 | expl_dev 0.48476
-epoch  505 | train_nll -1.29373 | train_fsce 0.61624 | moe_balance 0.004330 | gate_usage [0.349,0.246,0.405] | val_dev 0.72260 | expl_dev 0.51139
-epoch  510 | train_nll -1.30815 | train_fsce 0.59648 | moe_balance 0.003618 | gate_usage [0.331,0.262,0.407] | val_dev 0.70935 | expl_dev 0.52035
-epoch  515 | train_nll -1.30894 | train_fsce 0.56933 | moe_balance 0.002934 | gate_usage [0.332,0.270,0.398] | val_dev 0.71929 | expl_dev 0.51363
-epoch  520 | train_nll -1.28981 | train_fsce 0.59071 | moe_balance 0.000335 | gate_usage [0.354,0.320,0.325] | val_dev 0.72076 | expl_dev 0.51264
-epoch  525 | train_nll -1.30122 | train_fsce 0.56078 | moe_balance 0.007408 | gate_usage [0.257,0.291,0.452] | val_dev 0.72381 | expl_dev 0.51058
-epoch  530 | train_nll -1.30560 | train_fsce 0.55985 | moe_balance 0.003681 | gate_usage [0.261,0.331,0.408] | val_dev 0.73034 | expl_dev 0.50616
-epoch  535 | train_nll -1.30686 | train_fsce 0.60166 | moe_balance 0.001671 | gate_usage [0.276,0.367,0.358] | val_dev 0.73256 | expl_dev 0.50466
-epoch  540 | train_nll -1.28187 | train_fsce 0.61270 | moe_balance 0.004179 | gate_usage [0.283,0.418,0.299] | val_dev 0.72609 | expl_dev 0.50903
-epoch  545 | train_nll -1.31602 | train_fsce 0.57026 | moe_balance 0.000433 | gate_usage [0.305,0.351,0.344] | val_dev 0.72002 | expl_dev 0.51314
-epoch  550 | train_nll -1.31101 | train_fsce 0.58891 | moe_balance 0.000280 | gate_usage [0.314,0.353,0.332] | val_dev 0.71488 | expl_dev 0.51661
-epoch  555 | train_nll -1.31775 | train_fsce 0.56555 | moe_balance 0.000455 | gate_usage [0.313,0.325,0.361] | val_dev 0.71507 | expl_dev 0.51648
-epoch  560 | train_nll -1.31615 | train_fsce 0.59224 | moe_balance 0.000882 | gate_usage [0.309,0.316,0.375] | val_dev 0.69870 | expl_dev 0.52756
-epoch  565 | train_nll -1.31865 | train_fsce 0.57575 | moe_balance 0.001180 | gate_usage [0.303,0.316,0.381] | val_dev 0.69940 | expl_dev 0.52708
-epoch  570 | train_nll -1.32199 | train_fsce 0.55172 | moe_balance 0.001103 | gate_usage [0.294,0.332,0.373] | val_dev 0.71246 | expl_dev 0.51825
-epoch  575 | train_nll -1.32191 | train_fsce 0.58181 | moe_balance 0.001543 | gate_usage [0.292,0.324,0.384] | val_dev 0.69951 | expl_dev 0.52701
-epoch  580 | train_nll -1.30517 | train_fsce 0.58037 | moe_balance 0.001060 | gate_usage [0.288,0.362,0.350] | val_dev 0.69838 | expl_dev 0.52777
-epoch  585 | train_nll -1.31888 | train_fsce 0.57998 | moe_balance 0.001474 | gate_usage [0.285,0.376,0.338] | val_dev 0.69875 | expl_dev 0.52752
-epoch  590 | train_nll -1.32167 | train_fsce 0.57746 | moe_balance 0.001073 | gate_usage [0.288,0.360,0.353] | val_dev 0.71556 | expl_dev 0.51615
-epoch  595 | train_nll -1.31560 | train_fsce 0.57149 | moe_balance 0.002029 | gate_usage [0.269,0.363,0.367] | val_dev 0.70511 | expl_dev 0.52322
-epoch  600 | train_nll -1.31432 | train_fsce 0.57858 | moe_balance 0.000750 | gate_usage [0.296,0.351,0.354] | val_dev 0.72803 | expl_dev 0.50772
-epoch  605 | train_nll -1.31995 | train_fsce 0.56158 | moe_balance 0.001544 | gate_usage [0.281,0.345,0.373] | val_dev 0.71226 | expl_dev 0.51838
-epoch  610 | train_nll -1.32376 | train_fsce 0.56599 | moe_balance 0.001780 | gate_usage [0.275,0.364,0.361] | val_dev 0.71736 | expl_dev 0.51493
-epoch  615 | train_nll -1.31531 | train_fsce 0.57671 | moe_balance 0.002704 | gate_usage [0.276,0.400,0.324] | val_dev 0.70896 | expl_dev 0.52061
-epoch  620 | train_nll -1.31940 | train_fsce 0.57302 | moe_balance 0.003015 | gate_usage [0.270,0.404,0.326] | val_dev 0.69704 | expl_dev 0.52867
-epoch  625 | train_nll -1.32451 | train_fsce 0.55950 | moe_balance 0.001349 | gate_usage [0.284,0.360,0.356] | val_dev 0.70644 | expl_dev 0.52232
-epoch  630 | train_nll -1.32710 | train_fsce 0.58004 | moe_balance 0.001491 | gate_usage [0.279,0.363,0.357] | val_dev 0.69476 | expl_dev 0.53022
-epoch  635 | train_nll -1.31738 | train_fsce 0.57398 | moe_balance 0.002050 | gate_usage [0.277,0.385,0.338] | val_dev 0.71790 | expl_dev 0.51457
-epoch  640 | train_nll -1.31628 | train_fsce 0.58779 | moe_balance 0.001919 | gate_usage [0.277,0.382,0.341] | val_dev 0.69601 | expl_dev 0.52938
-epoch  645 | train_nll -1.31564 | train_fsce 0.54768 | moe_balance 0.001765 | gate_usage [0.277,0.350,0.373] | val_dev 0.70156 | expl_dev 0.52562
-epoch  650 | train_nll -1.32128 | train_fsce 0.57397 | moe_balance 0.001570 | gate_usage [0.291,0.323,0.386] | val_dev 0.69740 | expl_dev 0.52843
-epoch  655 | train_nll -1.31636 | train_fsce 0.58914 | moe_balance 0.002532 | gate_usage [0.293,0.304,0.403] | val_dev 0.72533 | expl_dev 0.50955
-epoch  660 | train_nll -1.32225 | train_fsce 0.57003 | moe_balance 0.004798 | gate_usage [0.276,0.295,0.429] | val_dev 0.72035 | expl_dev 0.51291
-epoch  665 | train_nll -1.32652 | train_fsce 0.56143 | moe_balance 0.002155 | gate_usage [0.289,0.314,0.397] | val_dev 0.71672 | expl_dev 0.51537
-epoch  670 | train_nll -1.31771 | train_fsce 0.56700 | moe_balance 0.003372 | gate_usage [0.290,0.296,0.414] | val_dev 0.71974 | expl_dev 0.51332
-epoch  675 | train_nll -1.31568 | train_fsce 0.57014 | moe_balance 0.003606 | gate_usage [0.277,0.306,0.417] | val_dev 0.70529 | expl_dev 0.52309
-epoch  680 | train_nll -1.32180 | train_fsce 0.57592 | moe_balance 0.004382 | gate_usage [0.282,0.291,0.426] | val_dev 0.70640 | expl_dev 0.52235
-epoch  685 | train_nll -1.31825 | train_fsce 0.58341 | moe_balance 0.002568 | gate_usage [0.297,0.297,0.406] | val_dev 0.71099 | expl_dev 0.51924
-epoch  690 | train_nll -1.32146 | train_fsce 0.57355 | moe_balance 0.003464 | gate_usage [0.285,0.300,0.416] | val_dev 0.69308 | expl_dev 0.53135
-epoch  695 | train_nll -1.32030 | train_fsce 0.54653 | moe_balance 0.003124 | gate_usage [0.287,0.303,0.410] | val_dev 0.68478 | expl_dev 0.53697
-epoch  700 | train_nll -1.32733 | train_fsce 0.54696 | moe_balance 0.002794 | gate_usage [0.295,0.299,0.406] | val_dev 0.68677 | expl_dev 0.53562
-epoch  705 | train_nll -1.32939 | train_fsce 0.56628 | moe_balance 0.004051 | gate_usage [0.281,0.298,0.421] | val_dev 0.68041 | expl_dev 0.53992
-epoch  710 | train_nll -1.32951 | train_fsce 0.55937 | moe_balance 0.003889 | gate_usage [0.281,0.298,0.420] | val_dev 0.69949 | expl_dev 0.52702
-epoch  715 | train_nll -1.32686 | train_fsce 0.57040 | moe_balance 0.003668 | gate_usage [0.280,0.303,0.417] | val_dev 0.69481 | expl_dev 0.53018
-epoch  720 | train_nll -1.32064 | train_fsce 0.56894 | moe_balance 0.002564 | gate_usage [0.286,0.311,0.403] | val_dev 0.69761 | expl_dev 0.52829
-epoch  725 | train_nll -1.33012 | train_fsce 0.55778 | moe_balance 0.003496 | gate_usage [0.272,0.314,0.414] | val_dev 0.67643 | expl_dev 0.54261
-epoch  730 | train_nll -1.32153 | train_fsce 0.51725 | moe_balance 0.003450 | gate_usage [0.274,0.313,0.413] | val_dev 0.68855 | expl_dev 0.53442
-epoch  735 | train_nll -1.32769 | train_fsce 0.58303 | moe_balance 0.002404 | gate_usage [0.269,0.348,0.383] | val_dev 0.67939 | expl_dev 0.54061
-epoch  740 | train_nll -1.32501 | train_fsce 0.55489 | moe_balance 0.003267 | gate_usage [0.274,0.316,0.410] | val_dev 0.68933 | expl_dev 0.53389
-epoch  745 | train_nll -1.32862 | train_fsce 0.59026 | moe_balance 0.002789 | gate_usage [0.280,0.315,0.404] | val_dev 0.68276 | expl_dev 0.53833
-epoch  750 | train_nll -1.33482 | train_fsce 0.54733 | moe_balance 0.002881 | gate_usage [0.277,0.319,0.404] | val_dev 0.68073 | expl_dev 0.53970
-epoch  755 | train_nll -1.32164 | train_fsce 0.56633 | moe_balance 0.002747 | gate_usage [0.279,0.316,0.405] | val_dev 0.68505 | expl_dev 0.53678
-epoch  760 | train_nll -1.31290 | train_fsce 0.60498 | moe_balance 0.003266 | gate_usage [0.289,0.297,0.414] | val_dev 0.71789 | expl_dev 0.51458
-epoch  765 | train_nll -1.32084 | train_fsce 0.56008 | moe_balance 0.004517 | gate_usage [0.282,0.290,0.428] | val_dev 0.72037 | expl_dev 0.51290
-epoch  770 | train_nll -1.31758 | train_fsce 0.55478 | moe_balance 0.005242 | gate_usage [0.281,0.283,0.436] | val_dev 0.71357 | expl_dev 0.51750
-epoch  775 | train_nll -1.33008 | train_fsce 0.57209 | moe_balance 0.005135 | gate_usage [0.285,0.281,0.434] | val_dev 0.69237 | expl_dev 0.53183
-epoch  780 | train_nll -1.31959 | train_fsce 0.58696 | moe_balance 0.005149 | gate_usage [0.284,0.281,0.435] | val_dev 0.70983 | expl_dev 0.52003
-epoch  785 | train_nll -1.32485 | train_fsce 0.55900 | moe_balance 0.007007 | gate_usage [0.279,0.268,0.452] | val_dev 0.70359 | expl_dev 0.52425
-epoch  790 | train_nll -1.32184 | train_fsce 0.58001 | moe_balance 0.005682 | gate_usage [0.285,0.275,0.440] | val_dev 0.70846 | expl_dev 0.52096
-epoch  795 | train_nll -1.30373 | train_fsce 0.58543 | moe_balance 0.005265 | gate_usage [0.281,0.283,0.436] | val_dev 0.68823 | expl_dev 0.53463
-epoch  800 | train_nll -1.32069 | train_fsce 0.56452 | moe_balance 0.005197 | gate_usage [0.286,0.279,0.435] | val_dev 0.70781 | expl_dev 0.52139
-epoch  805 | train_nll -1.30581 | train_fsce 0.60008 | moe_balance 0.004848 | gate_usage [0.292,0.278,0.430] | val_dev 0.74822 | expl_dev 0.49407
-epoch  810 | train_nll -1.31035 | train_fsce 0.58003 | moe_balance 0.007152 | gate_usage [0.290,0.259,0.451] | val_dev 0.69378 | expl_dev 0.53088
-epoch  815 | train_nll -1.30852 | train_fsce 0.59353 | moe_balance 0.004315 | gate_usage [0.303,0.273,0.424] | val_dev 0.71689 | expl_dev 0.51525
-epoch  820 | train_nll -1.32494 | train_fsce 0.58173 | moe_balance 0.005820 | gate_usage [0.297,0.265,0.438] | val_dev 0.69075 | expl_dev 0.53293
-epoch  825 | train_nll -1.31785 | train_fsce 0.56202 | moe_balance 0.006535 | gate_usage [0.283,0.270,0.447] | val_dev 0.70380 | expl_dev 0.52411
-epoch  830 | train_nll -1.31520 | train_fsce 0.56155 | moe_balance 0.006437 | gate_usage [0.292,0.263,0.445] | val_dev 0.71461 | expl_dev 0.51680
-epoch  835 | train_nll -1.29511 | train_fsce 0.58501 | moe_balance 0.002934 | gate_usage [0.301,0.290,0.409] | val_dev 0.73978 | expl_dev 0.49978
-epoch  840 | train_nll -1.30315 | train_fsce 0.56981 | moe_balance 0.004710 | gate_usage [0.309,0.265,0.426] | val_dev 0.73168 | expl_dev 0.50525
-epoch  845 | train_nll -1.30766 | train_fsce 0.55379 | moe_balance 0.003925 | gate_usage [0.319,0.265,0.416] | val_dev 0.72429 | expl_dev 0.51025
-epoch  850 | train_nll -1.31297 | train_fsce 0.55593 | moe_balance 0.004067 | gate_usage [0.303,0.275,0.423] | val_dev 0.69306 | expl_dev 0.53136
-epoch  855 | train_nll -1.31401 | train_fsce 0.57358 | moe_balance 0.005652 | gate_usage [0.306,0.258,0.435] | val_dev 0.71546 | expl_dev 0.51622
-epoch  860 | train_nll -1.31666 | train_fsce 0.58134 | moe_balance 0.003355 | gate_usage [0.308,0.279,0.413] | val_dev 0.69258 | expl_dev 0.53169
-epoch  865 | train_nll -1.31681 | train_fsce 0.58447 | moe_balance 0.004595 | gate_usage [0.300,0.271,0.429] | val_dev 0.71402 | expl_dev 0.51720
-epoch  870 | train_nll -1.31524 | train_fsce 0.55826 | moe_balance 0.005456 | gate_usage [0.293,0.270,0.436] | val_dev 0.70121 | expl_dev 0.52586
-epoch  875 | train_nll -1.31326 | train_fsce 0.57094 | moe_balance 0.004420 | gate_usage [0.298,0.275,0.427] | val_dev 0.70327 | expl_dev 0.52446
-epoch  880 | train_nll -1.31761 | train_fsce 0.57931 | moe_balance 0.003596 | gate_usage [0.302,0.281,0.417] | val_dev 0.69198 | expl_dev 0.53210
-epoch  885 | train_nll -1.32207 | train_fsce 0.57192 | moe_balance 0.003947 | gate_usage [0.308,0.272,0.419] | val_dev 0.70241 | expl_dev 0.52504
-epoch  890 | train_nll -1.31318 | train_fsce 0.57099 | moe_balance 0.004276 | gate_usage [0.302,0.274,0.424] | val_dev 0.70439 | expl_dev 0.52371
-epoch  895 | train_nll -1.30932 | train_fsce 0.59560 | moe_balance 0.003374 | gate_usage [0.303,0.283,0.413] | val_dev 0.72235 | expl_dev 0.51156
-epoch  900 | train_nll -1.30604 | train_fsce 0.59245 | moe_balance 0.002922 | gate_usage [0.296,0.294,0.410] | val_dev 0.70537 | expl_dev 0.52305
-epoch  905 | train_nll -1.32090 | train_fsce 0.57079 | moe_balance 0.003931 | gate_usage [0.295,0.284,0.422] | val_dev 0.71952 | expl_dev 0.51348
-epoch  910 | train_nll -1.28616 | train_fsce 0.54321 | moe_balance 0.008017 | gate_usage [0.257,0.284,0.459] | val_dev 0.78461 | expl_dev 0.46947
-epoch  915 | train_nll -1.29006 | train_fsce 0.54605 | moe_balance 0.010361 | gate_usage [0.253,0.269,0.478] | val_dev 0.69593 | expl_dev 0.52943
-epoch  920 | train_nll -1.29659 | train_fsce 0.50577 | moe_balance 0.012521 | gate_usage [0.225,0.290,0.486] | val_dev 0.67641 | expl_dev 0.54263
-epoch  925 | train_nll -1.30177 | train_fsce 0.54016 | moe_balance 0.009872 | gate_usage [0.243,0.288,0.470] | val_dev 0.69163 | expl_dev 0.53234
-epoch  930 | train_nll -1.30480 | train_fsce 0.55575 | moe_balance 0.003335 | gate_usage [0.282,0.305,0.413] | val_dev 0.69109 | expl_dev 0.53270
-epoch  935 | train_nll -1.30380 | train_fsce 0.55624 | moe_balance 0.006330 | gate_usage [0.275,0.280,0.445] | val_dev 0.66769 | expl_dev 0.54852
-epoch  940 | train_nll -1.30310 | train_fsce 0.55363 | moe_balance 0.006307 | gate_usage [0.250,0.309,0.441] | val_dev 0.67674 | expl_dev 0.54240
-epoch  945 | train_nll -1.30418 | train_fsce 0.56226 | moe_balance 0.004048 | gate_usage [0.280,0.298,0.422] | val_dev 0.69059 | expl_dev 0.53304
-epoch  950 | train_nll -1.30427 | train_fsce 0.56332 | moe_balance 0.004510 | gate_usage [0.288,0.284,0.428] | val_dev 0.69459 | expl_dev 0.53033
-epoch  955 | train_nll -1.31594 | train_fsce 0.57182 | moe_balance 0.004814 | gate_usage [0.291,0.279,0.430] | val_dev 0.69528 | expl_dev 0.52987
-epoch  960 | train_nll -1.32272 | train_fsce 0.55028 | moe_balance 0.004772 | gate_usage [0.279,0.291,0.430] | val_dev 0.68840 | expl_dev 0.53452
-epoch  965 | train_nll -1.32273 | train_fsce 0.54300 | moe_balance 0.006088 | gate_usage [0.278,0.279,0.442] | val_dev 0.67574 | expl_dev 0.54308
-epoch  970 | train_nll -1.32766 | train_fsce 0.58318 | moe_balance 0.004161 | gate_usage [0.289,0.286,0.425] | val_dev 0.68134 | expl_dev 0.53930
-epoch  975 | train_nll -1.32396 | train_fsce 0.57177 | moe_balance 0.005014 | gate_usage [0.283,0.285,0.432] | val_dev 0.69337 | expl_dev 0.53116
-epoch  980 | train_nll -1.32560 | train_fsce 0.58985 | moe_balance 0.004034 | gate_usage [0.282,0.296,0.422] | val_dev 0.68512 | expl_dev 0.53673
-epoch  985 | train_nll -1.32002 | train_fsce 0.57385 | moe_balance 0.005394 | gate_usage [0.269,0.296,0.435] | val_dev 0.67014 | expl_dev 0.54687
-epoch  990 | train_nll -1.32841 | train_fsce 0.55434 | moe_balance 0.004701 | gate_usage [0.285,0.285,0.430] | val_dev 0.69244 | expl_dev 0.53179
-epoch  995 | train_nll -1.32050 | train_fsce 0.59187 | moe_balance 0.004210 | gate_usage [0.268,0.310,0.422] | val_dev 0.68844 | expl_dev 0.53449
-epoch 1000 | train_nll -1.33177 | train_fsce 0.56425 | moe_balance 0.002768 | gate_usage [0.302,0.292,0.406] | val_dev 0.69134 | expl_dev 0.53253
-已存 C:\Users\楊仟愉\n\project-2\model\v3_ddae_mot\result\latents.npz
+1233 patches, train=1110, val=123, device=cpu, train-only FSCE edges=22360
+epoch    1 | train_nll 0.56376 | train_fsce 3.16756 | moe_balance 0.000213 | gate_usage [0.512,0.488] | lr 1.00e-03/3.00e-04 | val_nll -0.13538 | val_dev 2.52685 | expl_dev -0.70860 | BEST
+epoch    5 | train_nll -0.86803 | train_fsce 1.72661 | moe_balance 0.006333 | gate_usage [0.420,0.580] | lr 1.00e-03/3.00e-04 | val_nll -0.74851 | val_dev 1.30059 | expl_dev 0.12056 | BEST
+epoch   10 | train_nll -1.06457 | train_fsce 1.21902 | moe_balance 0.009505 | gate_usage [0.403,0.597] | lr 1.00e-03/3.00e-04 | val_nll -0.89049 | val_dev 1.01664 | expl_dev 0.31257 | BEST
+epoch   15 | train_nll -1.14798 | train_fsce 1.25989 | moe_balance 0.002658 | gate_usage [0.449,0.551] | lr 1.00e-03/3.00e-04 | val_nll -0.94985 | val_dev 0.89791 | expl_dev 0.39285 | BEST
+epoch   20 | train_nll -1.19573 | train_fsce 1.23958 | moe_balance 0.000411 | gate_usage [0.484,0.516] | lr 1.00e-03/3.00e-04 | val_nll -0.96866 | val_dev 0.86028 | expl_dev 0.41829 | BEST
+epoch   25 | train_nll -1.21308 | train_fsce 1.22159 | moe_balance 0.000047 | gate_usage [0.500,0.500] | lr 1.00e-03/3.00e-04 | val_nll -0.98789 | val_dev 0.82182 | expl_dev 0.44430 | BEST
+epoch   30 | train_nll -1.22967 | train_fsce 1.15921 | moe_balance 0.000656 | gate_usage [0.525,0.475] | lr 1.00e-03/3.00e-04 | val_nll -1.00149 | val_dev 0.79463 | expl_dev 0.46269 | BEST
+epoch   35 | train_nll -1.23746 | train_fsce 1.22071 | moe_balance 0.000382 | gate_usage [0.518,0.482] | lr 1.00e-03/3.00e-04 | val_nll -1.00157 | val_dev 0.79446 | expl_dev 0.46280 | BEST
+epoch   40 | train_nll -1.24622 | train_fsce 1.19954 | moe_balance 0.000564 | gate_usage [0.522,0.478] | lr 1.00e-03/3.00e-04 | val_nll -1.01084 | val_dev 0.77592 | expl_dev 0.47534 | BEST
+epoch   45 | train_nll -1.23938 | train_fsce 1.18254 | moe_balance 0.000879 | gate_usage [0.523,0.477] | lr 1.00e-03/3.00e-04 | val_nll -1.00368 | val_dev 0.79024 | expl_dev 0.46565
+epoch   50 | train_nll -1.24705 | train_fsce 1.14537 | moe_balance 0.000756 | gate_usage [0.521,0.479] | lr 1.00e-03/3.00e-04 | val_nll -1.01735 | val_dev 0.76290 | expl_dev 0.48414 | BEST
+epoch   55 | train_nll -1.25390 | train_fsce 1.15328 | moe_balance 0.000674 | gate_usage [0.521,0.479] | lr 1.00e-03/3.00e-04 | val_nll -1.02253 | val_dev 0.75254 | expl_dev 0.49115 | BEST
+epoch   60 | train_nll -1.25641 | train_fsce 1.14046 | moe_balance 0.000206 | gate_usage [0.510,0.490] | lr 1.00e-03/3.00e-04 | val_nll -1.02274 | val_dev 0.75213 | expl_dev 0.49142 | BEST
+epoch   65 | train_nll -1.25902 | train_fsce 1.10724 | moe_balance 0.000152 | gate_usage [0.504,0.496] | lr 1.00e-03/3.00e-04 | val_nll -1.02550 | val_dev 0.74661 | expl_dev 0.49516 | BEST
+epoch   70 | train_nll -1.26044 | train_fsce 1.12245 | moe_balance 0.000240 | gate_usage [0.512,0.488] | lr 1.00e-03/3.00e-04 | val_nll -1.02278 | val_dev 0.75205 | expl_dev 0.49148
+epoch   75 | train_nll -1.26633 | train_fsce 1.03685 | moe_balance 0.000269 | gate_usage [0.492,0.508] | lr 1.00e-03/3.00e-04 | val_nll -1.01066 | val_dev 0.77630 | expl_dev 0.47508
+epoch   80 | train_nll -1.26298 | train_fsce 1.06673 | moe_balance 0.000596 | gate_usage [0.492,0.508] | lr 1.00e-03/3.00e-04 | val_nll -1.02119 | val_dev 0.75523 | expl_dev 0.48933
+epoch   85 | train_nll -1.27159 | train_fsce 1.04139 | moe_balance 0.000112 | gate_usage [0.501,0.499] | lr 1.00e-03/3.00e-04 | val_nll -1.02416 | val_dev 0.74928 | expl_dev 0.49335
+epoch   90 | train_nll -1.27800 | train_fsce 1.03951 | moe_balance 0.000342 | gate_usage [0.515,0.485] | lr 1.00e-03/3.00e-04 | val_nll -1.03094 | val_dev 0.73573 | expl_dev 0.50251 | BEST
+epoch   95 | train_nll -1.26950 | train_fsce 0.99760 | moe_balance 0.001147 | gate_usage [0.529,0.471] | lr 1.00e-03/3.00e-04 | val_nll -1.02573 | val_dev 0.74615 | expl_dev 0.49547
+epoch  100 | train_nll -1.26953 | train_fsce 0.98945 | moe_balance 0.002729 | gate_usage [0.546,0.454] | lr 1.00e-03/3.00e-04 | val_nll -1.02087 | val_dev 0.75587 | expl_dev 0.48890
+epoch  105 | train_nll -1.27877 | train_fsce 0.90557 | moe_balance 0.000305 | gate_usage [0.507,0.493] | lr 1.00e-03/3.00e-04 | val_nll -1.03617 | val_dev 0.72527 | expl_dev 0.50959 | BEST
+epoch  110 | train_nll -1.28631 | train_fsce 0.93825 | moe_balance 0.000659 | gate_usage [0.518,0.482] | lr 1.00e-03/3.00e-04 | val_nll -1.02683 | val_dev 0.74394 | expl_dev 0.49696
+epoch  115 | train_nll -1.28857 | train_fsce 0.93880 | moe_balance 0.001051 | gate_usage [0.527,0.473] | lr 1.00e-03/3.00e-04 | val_nll -1.03401 | val_dev 0.72960 | expl_dev 0.50666
+epoch  120 | train_nll -1.28951 | train_fsce 0.92972 | moe_balance 0.000683 | gate_usage [0.522,0.478] | lr 1.00e-03/3.00e-04 | val_nll -1.03640 | val_dev 0.72480 | expl_dev 0.50991 | BEST
+epoch  125 | train_nll -1.29039 | train_fsce 0.90574 | moe_balance 0.000850 | gate_usage [0.524,0.476] | lr 1.00e-03/3.00e-04 | val_nll -1.02751 | val_dev 0.74259 | expl_dev 0.49788
+epoch  130 | train_nll -1.29119 | train_fsce 0.92654 | moe_balance 0.000288 | gate_usage [0.509,0.491] | lr 1.00e-03/3.00e-04 | val_nll -1.02476 | val_dev 0.74808 | expl_dev 0.49416
+epoch  135 | train_nll -1.27191 | train_fsce 0.89350 | moe_balance 0.000595 | gate_usage [0.501,0.499] | lr 1.00e-03/3.00e-04 | val_nll -1.03748 | val_dev 0.72264 | expl_dev 0.51137 | BEST
+epoch  140 | train_nll -1.28832 | train_fsce 0.90402 | moe_balance 0.003064 | gate_usage [0.552,0.448] | lr 1.00e-03/3.00e-04 | val_nll -1.04001 | val_dev 0.71759 | expl_dev 0.51478 | BEST
+epoch  145 | train_nll -1.29834 | train_fsce 0.90613 | moe_balance 0.000610 | gate_usage [0.523,0.477] | lr 1.00e-03/3.00e-04 | val_nll -1.02623 | val_dev 0.74515 | expl_dev 0.49614
+epoch  150 | train_nll -1.28995 | train_fsce 0.89051 | moe_balance 0.001052 | gate_usage [0.523,0.477] | lr 1.00e-03/3.00e-04 | val_nll -1.02953 | val_dev 0.73855 | expl_dev 0.50061
+epoch  155 | train_nll -1.29520 | train_fsce 0.85588 | moe_balance 0.000721 | gate_usage [0.523,0.477] | lr 1.00e-03/3.00e-04 | val_nll -1.03979 | val_dev 0.71802 | expl_dev 0.51449
+epoch  160 | train_nll -1.29300 | train_fsce 0.87718 | moe_balance 0.002369 | gate_usage [0.543,0.457] | lr 1.00e-03/3.00e-04 | val_nll -1.03539 | val_dev 0.72682 | expl_dev 0.50854
+epoch  165 | train_nll -1.29134 | train_fsce 0.86267 | moe_balance 0.000322 | gate_usage [0.511,0.489] | lr 1.00e-03/3.00e-04 | val_nll -1.03673 | val_dev 0.72415 | expl_dev 0.51035
+epoch  170 | train_nll -1.30137 | train_fsce 0.87348 | moe_balance 0.000454 | gate_usage [0.516,0.484] | lr 1.00e-03/3.00e-04 | val_nll -1.04014 | val_dev 0.71733 | expl_dev 0.51496 | BEST
+epoch  175 | train_nll -1.29794 | train_fsce 0.80864 | moe_balance 0.000283 | gate_usage [0.502,0.498] | lr 1.00e-03/3.00e-04 | val_nll -1.03765 | val_dev 0.72230 | expl_dev 0.51159
+epoch  180 | train_nll -1.29907 | train_fsce 0.84606 | moe_balance 0.001110 | gate_usage [0.521,0.479] | lr 1.00e-03/3.00e-04 | val_nll -1.03291 | val_dev 0.73179 | expl_dev 0.50518
+epoch  185 | train_nll -1.29441 | train_fsce 0.83447 | moe_balance 0.000167 | gate_usage [0.496,0.504] | lr 1.00e-03/3.00e-04 | val_nll -1.02696 | val_dev 0.74368 | expl_dev 0.49714
+epoch  190 | train_nll -1.30470 | train_fsce 0.84504 | moe_balance 0.001712 | gate_usage [0.540,0.460] | lr 1.00e-03/3.00e-04 | val_nll -1.01951 | val_dev 0.75858 | expl_dev 0.48706
+epoch  195 | train_nll -1.29921 | train_fsce 0.84783 | moe_balance 0.000495 | gate_usage [0.498,0.502] | lr 1.00e-03/3.00e-04 | val_nll -1.03220 | val_dev 0.73321 | expl_dev 0.50422
+epoch  200 | train_nll -1.29825 | train_fsce 0.84509 | moe_balance 0.001036 | gate_usage [0.527,0.473] | lr 1.00e-03/3.00e-04 | val_nll -1.01584 | val_dev 0.76593 | expl_dev 0.48209
+epoch  205 | train_nll -1.30352 | train_fsce 0.83550 | moe_balance 0.000847 | gate_usage [0.522,0.478] | lr 1.00e-03/3.00e-04 | val_nll -1.00228 | val_dev 0.79306 | expl_dev 0.46375
+epoch  210 | train_nll -1.29947 | train_fsce 0.78341 | moe_balance 0.000767 | gate_usage [0.481,0.519] | lr 1.00e-03/3.00e-04 | val_nll -1.04223 | val_dev 0.71314 | expl_dev 0.51779 | BEST
+epoch  215 | train_nll -1.30721 | train_fsce 0.76212 | moe_balance 0.000755 | gate_usage [0.513,0.487] | lr 1.00e-03/3.00e-04 | val_nll -1.03385 | val_dev 0.72991 | expl_dev 0.50645
+epoch  220 | train_nll -1.31139 | train_fsce 0.77791 | moe_balance 0.000182 | gate_usage [0.504,0.496] | lr 1.00e-03/3.00e-04 | val_nll -1.03312 | val_dev 0.73137 | expl_dev 0.50546
+epoch  225 | train_nll -1.30580 | train_fsce 0.72371 | moe_balance 0.000498 | gate_usage [0.503,0.497] | lr 1.00e-03/3.00e-04 | val_nll -1.00525 | val_dev 0.78711 | expl_dev 0.46777
+epoch  230 | train_nll -1.30693 | train_fsce 0.80236 | moe_balance 0.001580 | gate_usage [0.536,0.464] | lr 1.00e-03/3.00e-04 | val_nll -1.01279 | val_dev 0.77202 | expl_dev 0.47797
+epoch  235 | train_nll -1.31752 | train_fsce 0.80976 | moe_balance 0.000503 | gate_usage [0.518,0.482] | lr 1.00e-03/3.00e-04 | val_nll -1.02764 | val_dev 0.74232 | expl_dev 0.49806
+epoch  240 | train_nll -1.30718 | train_fsce 0.75494 | moe_balance 0.000820 | gate_usage [0.521,0.479] | lr 1.00e-03/3.00e-04 | val_nll -1.01973 | val_dev 0.75815 | expl_dev 0.48735
+epoch  245 | train_nll -1.30242 | train_fsce 0.77785 | moe_balance 0.000753 | gate_usage [0.521,0.479] | lr 1.00e-03/3.00e-04 | val_nll -1.01775 | val_dev 0.76211 | expl_dev 0.48468
+epoch  250 | train_nll -1.30665 | train_fsce 0.78440 | moe_balance 0.000636 | gate_usage [0.525,0.475] | lr 1.00e-03/3.00e-04 | val_nll -1.02584 | val_dev 0.74594 | expl_dev 0.49561
+epoch  255 | train_nll -1.30970 | train_fsce 0.75304 | moe_balance 0.000225 | gate_usage [0.487,0.513] | lr 1.00e-03/3.00e-04 | val_nll -1.03550 | val_dev 0.72661 | expl_dev 0.50868
+epoch  260 | train_nll -1.31055 | train_fsce 0.76920 | moe_balance 0.000403 | gate_usage [0.506,0.494] | lr 1.00e-03/3.00e-04 | val_nll -1.01137 | val_dev 0.77486 | expl_dev 0.47605
+epoch  265 | train_nll -1.31661 | train_fsce 0.71820 | moe_balance 0.000243 | gate_usage [0.511,0.489] | lr 1.00e-03/3.00e-04 | val_nll -1.03393 | val_dev 0.72975 | expl_dev 0.50656
+epoch  270 | train_nll -1.30745 | train_fsce 0.73893 | moe_balance 0.000207 | gate_usage [0.500,0.500] | lr 1.00e-03/3.00e-04 | val_nll -1.02790 | val_dev 0.74180 | expl_dev 0.49841
+epoch  275 | train_nll -1.31330 | train_fsce 0.77341 | moe_balance 0.001257 | gate_usage [0.521,0.479] | lr 5.00e-04/1.50e-04 | val_nll -1.03138 | val_dev 0.73486 | expl_dev 0.50311
+epoch  280 | train_nll -1.31410 | train_fsce 0.79487 | moe_balance 0.001572 | gate_usage [0.536,0.464] | lr 5.00e-04/1.50e-04 | val_nll -1.02688 | val_dev 0.74384 | expl_dev 0.49703
+epoch  285 | train_nll -1.32686 | train_fsce 0.75769 | moe_balance 0.000051 | gate_usage [0.502,0.498] | lr 5.00e-04/1.50e-04 | val_nll -1.03123 | val_dev 0.73516 | expl_dev 0.50290
+epoch  290 | train_nll -1.32543 | train_fsce 0.73666 | moe_balance 0.000717 | gate_usage [0.522,0.478] | lr 5.00e-04/1.50e-04 | val_nll -1.01396 | val_dev 0.76969 | expl_dev 0.47955
+epoch  295 | train_nll -1.32480 | train_fsce 0.75345 | moe_balance 0.000664 | gate_usage [0.489,0.511] | lr 5.00e-04/1.50e-04 | val_nll -1.04425 | val_dev 0.70911 | expl_dev 0.52052 | BEST
+epoch  300 | train_nll -1.32295 | train_fsce 0.73884 | moe_balance 0.000274 | gate_usage [0.510,0.490] | lr 5.00e-04/1.50e-04 | val_nll -1.03046 | val_dev 0.73668 | expl_dev 0.50187
+epoch  305 | train_nll -1.32170 | train_fsce 0.74057 | moe_balance 0.002117 | gate_usage [0.532,0.468] | lr 5.00e-04/1.50e-04 | val_nll -1.03668 | val_dev 0.72424 | expl_dev 0.51028
+epoch  310 | train_nll -1.32755 | train_fsce 0.75851 | moe_balance 0.000542 | gate_usage [0.517,0.483] | lr 5.00e-04/1.50e-04 | val_nll -1.03359 | val_dev 0.73043 | expl_dev 0.50610
+epoch  315 | train_nll -1.32460 | train_fsce 0.77830 | moe_balance 0.000219 | gate_usage [0.504,0.496] | lr 5.00e-04/1.50e-04 | val_nll -1.03564 | val_dev 0.72633 | expl_dev 0.50887
+epoch  320 | train_nll -1.32725 | train_fsce 0.72576 | moe_balance 0.000847 | gate_usage [0.522,0.478] | lr 5.00e-04/1.50e-04 | val_nll -1.03323 | val_dev 0.73114 | expl_dev 0.50562
+epoch  325 | train_nll -1.32371 | train_fsce 0.76392 | moe_balance 0.000847 | gate_usage [0.499,0.501] | lr 5.00e-04/1.50e-04 | val_nll -1.04375 | val_dev 0.71010 | expl_dev 0.51984
+epoch  330 | train_nll -1.32563 | train_fsce 0.75520 | moe_balance 0.001175 | gate_usage [0.533,0.467] | lr 5.00e-04/1.50e-04 | val_nll -1.03330 | val_dev 0.73100 | expl_dev 0.50571
+epoch  335 | train_nll -1.32341 | train_fsce 0.74748 | moe_balance 0.000574 | gate_usage [0.507,0.493] | lr 5.00e-04/1.50e-04 | val_nll -1.02403 | val_dev 0.74954 | expl_dev 0.49318
+epoch  340 | train_nll -1.33366 | train_fsce 0.77576 | moe_balance 0.000631 | gate_usage [0.509,0.491] | lr 5.00e-04/1.50e-04 | val_nll -1.03306 | val_dev 0.73149 | expl_dev 0.50538
+epoch  345 | train_nll -1.32572 | train_fsce 0.74740 | moe_balance 0.000284 | gate_usage [0.505,0.495] | lr 5.00e-04/1.50e-04 | val_nll -1.03128 | val_dev 0.73505 | expl_dev 0.50298
+epoch  350 | train_nll -1.32975 | train_fsce 0.72328 | moe_balance 0.000202 | gate_usage [0.506,0.494] | lr 5.00e-04/1.50e-04 | val_nll -1.04802 | val_dev 0.70156 | expl_dev 0.52562 | BEST
+epoch  355 | train_nll -1.33362 | train_fsce 0.70647 | moe_balance 0.000131 | gate_usage [0.498,0.502] | lr 5.00e-04/1.50e-04 | val_nll -1.04589 | val_dev 0.70582 | expl_dev 0.52274
+epoch  360 | train_nll -1.32873 | train_fsce 0.73954 | moe_balance 0.000354 | gate_usage [0.512,0.488] | lr 5.00e-04/1.50e-04 | val_nll -1.03147 | val_dev 0.73467 | expl_dev 0.50323
+epoch  365 | train_nll -1.33511 | train_fsce 0.74645 | moe_balance 0.000659 | gate_usage [0.504,0.496] | lr 5.00e-04/1.50e-04 | val_nll -1.02587 | val_dev 0.74587 | expl_dev 0.49566
+epoch  370 | train_nll -1.33189 | train_fsce 0.75062 | moe_balance 0.000549 | gate_usage [0.483,0.517] | lr 5.00e-04/1.50e-04 | val_nll -1.03369 | val_dev 0.73023 | expl_dev 0.50624
+epoch  375 | train_nll -1.32404 | train_fsce 0.76254 | moe_balance 0.000659 | gate_usage [0.521,0.479] | lr 5.00e-04/1.50e-04 | val_nll -1.04265 | val_dev 0.71231 | expl_dev 0.51835
+epoch  380 | train_nll -1.32982 | train_fsce 0.70682 | moe_balance 0.000055 | gate_usage [0.502,0.498] | lr 5.00e-04/1.50e-04 | val_nll -1.04733 | val_dev 0.70294 | expl_dev 0.52468
+epoch  385 | train_nll -1.33107 | train_fsce 0.74910 | moe_balance 0.000270 | gate_usage [0.511,0.489] | lr 5.00e-04/1.50e-04 | val_nll -1.04000 | val_dev 0.71761 | expl_dev 0.51477
+epoch  390 | train_nll -1.32656 | train_fsce 0.73873 | moe_balance 0.000014 | gate_usage [0.498,0.502] | lr 5.00e-04/1.50e-04 | val_nll -1.04795 | val_dev 0.70170 | expl_dev 0.52552
+epoch  395 | train_nll -1.33053 | train_fsce 0.74019 | moe_balance 0.000556 | gate_usage [0.490,0.510] | lr 5.00e-04/1.50e-04 | val_nll -1.04624 | val_dev 0.70513 | expl_dev 0.52321
+epoch  400 | train_nll -1.32819 | train_fsce 0.72097 | moe_balance 0.000324 | gate_usage [0.487,0.513] | lr 5.00e-04/1.50e-04 | val_nll -1.05171 | val_dev 0.69419 | expl_dev 0.53060 | BEST
+epoch  405 | train_nll -1.33164 | train_fsce 0.74288 | moe_balance 0.000551 | gate_usage [0.515,0.485] | lr 5.00e-04/1.50e-04 | val_nll -1.04790 | val_dev 0.70182 | expl_dev 0.52545
+epoch  410 | train_nll -1.32556 | train_fsce 0.72049 | moe_balance 0.000676 | gate_usage [0.483,0.517] | lr 5.00e-04/1.50e-04 | val_nll -1.04540 | val_dev 0.70680 | expl_dev 0.52208
+epoch  415 | train_nll -1.33399 | train_fsce 0.71427 | moe_balance 0.000320 | gate_usage [0.491,0.509] | lr 5.00e-04/1.50e-04 | val_nll -1.04430 | val_dev 0.70901 | expl_dev 0.52058
+epoch  420 | train_nll -1.33426 | train_fsce 0.74634 | moe_balance 0.000890 | gate_usage [0.496,0.504] | lr 5.00e-04/1.50e-04 | val_nll -1.04904 | val_dev 0.69953 | expl_dev 0.52699
+epoch  425 | train_nll -1.33301 | train_fsce 0.72041 | moe_balance 0.000196 | gate_usage [0.500,0.500] | lr 5.00e-04/1.50e-04 | val_nll -1.05441 | val_dev 0.68878 | expl_dev 0.53426 | BEST
+epoch  430 | train_nll -1.33796 | train_fsce 0.70087 | moe_balance 0.000479 | gate_usage [0.500,0.500] | lr 5.00e-04/1.50e-04 | val_nll -1.04339 | val_dev 0.71082 | expl_dev 0.51936
+epoch  435 | train_nll -1.33420 | train_fsce 0.71694 | moe_balance 0.000317 | gate_usage [0.492,0.508] | lr 5.00e-04/1.50e-04 | val_nll -1.04046 | val_dev 0.71669 | expl_dev 0.51539
+epoch  440 | train_nll -1.33854 | train_fsce 0.74326 | moe_balance 0.000633 | gate_usage [0.523,0.477] | lr 5.00e-04/1.50e-04 | val_nll -1.03548 | val_dev 0.72664 | expl_dev 0.50866
+epoch  445 | train_nll -1.32650 | train_fsce 0.72283 | moe_balance 0.000204 | gate_usage [0.495,0.505] | lr 5.00e-04/1.50e-04 | val_nll -1.05246 | val_dev 0.69268 | expl_dev 0.53163
+epoch  450 | train_nll -1.33407 | train_fsce 0.72580 | moe_balance 0.000564 | gate_usage [0.484,0.516] | lr 5.00e-04/1.50e-04 | val_nll -1.05645 | val_dev 0.68471 | expl_dev 0.53701 | BEST
+epoch  455 | train_nll -1.32781 | train_fsce 0.74270 | moe_balance 0.000496 | gate_usage [0.506,0.494] | lr 5.00e-04/1.50e-04 | val_nll -1.04968 | val_dev 0.69825 | expl_dev 0.52786
+epoch  460 | train_nll -1.33917 | train_fsce 0.69986 | moe_balance 0.000314 | gate_usage [0.487,0.513] | lr 5.00e-04/1.50e-04 | val_nll -1.04772 | val_dev 0.70217 | expl_dev 0.52520
+epoch  465 | train_nll -1.33782 | train_fsce 0.76010 | moe_balance 0.000998 | gate_usage [0.518,0.482] | lr 5.00e-04/1.50e-04 | val_nll -1.04069 | val_dev 0.71623 | expl_dev 0.51570
+epoch  470 | train_nll -1.33455 | train_fsce 0.68576 | moe_balance 0.000279 | gate_usage [0.499,0.501] | lr 5.00e-04/1.50e-04 | val_nll -1.05077 | val_dev 0.69607 | expl_dev 0.52933
+epoch  475 | train_nll -1.33841 | train_fsce 0.70555 | moe_balance 0.000780 | gate_usage [0.518,0.482] | lr 5.00e-04/1.50e-04 | val_nll -1.03797 | val_dev 0.72167 | expl_dev 0.51202
+epoch  480 | train_nll -1.33299 | train_fsce 0.71390 | moe_balance 0.000222 | gate_usage [0.496,0.504] | lr 5.00e-04/1.50e-04 | val_nll -1.05255 | val_dev 0.69251 | expl_dev 0.53174
+epoch  485 | train_nll -1.33079 | train_fsce 0.77160 | moe_balance 0.000772 | gate_usage [0.508,0.492] | lr 5.00e-04/1.50e-04 | val_nll -1.04139 | val_dev 0.71483 | expl_dev 0.51665
+epoch  490 | train_nll -1.33873 | train_fsce 0.71791 | moe_balance 0.000262 | gate_usage [0.506,0.494] | lr 5.00e-04/1.50e-04 | val_nll -1.05351 | val_dev 0.69058 | expl_dev 0.53305
+epoch  495 | train_nll -1.33263 | train_fsce 0.72170 | moe_balance 0.000373 | gate_usage [0.509,0.491] | lr 5.00e-04/1.50e-04 | val_nll -1.04190 | val_dev 0.71380 | expl_dev 0.51734
+epoch  500 | train_nll -1.33202 | train_fsce 0.69558 | moe_balance 0.000276 | gate_usage [0.506,0.494] | lr 5.00e-04/1.50e-04 | val_nll -1.04211 | val_dev 0.71339 | expl_dev 0.51762
+epoch  505 | train_nll -1.33832 | train_fsce 0.72198 | moe_balance 0.000303 | gate_usage [0.490,0.510] | lr 5.00e-04/1.50e-04 | val_nll -1.04886 | val_dev 0.69989 | expl_dev 0.52675
+epoch  510 | train_nll -1.33572 | train_fsce 0.73783 | moe_balance 0.000189 | gate_usage [0.511,0.489] | lr 5.00e-04/1.50e-04 | val_nll -1.05283 | val_dev 0.69194 | expl_dev 0.53212
+epoch  515 | train_nll -1.33946 | train_fsce 0.75383 | moe_balance 0.001381 | gate_usage [0.536,0.464] | lr 2.50e-04/7.50e-05 | val_nll -1.05366 | val_dev 0.69028 | expl_dev 0.53325
+epoch  520 | train_nll -1.33243 | train_fsce 0.73559 | moe_balance 0.000564 | gate_usage [0.515,0.485] | lr 2.50e-04/7.50e-05 | val_nll -1.05574 | val_dev 0.68612 | expl_dev 0.53606
+epoch  525 | train_nll -1.34399 | train_fsce 0.73883 | moe_balance 0.000747 | gate_usage [0.511,0.489] | lr 2.50e-04/7.50e-05 | val_nll -1.05079 | val_dev 0.69602 | expl_dev 0.52936
+epoch  530 | train_nll -1.35075 | train_fsce 0.71862 | moe_balance 0.000319 | gate_usage [0.515,0.485] | lr 2.50e-04/7.50e-05 | val_nll -1.04421 | val_dev 0.70919 | expl_dev 0.52046
+epoch  535 | train_nll -1.34573 | train_fsce 0.76211 | moe_balance 0.000397 | gate_usage [0.513,0.487] | lr 2.50e-04/7.50e-05 | val_nll -1.05766 | val_dev 0.68228 | expl_dev 0.53866 | BEST
+epoch  540 | train_nll -1.34231 | train_fsce 0.74231 | moe_balance 0.000408 | gate_usage [0.512,0.488] | lr 2.50e-04/7.50e-05 | val_nll -1.04568 | val_dev 0.70624 | expl_dev 0.52246
+epoch  545 | train_nll -1.34510 | train_fsce 0.73832 | moe_balance 0.000714 | gate_usage [0.507,0.493] | lr 2.50e-04/7.50e-05 | val_nll -1.05382 | val_dev 0.68996 | expl_dev 0.53346
+epoch  550 | train_nll -1.35017 | train_fsce 0.69739 | moe_balance 0.000646 | gate_usage [0.508,0.492] | lr 2.50e-04/7.50e-05 | val_nll -1.05411 | val_dev 0.68938 | expl_dev 0.53386
+epoch  555 | train_nll -1.34241 | train_fsce 0.72750 | moe_balance 0.000778 | gate_usage [0.493,0.507] | lr 2.50e-04/7.50e-05 | val_nll -1.05185 | val_dev 0.69391 | expl_dev 0.53079
+epoch  560 | train_nll -1.35109 | train_fsce 0.74973 | moe_balance 0.000410 | gate_usage [0.520,0.480] | lr 2.50e-04/7.50e-05 | val_nll -1.05452 | val_dev 0.68856 | expl_dev 0.53441
+epoch  565 | train_nll -1.34612 | train_fsce 0.72142 | moe_balance 0.000320 | gate_usage [0.509,0.491] | lr 2.50e-04/7.50e-05 | val_nll -1.04807 | val_dev 0.70147 | expl_dev 0.52568
+epoch  570 | train_nll -1.34908 | train_fsce 0.74638 | moe_balance 0.000812 | gate_usage [0.512,0.488] | lr 2.50e-04/7.50e-05 | val_nll -1.06142 | val_dev 0.67476 | expl_dev 0.54374 | BEST
+epoch  575 | train_nll -1.34815 | train_fsce 0.73372 | moe_balance 0.000665 | gate_usage [0.519,0.481] | lr 2.50e-04/7.50e-05 | val_nll -1.04012 | val_dev 0.71738 | expl_dev 0.51493
+epoch  580 | train_nll -1.34907 | train_fsce 0.69838 | moe_balance 0.000391 | gate_usage [0.509,0.491] | lr 2.50e-04/7.50e-05 | val_nll -1.04903 | val_dev 0.69955 | expl_dev 0.52698
+epoch  585 | train_nll -1.34854 | train_fsce 0.70191 | moe_balance 0.000448 | gate_usage [0.504,0.496] | lr 2.50e-04/7.50e-05 | val_nll -1.04917 | val_dev 0.69927 | expl_dev 0.52717
+epoch  590 | train_nll -1.34736 | train_fsce 0.70731 | moe_balance 0.000418 | gate_usage [0.518,0.482] | lr 2.50e-04/7.50e-05 | val_nll -1.05421 | val_dev 0.68919 | expl_dev 0.53399
+epoch  595 | train_nll -1.34611 | train_fsce 0.72904 | moe_balance 0.000835 | gate_usage [0.523,0.477] | lr 2.50e-04/7.50e-05 | val_nll -1.03562 | val_dev 0.72636 | expl_dev 0.50885
+epoch  600 | train_nll -1.34314 | train_fsce 0.73333 | moe_balance 0.000977 | gate_usage [0.521,0.479] | lr 2.50e-04/7.50e-05 | val_nll -1.05083 | val_dev 0.69595 | expl_dev 0.52941
+epoch  605 | train_nll -1.34157 | train_fsce 0.73997 | moe_balance 0.000745 | gate_usage [0.519,0.481] | lr 2.50e-04/7.50e-05 | val_nll -1.05298 | val_dev 0.69165 | expl_dev 0.53232
+epoch  610 | train_nll -1.33949 | train_fsce 0.71513 | moe_balance 0.000449 | gate_usage [0.518,0.482] | lr 2.50e-04/7.50e-05 | val_nll -1.04897 | val_dev 0.69966 | expl_dev 0.52690
+epoch  615 | train_nll -1.34632 | train_fsce 0.72662 | moe_balance 0.001269 | gate_usage [0.519,0.481] | lr 2.50e-04/7.50e-05 | val_nll -1.05694 | val_dev 0.68373 | expl_dev 0.53768
+epoch  620 | train_nll -1.34546 | train_fsce 0.70168 | moe_balance 0.000717 | gate_usage [0.517,0.483] | lr 2.50e-04/7.50e-05 | val_nll -1.05112 | val_dev 0.69537 | expl_dev 0.52980
+epoch  625 | train_nll -1.34774 | train_fsce 0.69974 | moe_balance 0.000405 | gate_usage [0.512,0.488] | lr 2.50e-04/7.50e-05 | val_nll -1.03619 | val_dev 0.72522 | expl_dev 0.50962
+epoch  630 | train_nll -1.34193 | train_fsce 0.72982 | moe_balance 0.001472 | gate_usage [0.533,0.467] | lr 2.50e-04/7.50e-05 | val_nll -1.03812 | val_dev 0.72137 | expl_dev 0.51223
+epoch  635 | train_nll -1.35183 | train_fsce 0.71474 | moe_balance 0.000642 | gate_usage [0.511,0.489] | lr 1.25e-04/3.75e-05 | val_nll -1.04537 | val_dev 0.70686 | expl_dev 0.52204
+epoch  640 | train_nll -1.35273 | train_fsce 0.72834 | moe_balance 0.000188 | gate_usage [0.509,0.491] | lr 1.25e-04/3.75e-05 | val_nll -1.05304 | val_dev 0.69152 | expl_dev 0.53241
+epoch  645 | train_nll -1.34802 | train_fsce 0.71906 | moe_balance 0.000786 | gate_usage [0.519,0.481] | lr 1.25e-04/3.75e-05 | val_nll -1.04597 | val_dev 0.70566 | expl_dev 0.52285
+epoch  650 | train_nll -1.34705 | train_fsce 0.69712 | moe_balance 0.000236 | gate_usage [0.505,0.495] | lr 1.25e-04/3.75e-05 | val_nll -1.03476 | val_dev 0.72809 | expl_dev 0.50768
+epoch  655 | train_nll -1.34490 | train_fsce 0.72686 | moe_balance 0.000234 | gate_usage [0.515,0.485] | lr 1.25e-04/3.75e-05 | val_nll -1.04046 | val_dev 0.71668 | expl_dev 0.51539
+epoch  660 | train_nll -1.35471 | train_fsce 0.70713 | moe_balance 0.000719 | gate_usage [0.516,0.484] | lr 1.25e-04/3.75e-05 | val_nll -1.04702 | val_dev 0.70357 | expl_dev 0.52426
+epoch  665 | train_nll -1.35738 | train_fsce 0.74082 | moe_balance 0.000503 | gate_usage [0.518,0.482] | lr 1.25e-04/3.75e-05 | val_nll -1.04553 | val_dev 0.70654 | expl_dev 0.52225
+epoch  670 | train_nll -1.35140 | train_fsce 0.70798 | moe_balance 0.000694 | gate_usage [0.512,0.488] | lr 1.25e-04/3.75e-05 | val_nll -1.05135 | val_dev 0.69491 | expl_dev 0.53011
+epoch  675 | train_nll -1.34890 | train_fsce 0.71542 | moe_balance 0.000620 | gate_usage [0.515,0.485] | lr 1.25e-04/3.75e-05 | val_nll -1.03445 | val_dev 0.72871 | expl_dev 0.50726
+epoch  680 | train_nll -1.35444 | train_fsce 0.73592 | moe_balance 0.000304 | gate_usage [0.512,0.488] | lr 1.25e-04/3.75e-05 | val_nll -1.04122 | val_dev 0.71516 | expl_dev 0.51642
+epoch  685 | train_nll -1.35065 | train_fsce 0.73481 | moe_balance 0.001211 | gate_usage [0.516,0.484] | lr 1.25e-04/3.75e-05 | val_nll -1.04851 | val_dev 0.70060 | expl_dev 0.52627
+epoch  690 | train_nll -1.34028 | train_fsce 0.71861 | moe_balance 0.000338 | gate_usage [0.502,0.498] | lr 1.25e-04/3.75e-05 | val_nll -1.05283 | val_dev 0.69195 | expl_dev 0.53212
+epoch  695 | train_nll -1.35419 | train_fsce 0.73658 | moe_balance 0.001220 | gate_usage [0.530,0.470] | lr 1.25e-04/3.75e-05 | val_nll -1.04089 | val_dev 0.71582 | expl_dev 0.51598
+epoch  700 | train_nll -1.35332 | train_fsce 0.73349 | moe_balance 0.000649 | gate_usage [0.520,0.480] | lr 1.00e-04/3.00e-05 | val_nll -1.04068 | val_dev 0.71624 | expl_dev 0.51569
+epoch  705 | train_nll -1.35345 | train_fsce 0.71378 | moe_balance 0.000537 | gate_usage [0.516,0.484] | lr 1.00e-04/3.00e-05 | val_nll -1.04864 | val_dev 0.70033 | expl_dev 0.52645
+epoch  710 | train_nll -1.34894 | train_fsce 0.71764 | moe_balance 0.000333 | gate_usage [0.510,0.490] | lr 1.00e-04/3.00e-05 | val_nll -1.05521 | val_dev 0.68719 | expl_dev 0.53533
+epoch  715 | train_nll -1.35279 | train_fsce 0.72330 | moe_balance 0.000858 | gate_usage [0.511,0.489] | lr 1.00e-04/3.00e-05 | val_nll -1.04889 | val_dev 0.69984 | expl_dev 0.52679
+epoch  720 | train_nll -1.35039 | train_fsce 0.71382 | moe_balance 0.000318 | gate_usage [0.515,0.485] | lr 1.00e-04/3.00e-05 | val_nll -1.05552 | val_dev 0.68657 | expl_dev 0.53575
+epoch  725 | train_nll -1.35168 | train_fsce 0.69733 | moe_balance 0.000210 | gate_usage [0.504,0.496] | lr 1.00e-04/3.00e-05 | val_nll -1.04649 | val_dev 0.70462 | expl_dev 0.52355
+epoch  730 | train_nll -1.35439 | train_fsce 0.71813 | moe_balance 0.000418 | gate_usage [0.502,0.498] | lr 1.00e-04/3.00e-05 | val_nll -1.04185 | val_dev 0.71390 | expl_dev 0.51728
+epoch  735 | train_nll -1.35896 | train_fsce 0.70511 | moe_balance 0.000739 | gate_usage [0.513,0.487] | lr 1.00e-04/3.00e-05 | val_nll -1.04559 | val_dev 0.70643 | expl_dev 0.52233
+epoch  740 | train_nll -1.35321 | train_fsce 0.73069 | moe_balance 0.000324 | gate_usage [0.516,0.484] | lr 1.00e-04/3.00e-05 | val_nll -1.05110 | val_dev 0.69540 | expl_dev 0.52978
+epoch  745 | train_nll -1.35685 | train_fsce 0.74345 | moe_balance 0.000819 | gate_usage [0.514,0.486] | lr 1.00e-04/3.00e-05 | val_nll -1.05113 | val_dev 0.69534 | expl_dev 0.52982
+epoch  750 | train_nll -1.35296 | train_fsce 0.74500 | moe_balance 0.000171 | gate_usage [0.509,0.491] | lr 1.00e-04/3.00e-05 | val_nll -1.04609 | val_dev 0.70543 | expl_dev 0.52300
+epoch  755 | train_nll -1.35274 | train_fsce 0.71805 | moe_balance 0.000856 | gate_usage [0.516,0.484] | lr 1.00e-04/3.00e-05 | val_nll -1.04963 | val_dev 0.69835 | expl_dev 0.52779
+epoch  760 | train_nll -1.35810 | train_fsce 0.72902 | moe_balance 0.000372 | gate_usage [0.514,0.486] | lr 1.00e-04/3.00e-05 | val_nll -1.05024 | val_dev 0.69712 | expl_dev 0.52862
+epoch  765 | train_nll -1.34781 | train_fsce 0.74025 | moe_balance 0.000665 | gate_usage [0.517,0.483] | lr 1.00e-04/3.00e-05 | val_nll -1.05529 | val_dev 0.68702 | expl_dev 0.53545
+epoch  770 | train_nll -1.35543 | train_fsce 0.73543 | moe_balance 0.000186 | gate_usage [0.505,0.495] | lr 1.00e-04/3.00e-05 | val_nll -1.05324 | val_dev 0.69114 | expl_dev 0.53267
+epoch  775 | train_nll -1.34871 | train_fsce 0.71638 | moe_balance 0.000369 | gate_usage [0.507,0.493] | lr 1.00e-04/3.00e-05 | val_nll -1.05525 | val_dev 0.68711 | expl_dev 0.53539
+epoch  780 | train_nll -1.34995 | train_fsce 0.71038 | moe_balance 0.000245 | gate_usage [0.507,0.493] | lr 1.00e-04/3.00e-05 | val_nll -1.05954 | val_dev 0.67853 | expl_dev 0.54119
+epoch  785 | train_nll -1.35210 | train_fsce 0.73292 | moe_balance 0.000646 | gate_usage [0.522,0.478] | lr 1.00e-04/3.00e-05 | val_nll -1.06165 | val_dev 0.67431 | expl_dev 0.54405 | BEST
+epoch  790 | train_nll -1.35072 | train_fsce 0.72369 | moe_balance 0.000667 | gate_usage [0.520,0.480] | lr 1.00e-04/3.00e-05 | val_nll -1.05949 | val_dev 0.67862 | expl_dev 0.54113
+epoch  795 | train_nll -1.35731 | train_fsce 0.74540 | moe_balance 0.000325 | gate_usage [0.512,0.488] | lr 1.00e-04/3.00e-05 | val_nll -1.04981 | val_dev 0.69798 | expl_dev 0.52804
+epoch  800 | train_nll -1.35443 | train_fsce 0.72022 | moe_balance 0.000531 | gate_usage [0.521,0.479] | lr 1.00e-04/3.00e-05 | val_nll -1.04374 | val_dev 0.71012 | expl_dev 0.51983
+epoch  805 | train_nll -1.35910 | train_fsce 0.68716 | moe_balance 0.000210 | gate_usage [0.504,0.496] | lr 1.00e-04/3.00e-05 | val_nll -1.04108 | val_dev 0.71545 | expl_dev 0.51623
+epoch  810 | train_nll -1.35096 | train_fsce 0.72531 | moe_balance 0.000381 | gate_usage [0.511,0.489] | lr 1.00e-04/3.00e-05 | val_nll -1.04149 | val_dev 0.71462 | expl_dev 0.51679
+epoch  815 | train_nll -1.35325 | train_fsce 0.73098 | moe_balance 0.000276 | gate_usage [0.503,0.497] | lr 1.00e-04/3.00e-05 | val_nll -1.03811 | val_dev 0.72138 | expl_dev 0.51222
+epoch  820 | train_nll -1.35350 | train_fsce 0.69530 | moe_balance 0.000879 | gate_usage [0.510,0.490] | lr 1.00e-04/3.00e-05 | val_nll -1.04944 | val_dev 0.69872 | expl_dev 0.52754
+epoch  825 | train_nll -1.35830 | train_fsce 0.73297 | moe_balance 0.000230 | gate_usage [0.503,0.497] | lr 1.00e-04/3.00e-05 | val_nll -1.04218 | val_dev 0.71324 | expl_dev 0.51772
+epoch  830 | train_nll -1.35346 | train_fsce 0.72686 | moe_balance 0.000838 | gate_usage [0.506,0.494] | lr 1.00e-04/3.00e-05 | val_nll -1.05015 | val_dev 0.69731 | expl_dev 0.52849
+epoch  835 | train_nll -1.34289 | train_fsce 0.70432 | moe_balance 0.000285 | gate_usage [0.498,0.502] | lr 1.00e-04/3.00e-05 | val_nll -1.05681 | val_dev 0.68398 | expl_dev 0.53750
+epoch  840 | train_nll -1.35453 | train_fsce 0.70851 | moe_balance 0.000500 | gate_usage [0.512,0.488] | lr 1.00e-04/3.00e-05 | val_nll -1.05163 | val_dev 0.69435 | expl_dev 0.53050
+epoch  845 | train_nll -1.35352 | train_fsce 0.71953 | moe_balance 0.000207 | gate_usage [0.507,0.493] | lr 1.00e-04/3.00e-05 | val_nll -1.04265 | val_dev 0.71230 | expl_dev 0.51836
+epoch  850 | train_nll -1.35320 | train_fsce 0.72948 | moe_balance 0.000655 | gate_usage [0.522,0.478] | lr 1.00e-04/3.00e-05 | val_nll -1.04175 | val_dev 0.71411 | expl_dev 0.51713
+epoch  855 | train_nll -1.35400 | train_fsce 0.74644 | moe_balance 0.001334 | gate_usage [0.525,0.475] | lr 1.00e-04/3.00e-05 | val_nll -1.03503 | val_dev 0.72755 | expl_dev 0.50805
+epoch  860 | train_nll -1.36329 | train_fsce 0.71831 | moe_balance 0.000771 | gate_usage [0.509,0.491] | lr 1.00e-04/3.00e-05 | val_nll -1.03863 | val_dev 0.72034 | expl_dev 0.51292
+epoch  865 | train_nll -1.34999 | train_fsce 0.72544 | moe_balance 0.000641 | gate_usage [0.506,0.494] | lr 1.00e-04/3.00e-05 | val_nll -1.04084 | val_dev 0.71593 | expl_dev 0.51590
+epoch  870 | train_nll -1.34884 | train_fsce 0.70083 | moe_balance 0.000659 | gate_usage [0.512,0.488] | lr 1.00e-04/3.00e-05 | val_nll -1.03444 | val_dev 0.72872 | expl_dev 0.50725
+epoch  875 | train_nll -1.35255 | train_fsce 0.75523 | moe_balance 0.000165 | gate_usage [0.508,0.492] | lr 1.00e-04/3.00e-05 | val_nll -1.05142 | val_dev 0.69477 | expl_dev 0.53021
+epoch  880 | train_nll -1.35735 | train_fsce 0.72452 | moe_balance 0.000313 | gate_usage [0.510,0.490] | lr 1.00e-04/3.00e-05 | val_nll -1.04623 | val_dev 0.70516 | expl_dev 0.52319
+epoch  885 | train_nll -1.36137 | train_fsce 0.74915 | moe_balance 0.001564 | gate_usage [0.504,0.496] | lr 1.00e-04/3.00e-05 | val_nll -1.04415 | val_dev 0.70931 | expl_dev 0.52038
+epoch  890 | train_nll -1.35513 | train_fsce 0.72204 | moe_balance 0.000227 | gate_usage [0.506,0.494] | lr 1.00e-04/3.00e-05 | val_nll -1.03950 | val_dev 0.71860 | expl_dev 0.51410
+epoch  895 | train_nll -1.35547 | train_fsce 0.74989 | moe_balance 0.001186 | gate_usage [0.526,0.474] | lr 1.00e-04/3.00e-05 | val_nll -1.04968 | val_dev 0.69824 | expl_dev 0.52786
+epoch  900 | train_nll -1.35319 | train_fsce 0.71051 | moe_balance 0.000241 | gate_usage [0.508,0.492] | lr 1.00e-04/3.00e-05 | val_nll -1.04966 | val_dev 0.69828 | expl_dev 0.52784
+epoch  905 | train_nll -1.35665 | train_fsce 0.71028 | moe_balance 0.000223 | gate_usage [0.512,0.488] | lr 1.00e-04/3.00e-05 | val_nll -1.04765 | val_dev 0.70231 | expl_dev 0.52511
+epoch  910 | train_nll -1.35389 | train_fsce 0.73361 | moe_balance 0.000308 | gate_usage [0.508,0.492] | lr 1.00e-04/3.00e-05 | val_nll -1.04625 | val_dev 0.70511 | expl_dev 0.52322
+epoch  915 | train_nll -1.35475 | train_fsce 0.71182 | moe_balance 0.000358 | gate_usage [0.497,0.503] | lr 1.00e-04/3.00e-05 | val_nll -1.05086 | val_dev 0.69588 | expl_dev 0.52946
+epoch  920 | train_nll -1.35526 | train_fsce 0.71238 | moe_balance 0.000313 | gate_usage [0.509,0.491] | lr 1.00e-04/3.00e-05 | val_nll -1.05126 | val_dev 0.69508 | expl_dev 0.53000
+epoch  925 | train_nll -1.35978 | train_fsce 0.73536 | moe_balance 0.000794 | gate_usage [0.503,0.497] | lr 1.00e-04/3.00e-05 | val_nll -1.05741 | val_dev 0.68279 | expl_dev 0.53831
+epoch  930 | train_nll -1.35029 | train_fsce 0.72881 | moe_balance 0.000546 | gate_usage [0.510,0.490] | lr 1.00e-04/3.00e-05 | val_nll -1.04456 | val_dev 0.70849 | expl_dev 0.52093
+epoch  935 | train_nll -1.35903 | train_fsce 0.73635 | moe_balance 0.000832 | gate_usage [0.516,0.484] | lr 1.00e-04/3.00e-05 | val_nll -1.04320 | val_dev 0.71122 | expl_dev 0.51909
+epoch  940 | train_nll -1.35384 | train_fsce 0.72826 | moe_balance 0.000830 | gate_usage [0.516,0.484] | lr 1.00e-04/3.00e-05 | val_nll -1.04069 | val_dev 0.71623 | expl_dev 0.51570
+epoch  945 | train_nll -1.35483 | train_fsce 0.71771 | moe_balance 0.000151 | gate_usage [0.509,0.491] | lr 1.00e-04/3.00e-05 | val_nll -1.04670 | val_dev 0.70421 | expl_dev 0.52383
+epoch  950 | train_nll -1.35936 | train_fsce 0.73164 | moe_balance 0.000407 | gate_usage [0.511,0.489] | lr 1.00e-04/3.00e-05 | val_nll -1.05548 | val_dev 0.68665 | expl_dev 0.53570
+epoch  955 | train_nll -1.35121 | train_fsce 0.74810 | moe_balance 0.000504 | gate_usage [0.518,0.482] | lr 1.00e-04/3.00e-05 | val_nll -1.05044 | val_dev 0.69673 | expl_dev 0.52888
+epoch  960 | train_nll -1.36275 | train_fsce 0.74736 | moe_balance 0.000337 | gate_usage [0.507,0.493] | lr 1.00e-04/3.00e-05 | val_nll -1.06043 | val_dev 0.67674 | expl_dev 0.54240
+epoch  965 | train_nll -1.35848 | train_fsce 0.73144 | moe_balance 0.000430 | gate_usage [0.513,0.487] | lr 1.00e-04/3.00e-05 | val_nll -1.05450 | val_dev 0.68861 | expl_dev 0.53438
+epoch  970 | train_nll -1.36346 | train_fsce 0.70919 | moe_balance 0.000634 | gate_usage [0.518,0.482] | lr 1.00e-04/3.00e-05 | val_nll -1.05056 | val_dev 0.69648 | expl_dev 0.52905
+epoch  975 | train_nll -1.35687 | train_fsce 0.74292 | moe_balance 0.000646 | gate_usage [0.510,0.490] | lr 1.00e-04/3.00e-05 | val_nll -1.05340 | val_dev 0.69081 | expl_dev 0.53289
+epoch  980 | train_nll -1.35300 | train_fsce 0.69912 | moe_balance 0.000458 | gate_usage [0.516,0.484] | lr 1.00e-04/3.00e-05 | val_nll -1.05290 | val_dev 0.69181 | expl_dev 0.53221
+epoch  985 | train_nll -1.35667 | train_fsce 0.75279 | moe_balance 0.000371 | gate_usage [0.506,0.494] | lr 1.00e-04/3.00e-05 | val_nll -1.04557 | val_dev 0.70647 | expl_dev 0.52230
+epoch  990 | train_nll -1.35518 | train_fsce 0.74283 | moe_balance 0.000163 | gate_usage [0.502,0.498] | lr 1.00e-04/3.00e-05 | val_nll -1.05576 | val_dev 0.68608 | expl_dev 0.53609
+epoch  995 | train_nll -1.36113 | train_fsce 0.72104 | moe_balance 0.000240 | gate_usage [0.504,0.496] | lr 1.00e-04/3.00e-05 | val_nll -1.05449 | val_dev 0.68863 | expl_dev 0.53436
+epoch 1000 | train_nll -1.35428 | train_fsce 0.73494 | moe_balance 0.000515 | gate_usage [0.516,0.484] | lr 1.00e-04/3.00e-05 | val_nll -1.04821 | val_dev 0.70119 | expl_dev 0.52587
+restored best epoch 785, val_dev=0.67431
+saved checkpoint: c:\Users\楊仟愉\n\project-2\model\v3_ddae_mot\result\ae.pt
+saved latents: c:\Users\楊仟愉\n\project-2\model\v3_ddae_mot\result\latents.npz
