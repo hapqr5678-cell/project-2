@@ -1,0 +1,194 @@
+[noise_compare] v3_ddae_mot，EPOCHS=700，NOISE_MODE=thinning，NOISE_PS=[0.0, 0.1, 0.2, 0.3, 0.4, 0.5]
+1233 個 patch，device=cpu
+FSCE graph：24904 條邊，a=1.5769 b=0.8951
+
+=== NOISE_P=0.00 ===
+  NOISE_P=0.00 | epoch   25 | val_dev 0.82259 | expl_dev 0.44378
+  NOISE_P=0.00 | epoch   50 | val_dev 0.82270 | expl_dev 0.44371
+  NOISE_P=0.00 | epoch   75 | val_dev 0.78116 | expl_dev 0.47179
+  NOISE_P=0.00 | epoch  100 | val_dev 0.75087 | expl_dev 0.49227
+  NOISE_P=0.00 | epoch  125 | val_dev 0.75190 | expl_dev 0.49158
+  NOISE_P=0.00 | epoch  150 | val_dev 0.76198 | expl_dev 0.48476
+  NOISE_P=0.00 | epoch  175 | val_dev 0.82065 | expl_dev 0.44509
+  NOISE_P=0.00 | epoch  200 | val_dev 0.87660 | expl_dev 0.40726
+  NOISE_P=0.00 | epoch  225 | val_dev 0.81706 | expl_dev 0.44752
+  NOISE_P=0.00 | epoch  250 | val_dev 0.81042 | expl_dev 0.45201
+  NOISE_P=0.00 | epoch  275 | val_dev 0.80022 | expl_dev 0.45891
+  NOISE_P=0.00 | epoch  300 | val_dev 0.81055 | expl_dev 0.45192
+  NOISE_P=0.00 | epoch  325 | val_dev 0.79155 | expl_dev 0.46477
+  NOISE_P=0.00 | epoch  350 | val_dev 0.80154 | expl_dev 0.45801
+  NOISE_P=0.00 | epoch  375 | val_dev 0.78320 | expl_dev 0.47042
+  NOISE_P=0.00 | epoch  400 | val_dev 0.80439 | expl_dev 0.45609
+  NOISE_P=0.00 | epoch  425 | val_dev 0.82412 | expl_dev 0.44275
+  NOISE_P=0.00 | epoch  450 | val_dev 0.84587 | expl_dev 0.42804
+  NOISE_P=0.00 | epoch  475 | val_dev 0.84548 | expl_dev 0.42830
+  NOISE_P=0.00 | epoch  500 | val_dev 0.84657 | expl_dev 0.42757
+  NOISE_P=0.00 | epoch  525 | val_dev 0.85610 | expl_dev 0.42112
+  NOISE_P=0.00 | epoch  550 | val_dev 0.88402 | expl_dev 0.40224
+  NOISE_P=0.00 | epoch  575 | val_dev 0.90134 | expl_dev 0.39053
+  NOISE_P=0.00 | epoch  600 | val_dev 0.89894 | expl_dev 0.39215
+  NOISE_P=0.00 | epoch  625 | val_dev 0.89017 | expl_dev 0.39809
+  NOISE_P=0.00 | epoch  650 | val_dev 0.93371 | expl_dev 0.36864
+  NOISE_P=0.00 | epoch  675 | val_dev 0.91285 | expl_dev 0.38275
+  NOISE_P=0.00 | epoch  700 | val_dev 0.96337 | expl_dev 0.34859
+
+=== NOISE_P=0.10 ===
+  NOISE_P=0.10 | epoch   25 | val_dev 0.82485 | expl_dev 0.44225
+  NOISE_P=0.10 | epoch   50 | val_dev 0.80766 | expl_dev 0.45388
+  NOISE_P=0.10 | epoch   75 | val_dev 0.79937 | expl_dev 0.45948
+  NOISE_P=0.10 | epoch  100 | val_dev 0.82450 | expl_dev 0.44249
+  NOISE_P=0.10 | epoch  125 | val_dev 0.79463 | expl_dev 0.46269
+  NOISE_P=0.10 | epoch  150 | val_dev 0.73057 | expl_dev 0.50601
+  NOISE_P=0.10 | epoch  175 | val_dev 0.73026 | expl_dev 0.50622
+  NOISE_P=0.10 | epoch  200 | val_dev 0.70937 | expl_dev 0.52034
+  NOISE_P=0.10 | epoch  225 | val_dev 0.74013 | expl_dev 0.49954
+  NOISE_P=0.10 | epoch  250 | val_dev 0.80306 | expl_dev 0.45699
+  NOISE_P=0.10 | epoch  275 | val_dev 0.72106 | expl_dev 0.51243
+  NOISE_P=0.10 | epoch  300 | val_dev 0.72786 | expl_dev 0.50784
+  NOISE_P=0.10 | epoch  325 | val_dev 0.71650 | expl_dev 0.51552
+  NOISE_P=0.10 | epoch  350 | val_dev 0.72032 | expl_dev 0.51293
+  NOISE_P=0.10 | epoch  375 | val_dev 0.71249 | expl_dev 0.51823
+  NOISE_P=0.10 | epoch  400 | val_dev 0.72232 | expl_dev 0.51158
+  NOISE_P=0.10 | epoch  425 | val_dev 0.66824 | expl_dev 0.54815
+  NOISE_P=0.10 | epoch  450 | val_dev 0.70089 | expl_dev 0.52607
+  NOISE_P=0.10 | epoch  475 | val_dev 0.70538 | expl_dev 0.52304
+  NOISE_P=0.10 | epoch  500 | val_dev 0.72269 | expl_dev 0.51133
+  NOISE_P=0.10 | epoch  525 | val_dev 0.69172 | expl_dev 0.53227
+  NOISE_P=0.10 | epoch  550 | val_dev 0.69523 | expl_dev 0.52990
+  NOISE_P=0.10 | epoch  575 | val_dev 0.69929 | expl_dev 0.52716
+  NOISE_P=0.10 | epoch  600 | val_dev 0.68220 | expl_dev 0.53871
+  NOISE_P=0.10 | epoch  625 | val_dev 0.69581 | expl_dev 0.52951
+  NOISE_P=0.10 | epoch  650 | val_dev 0.73442 | expl_dev 0.50340
+  NOISE_P=0.10 | epoch  675 | val_dev 0.64667 | expl_dev 0.56273
+  NOISE_P=0.10 | epoch  700 | val_dev 0.70686 | expl_dev 0.52204
+
+=== NOISE_P=0.20 ===
+  NOISE_P=0.20 | epoch   25 | val_dev 0.81517 | expl_dev 0.44880
+  NOISE_P=0.20 | epoch   50 | val_dev 0.78351 | expl_dev 0.47021
+  NOISE_P=0.20 | epoch   75 | val_dev 0.80340 | expl_dev 0.45676
+  NOISE_P=0.20 | epoch  100 | val_dev 0.78715 | expl_dev 0.46774
+  NOISE_P=0.20 | epoch  125 | val_dev 0.75700 | expl_dev 0.48813
+  NOISE_P=0.20 | epoch  150 | val_dev 0.75871 | expl_dev 0.48697
+  NOISE_P=0.20 | epoch  175 | val_dev 0.73630 | expl_dev 0.50213
+  NOISE_P=0.20 | epoch  200 | val_dev 0.73608 | expl_dev 0.50228
+  NOISE_P=0.20 | epoch  225 | val_dev 0.76252 | expl_dev 0.48440
+  NOISE_P=0.20 | epoch  250 | val_dev 0.72405 | expl_dev 0.51041
+  NOISE_P=0.20 | epoch  275 | val_dev 0.72352 | expl_dev 0.51077
+  NOISE_P=0.20 | epoch  300 | val_dev 0.71030 | expl_dev 0.51971
+  NOISE_P=0.20 | epoch  325 | val_dev 0.71481 | expl_dev 0.51666
+  NOISE_P=0.20 | epoch  350 | val_dev 0.72049 | expl_dev 0.51282
+  NOISE_P=0.20 | epoch  375 | val_dev 0.67532 | expl_dev 0.54336
+  NOISE_P=0.20 | epoch  400 | val_dev 0.69680 | expl_dev 0.52884
+  NOISE_P=0.20 | epoch  425 | val_dev 0.69923 | expl_dev 0.52719
+  NOISE_P=0.20 | epoch  450 | val_dev 0.74819 | expl_dev 0.49409
+  NOISE_P=0.20 | epoch  475 | val_dev 0.68343 | expl_dev 0.53788
+  NOISE_P=0.20 | epoch  500 | val_dev 0.68088 | expl_dev 0.53960
+  NOISE_P=0.20 | epoch  525 | val_dev 0.67380 | expl_dev 0.54439
+  NOISE_P=0.20 | epoch  550 | val_dev 0.68112 | expl_dev 0.53944
+  NOISE_P=0.20 | epoch  575 | val_dev 0.66928 | expl_dev 0.54744
+  NOISE_P=0.20 | epoch  600 | val_dev 0.67684 | expl_dev 0.54234
+  NOISE_P=0.20 | epoch  625 | val_dev 0.70240 | expl_dev 0.52505
+  NOISE_P=0.20 | epoch  650 | val_dev 0.70428 | expl_dev 0.52378
+  NOISE_P=0.20 | epoch  675 | val_dev 0.68013 | expl_dev 0.54011
+  NOISE_P=0.20 | epoch  700 | val_dev 0.72889 | expl_dev 0.50714
+
+=== NOISE_P=0.30 ===
+  NOISE_P=0.30 | epoch   25 | val_dev 0.90984 | expl_dev 0.38478
+  NOISE_P=0.30 | epoch   50 | val_dev 0.74155 | expl_dev 0.49858
+  NOISE_P=0.30 | epoch   75 | val_dev 0.77215 | expl_dev 0.47789
+  NOISE_P=0.30 | epoch  100 | val_dev 0.74009 | expl_dev 0.49957
+  NOISE_P=0.30 | epoch  125 | val_dev 0.76077 | expl_dev 0.48558
+  NOISE_P=0.30 | epoch  150 | val_dev 0.77676 | expl_dev 0.47477
+  NOISE_P=0.30 | epoch  175 | val_dev 0.77242 | expl_dev 0.47771
+  NOISE_P=0.30 | epoch  200 | val_dev 0.74075 | expl_dev 0.49912
+  NOISE_P=0.30 | epoch  225 | val_dev 0.75025 | expl_dev 0.49270
+  NOISE_P=0.30 | epoch  250 | val_dev 0.75945 | expl_dev 0.48647
+  NOISE_P=0.30 | epoch  275 | val_dev 0.78509 | expl_dev 0.46914
+  NOISE_P=0.30 | epoch  300 | val_dev 0.76952 | expl_dev 0.47967
+  NOISE_P=0.30 | epoch  325 | val_dev 0.78472 | expl_dev 0.46939
+  NOISE_P=0.30 | epoch  350 | val_dev 0.76100 | expl_dev 0.48543
+  NOISE_P=0.30 | epoch  375 | val_dev 0.77556 | expl_dev 0.47558
+  NOISE_P=0.30 | epoch  400 | val_dev 0.75141 | expl_dev 0.49191
+  NOISE_P=0.30 | epoch  425 | val_dev 0.72237 | expl_dev 0.51155
+  NOISE_P=0.30 | epoch  450 | val_dev 0.71197 | expl_dev 0.51858
+  NOISE_P=0.30 | epoch  475 | val_dev 0.70557 | expl_dev 0.52291
+  NOISE_P=0.30 | epoch  500 | val_dev 0.79073 | expl_dev 0.46532
+  NOISE_P=0.30 | epoch  525 | val_dev 0.77606 | expl_dev 0.47524
+  NOISE_P=0.30 | epoch  550 | val_dev 0.71909 | expl_dev 0.51376
+  NOISE_P=0.30 | epoch  575 | val_dev 0.79608 | expl_dev 0.46171
+  NOISE_P=0.30 | epoch  600 | val_dev 0.77269 | expl_dev 0.47752
+  NOISE_P=0.30 | epoch  625 | val_dev 0.75495 | expl_dev 0.48952
+  NOISE_P=0.30 | epoch  650 | val_dev 0.74632 | expl_dev 0.49536
+  NOISE_P=0.30 | epoch  675 | val_dev 0.76060 | expl_dev 0.48570
+  NOISE_P=0.30 | epoch  700 | val_dev 0.74390 | expl_dev 0.49699
+
+=== NOISE_P=0.40 ===
+  NOISE_P=0.40 | epoch   25 | val_dev 0.86694 | expl_dev 0.41379
+  NOISE_P=0.40 | epoch   50 | val_dev 0.81449 | expl_dev 0.44926
+  NOISE_P=0.40 | epoch   75 | val_dev 0.84431 | expl_dev 0.42910
+  NOISE_P=0.40 | epoch  100 | val_dev 0.81194 | expl_dev 0.45098
+  NOISE_P=0.40 | epoch  125 | val_dev 0.80439 | expl_dev 0.45609
+  NOISE_P=0.40 | epoch  150 | val_dev 0.79080 | expl_dev 0.46528
+  NOISE_P=0.40 | epoch  175 | val_dev 0.77136 | expl_dev 0.47842
+  NOISE_P=0.40 | epoch  200 | val_dev 0.78160 | expl_dev 0.47150
+  NOISE_P=0.40 | epoch  225 | val_dev 0.78885 | expl_dev 0.46659
+  NOISE_P=0.40 | epoch  250 | val_dev 0.77286 | expl_dev 0.47741
+  NOISE_P=0.40 | epoch  275 | val_dev 0.75339 | expl_dev 0.49058
+  NOISE_P=0.40 | epoch  300 | val_dev 0.73967 | expl_dev 0.49985
+  NOISE_P=0.40 | epoch  325 | val_dev 0.75079 | expl_dev 0.49233
+  NOISE_P=0.40 | epoch  350 | val_dev 0.74289 | expl_dev 0.49768
+  NOISE_P=0.40 | epoch  375 | val_dev 0.73888 | expl_dev 0.50039
+  NOISE_P=0.40 | epoch  400 | val_dev 0.75591 | expl_dev 0.48887
+  NOISE_P=0.40 | epoch  425 | val_dev 0.74559 | expl_dev 0.49585
+  NOISE_P=0.40 | epoch  450 | val_dev 0.74255 | expl_dev 0.49790
+  NOISE_P=0.40 | epoch  475 | val_dev 0.73211 | expl_dev 0.50496
+  NOISE_P=0.40 | epoch  500 | val_dev 0.71650 | expl_dev 0.51552
+  NOISE_P=0.40 | epoch  525 | val_dev 0.70650 | expl_dev 0.52228
+  NOISE_P=0.40 | epoch  550 | val_dev 0.76636 | expl_dev 0.48180
+  NOISE_P=0.40 | epoch  575 | val_dev 0.70853 | expl_dev 0.52091
+  NOISE_P=0.40 | epoch  600 | val_dev 0.69134 | expl_dev 0.53253
+  NOISE_P=0.40 | epoch  625 | val_dev 0.69967 | expl_dev 0.52690
+  NOISE_P=0.40 | epoch  650 | val_dev 0.68167 | expl_dev 0.53907
+  NOISE_P=0.40 | epoch  675 | val_dev 0.73088 | expl_dev 0.50579
+  NOISE_P=0.40 | epoch  700 | val_dev 0.69046 | expl_dev 0.53312
+
+=== NOISE_P=0.50 ===
+  NOISE_P=0.50 | epoch   25 | val_dev 0.99225 | expl_dev 0.32906
+  NOISE_P=0.50 | epoch   50 | val_dev 0.79494 | expl_dev 0.46248
+  NOISE_P=0.50 | epoch   75 | val_dev 0.77837 | expl_dev 0.47368
+  NOISE_P=0.50 | epoch  100 | val_dev 0.80631 | expl_dev 0.45479
+  NOISE_P=0.50 | epoch  125 | val_dev 0.76670 | expl_dev 0.48157
+  NOISE_P=0.50 | epoch  150 | val_dev 0.76041 | expl_dev 0.48583
+  NOISE_P=0.50 | epoch  175 | val_dev 0.76093 | expl_dev 0.48547
+  NOISE_P=0.50 | epoch  200 | val_dev 0.75732 | expl_dev 0.48792
+  NOISE_P=0.50 | epoch  225 | val_dev 0.77003 | expl_dev 0.47932
+  NOISE_P=0.50 | epoch  250 | val_dev 0.74446 | expl_dev 0.49661
+  NOISE_P=0.50 | epoch  275 | val_dev 0.79986 | expl_dev 0.45915
+  NOISE_P=0.50 | epoch  300 | val_dev 0.74707 | expl_dev 0.49485
+  NOISE_P=0.50 | epoch  325 | val_dev 0.73151 | expl_dev 0.50537
+  NOISE_P=0.50 | epoch  350 | val_dev 0.73848 | expl_dev 0.50065
+  NOISE_P=0.50 | epoch  375 | val_dev 0.74522 | expl_dev 0.49609
+  NOISE_P=0.50 | epoch  400 | val_dev 0.75415 | expl_dev 0.49006
+  NOISE_P=0.50 | epoch  425 | val_dev 0.73648 | expl_dev 0.50201
+  NOISE_P=0.50 | epoch  450 | val_dev 0.75023 | expl_dev 0.49271
+  NOISE_P=0.50 | epoch  475 | val_dev 0.73790 | expl_dev 0.50105
+  NOISE_P=0.50 | epoch  500 | val_dev 0.74954 | expl_dev 0.49317
+  NOISE_P=0.50 | epoch  525 | val_dev 0.75940 | expl_dev 0.48651
+  NOISE_P=0.50 | epoch  550 | val_dev 0.72887 | expl_dev 0.50715
+  NOISE_P=0.50 | epoch  575 | val_dev 0.71252 | expl_dev 0.51821
+  NOISE_P=0.50 | epoch  600 | val_dev 0.73265 | expl_dev 0.50460
+  NOISE_P=0.50 | epoch  625 | val_dev 0.72039 | expl_dev 0.51289
+  NOISE_P=0.50 | epoch  650 | val_dev 0.74055 | expl_dev 0.49925
+  NOISE_P=0.50 | epoch  675 | val_dev 0.73601 | expl_dev 0.50233
+  NOISE_P=0.50 | epoch  700 | val_dev 0.71507 | expl_dev 0.51648
+
+=== 總表（EPOCHS=700，NOISE_MODE=thinning）===
+ NOISE_P |    val_dev |   expl_dev
+    0.00 |    0.96337 |    0.34859
+    0.10 |    0.70686 |    0.52204
+    0.20 |    0.72889 |    0.50714
+    0.30 |    0.74390 |    0.49699
+    0.40 |    0.69046 |    0.53312
+    0.50 |    0.71507 |    0.51648
+
+已存 c:\Users\楊仟愉\n\project-2\model\v3_ddae_mot\result\noise_compare.log

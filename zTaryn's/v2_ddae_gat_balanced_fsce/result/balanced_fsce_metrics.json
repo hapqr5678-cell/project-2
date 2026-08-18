@@ -1,0 +1,32 @@
+{
+  "mixed_margin": 0.15000000596046448,
+  "n_train": 1110,
+  "n_validation": 123,
+  "metrics": {
+    "Original GAT": {
+      "heldout_macro_f1": 0.376539026318762,
+      "heldout_confident_macro_f1": 0.8517952635599695,
+      "heldout_non_dining_neighbor_dining_fraction": 0.5794871794871795,
+      "heldout_non_dining_predicted_as_dining": 0.6923076923076923,
+      "validation_clean_deviance": 0.7505987286567688,
+      "pc1_variance_ratio": 0.6604697598805549
+    },
+    "Composition head": {
+      "heldout_macro_f1": 0.3213213213213213,
+      "heldout_confident_macro_f1": 0.7526561835954101,
+      "heldout_non_dining_neighbor_dining_fraction": 0.6410256410256411,
+      "heldout_non_dining_predicted_as_dining": 0.6923076923076923,
+      "validation_clean_deviance": 0.8162458539009094,
+      "pc1_variance_ratio": 0.779753955490623
+    },
+    "Balanced pair FSCE": {
+      "heldout_macro_f1": 0.3739529002686897,
+      "heldout_confident_macro_f1": 0.7526561835954101,
+      "heldout_non_dining_neighbor_dining_fraction": 0.6051282051282051,
+      "heldout_non_dining_predicted_as_dining": 0.6923076923076923,
+      "validation_clean_deviance": 0.8937667608261108,
+      "pc1_variance_ratio": 0.6350974096101761
+    }
+  },
+  "skipped": {}
+}

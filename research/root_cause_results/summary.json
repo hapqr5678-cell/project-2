@@ -1,0 +1,51 @@
+{
+  "n_patches": 1233,
+  "dominant_label": {
+    "dining_poi_count_share": 0.5032260821262231,
+    "dining_dominant_patch_share": 0.8467153284671532,
+    "mixed_patch_share_margin_below_0_15": 0.25304136253041365,
+    "zero_dominant_categories": [
+      "Health and Medicine",
+      "Sports and Recreation"
+    ]
+  },
+  "two_dimensional_bottleneck": {
+    "raw_composition_10d_macro_f1": 0.475462962962963,
+    "raw_composition_pca2_macro_f1": 0.24613899613899615,
+    "pca2_explained_variance": 0.3071827131993725,
+    "macro_f1_loss_from_pca2": 0.22932396682396683,
+    "raw_composition_umap2_macro_f1": 0.6546205926316715,
+    "umap2_total_log_count_r2": -0.019747397337229078,
+    "umap2_composition_r2": 0.7829718874219467
+  },
+  "original_gat": {
+    "fused_macro_f1": 0.376539026318762,
+    "fused_non_dining_neighbor_dining_fraction": 0.5794871794871795,
+    "macro_f1_gap_from_raw_composition": 0.09892393664420096,
+    "total_log_count_r2": 0.848456804959608,
+    "composition_r2": 0.4876174864320469,
+    "macro_f1_gap_from_composition_umap2": 0.2780815663129095
+  },
+  "secondary_non_dining": {
+    "valid_patch_count": 1232,
+    "best_representation": "Non-Dining composition (9D)",
+    "best_macro_f1": 0.6954894567797795,
+    "original_gat_fused_macro_f1": 0.3779421784406554
+  },
+  "od_graph": {
+    "n_edges": 66833,
+    "trip_count_sum": 138008,
+    "same_category_edge_fraction_unweighted": 0.3353283557523978,
+    "same_category_trip_fraction": 0.4956161961625413,
+    "expected_same_category_trip_fraction_from_marginals": 0.3503370096335412,
+    "category_assortativity_lift": 1.41468409712398,
+    "dining_involved_trip_fraction": 0.2401237609413947,
+    "observed_patch_hellinger_similarity": 0.8505237380555268,
+    "random_patch_hellinger_similarity_mean": 0.795332793965312,
+    "random_patch_hellinger_similarity_std": 0.0013895112458718825,
+    "patch_similarity_lift": 1.06939352244618,
+    "observed_same_dominant_trip_fraction": 0.618152570865457,
+    "random_same_dominant_trip_fraction_mean": 0.5329501188336908,
+    "random_same_dominant_trip_fraction_std": 0.0049035614695360575
+  }
+}
