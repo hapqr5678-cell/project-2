@@ -19,7 +19,7 @@ from ae import (GATLiteralAE, ODGraph, Patches, poisson_deviance,  # noqa: E402
 from config.dataset import (CAT_COLORS, CAT_ZH, N_CAT, OD,  # noqa: E402
                             PATCHES, result)
 
-VERSION = "v3_gat_literal"
+VERSION = "v3_gat"
 LATENT_DIM = 2
 
 mpl.rcParams["font.family"] = ["Heiti TC"]

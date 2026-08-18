@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
 from ae import MLPAE, Patches, poisson_deviance, poisson_nll  # noqa: E402
 from config.dataset import CAT_COLORS, CAT_ZH, N_CAT, PATCHES, result  # noqa: E402
 
-VERSION = "v2_ddae_fsce"
+VERSION = "v5_refine"
 LATENT_DIM = 2   # v2 系列固定 latent_dim=2
 
 mpl.rcParams["font.family"] = ["Heiti TC"]
@@ -40,7 +40,8 @@ def main():
     idx = torch.tensor([n])
     x = data.agg(idx)
     with torch.no_grad():
-        z, log_lam = model(x)
+        zs, log_lams = model.trajectory(x)
+    z, log_lam = zs[-1], log_lams[-1]
     cnt = x[0].numpy()
     lam = torch.exp(log_lam)[0].numpy()
     dev = poisson_deviance(log_lam, x).item()
@@ -55,6 +56,11 @@ def main():
     print(f"deviance = {dev:.6f}（全體中位數 {np.median(err):.6f}，"
           f"此 patch 排在第 {pct:.1f} 百分位）")
     print(f"NLL = {nll:.6f}（省略 log(y!) 常數項，可能為負）")
+    print("精修軌跡（每一步的 z 與 deviance）：")
+    for t, (zt, llt) in enumerate(zip(zs, log_lams)):
+        tag = "encoder 前饋" if t == 0 else f"精修第 {t} 步"
+        print(f"  {tag:<12} z = ({zt[0, 0]:+.3f}, {zt[0, 1]:+.3f})  "
+              f"deviance {poisson_deviance(llt, x).item():.6f}")
 
     fig, ax = plt.subplots(figsize=(9, 5.5))
     idx_c = np.arange(N_CAT)

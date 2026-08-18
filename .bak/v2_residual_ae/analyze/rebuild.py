@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/.."))
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
-from ae import MLPAE, Patches, poisson_deviance, poisson_nll  # noqa: E402
+from ae import ResidualAE, Patches, poisson_deviance, poisson_nll  # noqa: E402
 from config.dataset import CAT_COLORS, CAT_ZH, N_CAT, PATCHES, result  # noqa: E402
 
-VERSION = "v2_ddae_fsce"
+VERSION = "v2_residual_ae"
 LATENT_DIM = 2   # v2 系列固定 latent_dim=2
 
 mpl.rcParams["font.family"] = ["Heiti TC"]
@@ -33,7 +33,7 @@ def main():
     data = Patches(PATCHES)
     assert 0 <= n < data.n, f"--n 要在 0~{data.n - 1}"
 
-    model = MLPAE(LATENT_DIM)
+    model = ResidualAE(LATENT_DIM)
     model.load_state_dict(torch.load(result(VERSION, "ae.pt"), map_location="cpu"))
     model.eval()
 

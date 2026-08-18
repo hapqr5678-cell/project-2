@@ -1,6 +1,6 @@
-"""畫 latent space 的純散點圖（不上色）。v3_gat_literal 的 z 本來就被
-tanh 夾在 (-1,1) 附近，這裡一樣做 min-max 正規化到 [-1,1]，跟
-v2_dae_tanh_fsce 的畫法保持一致，才能直接比較深/淺兩種容量下的分群形狀。
+"""畫 latent space 的純散點圖（不上色）。v3_gat_literal 的 z 是純 Linear
+輸出、沒有夾範圍，這裡統一做 min-max 正規化到 [-1,1]，才能跟其他版本的
+畫法保持一致，直接比較不同容量下的分群形狀。
 """
 
 import os
@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
 from config.dataset import result  # noqa: E402
 
-VERSION = "v3_gat_literal"
+VERSION = "v3_gat"
 LATENTS = result(VERSION, "latents.npz")
 OUT = result(VERSION, "latent_plot_plain.png")
 

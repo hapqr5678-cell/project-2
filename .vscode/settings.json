@@ -1,6 +1,7 @@
 {
     "files.exclude": {
         "**/*.pt": true,
-        "**/*.npz": true
-  }
+        "**/*.npz": true,
+        "model_taryn/": true,
+    }   
 }

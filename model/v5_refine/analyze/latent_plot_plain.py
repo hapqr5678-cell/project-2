@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(f"{os.path.dirname(__file__)}/../../.."))
 from config.dataset import result  # noqa: E402
 
-VERSION = "v2_ddae_fsce"
+VERSION = "v5_refine"
 LATENTS = result(VERSION, "latents.npz")
 OUT = result(VERSION, "latent_plot_plain.png")
 

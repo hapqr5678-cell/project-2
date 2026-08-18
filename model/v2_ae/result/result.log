@@ -1,0 +1,30 @@
+[dataset]
+  dataset = fsq
+  csv = data/tky_clean.csv
+  cat_col = category
+  categories = ['Dining and Drinking', 'Retail', 'Nightlife Spot', 'Community and Government', 'Travel and Transportation', 'Business and Professional Services', 'Landmarks and Outdoors', 'Arts and Entertainment', 'Health and Medicine', 'Sports and Recreation']
+  half_width = 50.0
+  cell = 15
+  center_step = 100
+  min_poi = 10
+  crs = EPSG:6677
+
+[hparams]
+  LATENT_DIM = 2
+  EPOCHS = 1500
+  BATCH = 256
+  LR = 0.001
+  VAL_FRAC = 0.1
+  SEED = 0
+
+1233 個 patch，device=mps
+epoch    1 | train_nll 1.05348 | val_dev 4.58080 | expl_dev -2.09744
+epoch    5 | train_nll -0.71655 | val_dev 1.68281 | expl_dev -0.13788
+epoch   10 | train_nll -0.97517 | val_dev 1.20608 | expl_dev 0.18447
+epoch   15 | train_nll -1.08587 | val_dev 1.03705 | expl_dev 0.29877
+epoch   20 | train_nll -1.17205 | val_dev 0.90257 | expl_dev 0.38970
+epoch   25 | train_nll -1.20978 | val_dev 0.87046 | expl_dev 0.41141
+epoch   30 | train_nll -1.23316 | val_dev 0.85534 | expl_dev 0.42164
+
+[中斷] epoch 33 收到 Ctrl-C，用目前模型存 checkpoint 跟 latent
+已存 /Users/yentso/developer/StartOver/model/v2_ae/result/latents.npz

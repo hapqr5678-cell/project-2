@@ -1,0 +1,201 @@
+[dataset]
+  dataset = fsq
+  csv = data/tky_clean.csv
+  cat_col = category
+  categories = ['Dining and Drinking', 'Retail', 'Nightlife Spot', 'Community and Government', 'Travel and Transportation', 'Business and Professional Services', 'Landmarks and Outdoors', 'Arts and Entertainment', 'Health and Medicine', 'Sports and Recreation']
+  half_width = 50.0
+  cell = 15
+  center_step = 100
+  min_poi = 10
+  crs = EPSG:6677
+
+[hparams]
+  LATENT_DIM = 2
+  EPOCHS = 1000
+  BATCH = 256
+  LR = 0.001
+  WEIGHT_DECAY = 1e-06
+  VAL_FRAC = 0.1
+  SEED = 0
+  ALPHA_INIT = 0.5
+  GAT_DIM = 16
+  GAT_HEADS = 4
+  GAT_LAYERS = 2
+  GAT_READOUT_DIM = 1
+  N_NEIGHBORS = 15
+  GRAPH_METRIC = euclidean
+  EDGE_BATCH = 256
+  LAMBDA_FSCE = 0.01
+  WARMUP_EPOCHS = 200
+  NOISE_P = 0.3
+  NOISE_MODE = thinning
+  NOISE_OD_P = 0.3
+
+1233 個 patch，device=mps，噪聲 thinning p=0.3
+OD：100.0% 的 patch 有觀測，總量中位數 44，最大 10449
+FSCE graph：24900 條邊，a=1.5769 b=0.8951
+參數量 36862
+epoch    1 | train_nll 1.04787 | train_fsce 2.49285 | val_dev 4.66623 | expl_dev -2.15521 | gat_gain +0.00025 | alpha 0.4991
+epoch    5 | train_nll -0.65011 | train_fsce 3.17466 | val_dev 1.59390 | expl_dev -0.07776 | gat_gain +0.00692 | alpha 0.5006
+epoch   10 | train_nll -0.93646 | train_fsce 1.18075 | val_dev 1.21308 | expl_dev 0.17974 | gat_gain +0.00124 | alpha 0.4983
+epoch   15 | train_nll -0.97720 | train_fsce 1.30157 | val_dev 1.17888 | expl_dev 0.20286 | gat_gain +0.00214 | alpha 0.4972
+epoch   20 | train_nll -0.99956 | train_fsce 1.26226 | val_dev 1.15525 | expl_dev 0.21885 | gat_gain +0.00316 | alpha 0.4969
+epoch   25 | train_nll -1.01391 | train_fsce 1.17237 | val_dev 1.14663 | expl_dev 0.22467 | gat_gain +0.00758 | alpha 0.4968
+epoch   30 | train_nll -1.03252 | train_fsce 0.93786 | val_dev 1.11881 | expl_dev 0.24348 | gat_gain +0.01079 | alpha 0.4966
+epoch   35 | train_nll -1.12602 | train_fsce 0.60466 | val_dev 0.92394 | expl_dev 0.37525 | gat_gain +0.00421 | alpha 0.4955
+epoch   40 | train_nll -1.20437 | train_fsce 0.63264 | val_dev 0.86126 | expl_dev 0.41763 | gat_gain +0.02243 | alpha 0.4950
+epoch   45 | train_nll -1.21859 | train_fsce 0.65570 | val_dev 0.85158 | expl_dev 0.42418 | gat_gain +0.01939 | alpha 0.4941
+epoch   50 | train_nll -1.22804 | train_fsce 0.64404 | val_dev 0.84532 | expl_dev 0.42841 | gat_gain +0.02552 | alpha 0.4935
+epoch   55 | train_nll -1.23499 | train_fsce 0.65692 | val_dev 0.85486 | expl_dev 0.42196 | gat_gain +0.01841 | alpha 0.4929
+epoch   60 | train_nll -1.23716 | train_fsce 0.65595 | val_dev 0.83715 | expl_dev 0.43393 | gat_gain +0.02046 | alpha 0.4921
+epoch   65 | train_nll -1.24208 | train_fsce 0.67167 | val_dev 0.83631 | expl_dev 0.43451 | gat_gain +0.01835 | alpha 0.4916
+epoch   70 | train_nll -1.23735 | train_fsce 0.64940 | val_dev 0.83210 | expl_dev 0.43735 | gat_gain +0.03027 | alpha 0.4912
+epoch   75 | train_nll -1.24943 | train_fsce 0.63918 | val_dev 0.83085 | expl_dev 0.43820 | gat_gain +0.01344 | alpha 0.4905
+epoch   80 | train_nll -1.25100 | train_fsce 0.65105 | val_dev 0.81878 | expl_dev 0.44636 | gat_gain +0.02147 | alpha 0.4900
+epoch   85 | train_nll -1.24946 | train_fsce 0.61928 | val_dev 0.82847 | expl_dev 0.43981 | gat_gain +0.03293 | alpha 0.4896
+epoch   90 | train_nll -1.25287 | train_fsce 0.61880 | val_dev 0.81936 | expl_dev 0.44597 | gat_gain +0.02217 | alpha 0.4892
+epoch   95 | train_nll -1.25166 | train_fsce 0.61273 | val_dev 0.81341 | expl_dev 0.44999 | gat_gain +0.02373 | alpha 0.4888
+epoch  100 | train_nll -1.25742 | train_fsce 0.60852 | val_dev 0.80888 | expl_dev 0.45305 | gat_gain +0.02497 | alpha 0.4886
+epoch  105 | train_nll -1.25803 | train_fsce 0.59066 | val_dev 0.81593 | expl_dev 0.44829 | gat_gain +0.03301 | alpha 0.4881
+epoch  110 | train_nll -1.26030 | train_fsce 0.58629 | val_dev 0.80067 | expl_dev 0.45860 | gat_gain +0.01997 | alpha 0.4877
+epoch  115 | train_nll -1.25818 | train_fsce 0.58748 | val_dev 0.80338 | expl_dev 0.45677 | gat_gain +0.02651 | alpha 0.4874
+epoch  120 | train_nll -1.26006 | train_fsce 0.60694 | val_dev 0.78871 | expl_dev 0.46669 | gat_gain +0.02394 | alpha 0.4868
+epoch  125 | train_nll -1.26482 | train_fsce 0.57800 | val_dev 0.79769 | expl_dev 0.46062 | gat_gain +0.02929 | alpha 0.4864
+epoch  130 | train_nll -1.26369 | train_fsce 0.56472 | val_dev 0.78366 | expl_dev 0.47010 | gat_gain +0.01543 | alpha 0.4861
+epoch  135 | train_nll -1.26786 | train_fsce 0.56575 | val_dev 0.78026 | expl_dev 0.47241 | gat_gain +0.03110 | alpha 0.4858
+epoch  140 | train_nll -1.26889 | train_fsce 0.55314 | val_dev 0.77352 | expl_dev 0.47696 | gat_gain +0.01980 | alpha 0.4854
+epoch  145 | train_nll -1.27000 | train_fsce 0.55862 | val_dev 0.75960 | expl_dev 0.48637 | gat_gain +0.02906 | alpha 0.4852
+epoch  150 | train_nll -1.27360 | train_fsce 0.54412 | val_dev 0.77198 | expl_dev 0.47800 | gat_gain +0.02750 | alpha 0.4850
+epoch  155 | train_nll -1.27339 | train_fsce 0.55165 | val_dev 0.78057 | expl_dev 0.47219 | gat_gain +0.02219 | alpha 0.4846
+epoch  160 | train_nll -1.27536 | train_fsce 0.53901 | val_dev 0.75224 | expl_dev 0.49135 | gat_gain +0.02643 | alpha 0.4843
+epoch  165 | train_nll -1.27638 | train_fsce 0.54414 | val_dev 0.74907 | expl_dev 0.49349 | gat_gain +0.03003 | alpha 0.4841
+epoch  170 | train_nll -1.28177 | train_fsce 0.54091 | val_dev 0.74854 | expl_dev 0.49385 | gat_gain +0.03217 | alpha 0.4839
+epoch  175 | train_nll -1.27857 | train_fsce 0.54610 | val_dev 0.74067 | expl_dev 0.49917 | gat_gain +0.02458 | alpha 0.4835
+epoch  180 | train_nll -1.28825 | train_fsce 0.51738 | val_dev 0.73660 | expl_dev 0.50192 | gat_gain +0.01914 | alpha 0.4831
+epoch  185 | train_nll -1.28434 | train_fsce 0.52859 | val_dev 0.74290 | expl_dev 0.49766 | gat_gain +0.01817 | alpha 0.4827
+epoch  190 | train_nll -1.28492 | train_fsce 0.52837 | val_dev 0.74685 | expl_dev 0.49500 | gat_gain +0.03071 | alpha 0.4822
+epoch  195 | train_nll -1.28771 | train_fsce 0.53118 | val_dev 0.73972 | expl_dev 0.49981 | gat_gain +0.02018 | alpha 0.4818
+epoch  200 | train_nll -1.28554 | train_fsce 0.53112 | val_dev 0.73875 | expl_dev 0.50048 | gat_gain +0.02318 | alpha 0.4816
+epoch  205 | train_nll -1.29280 | train_fsce 0.52701 | val_dev 0.75186 | expl_dev 0.49161 | gat_gain +0.04393 | alpha 0.4811
+epoch  210 | train_nll -1.29625 | train_fsce 0.50972 | val_dev 0.74201 | expl_dev 0.49827 | gat_gain +0.02905 | alpha 0.4807
+epoch  215 | train_nll -1.28859 | train_fsce 0.52901 | val_dev 0.73697 | expl_dev 0.50168 | gat_gain +0.02508 | alpha 0.4802
+epoch  220 | train_nll -1.28695 | train_fsce 0.52353 | val_dev 0.74298 | expl_dev 0.49761 | gat_gain +0.03929 | alpha 0.4798
+epoch  225 | train_nll -1.29224 | train_fsce 0.51794 | val_dev 0.73183 | expl_dev 0.50515 | gat_gain +0.03795 | alpha 0.4793
+epoch  230 | train_nll -1.29018 | train_fsce 0.53916 | val_dev 0.76565 | expl_dev 0.48229 | gat_gain +0.03344 | alpha 0.4790
+epoch  235 | train_nll -1.28720 | train_fsce 0.55260 | val_dev 0.79247 | expl_dev 0.46415 | gat_gain +0.03979 | alpha 0.4786
+epoch  240 | train_nll -1.29098 | train_fsce 0.52674 | val_dev 0.74024 | expl_dev 0.49947 | gat_gain +0.01977 | alpha 0.4781
+epoch  245 | train_nll -1.29622 | train_fsce 0.51410 | val_dev 0.73570 | expl_dev 0.50253 | gat_gain +0.03951 | alpha 0.4777
+epoch  250 | train_nll -1.29437 | train_fsce 0.51953 | val_dev 0.72933 | expl_dev 0.50684 | gat_gain +0.04135 | alpha 0.4774
+epoch  255 | train_nll -1.29488 | train_fsce 0.50533 | val_dev 0.72029 | expl_dev 0.51296 | gat_gain +0.03785 | alpha 0.4767
+epoch  260 | train_nll -1.29414 | train_fsce 0.51420 | val_dev 0.72163 | expl_dev 0.51205 | gat_gain +0.02348 | alpha 0.4763
+epoch  265 | train_nll -1.29633 | train_fsce 0.50342 | val_dev 0.72015 | expl_dev 0.51305 | gat_gain +0.03383 | alpha 0.4758
+epoch  270 | train_nll -1.29958 | train_fsce 0.51132 | val_dev 0.71842 | expl_dev 0.51422 | gat_gain +0.02103 | alpha 0.4755
+epoch  275 | train_nll -1.29906 | train_fsce 0.50458 | val_dev 0.72628 | expl_dev 0.50890 | gat_gain +0.02412 | alpha 0.4750
+epoch  280 | train_nll -1.29445 | train_fsce 0.50585 | val_dev 0.74054 | expl_dev 0.49926 | gat_gain +0.02864 | alpha 0.4746
+epoch  285 | train_nll -1.29885 | train_fsce 0.48943 | val_dev 0.73358 | expl_dev 0.50397 | gat_gain +0.03198 | alpha 0.4742
+epoch  290 | train_nll -1.30833 | train_fsce 0.52664 | val_dev 0.71780 | expl_dev 0.51464 | gat_gain +0.01882 | alpha 0.4737
+epoch  295 | train_nll -1.30386 | train_fsce 0.52374 | val_dev 0.71721 | expl_dev 0.51503 | gat_gain +0.02065 | alpha 0.4733
+epoch  300 | train_nll -1.30361 | train_fsce 0.51070 | val_dev 0.73509 | expl_dev 0.50295 | gat_gain +0.01797 | alpha 0.4728
+epoch  305 | train_nll -1.30040 | train_fsce 0.49681 | val_dev 0.71929 | expl_dev 0.51363 | gat_gain +0.03400 | alpha 0.4727
+epoch  310 | train_nll -1.30125 | train_fsce 0.52221 | val_dev 0.73080 | expl_dev 0.50585 | gat_gain +0.01749 | alpha 0.4721
+epoch  315 | train_nll -1.30296 | train_fsce 0.49039 | val_dev 0.73967 | expl_dev 0.49985 | gat_gain +0.01227 | alpha 0.4717
+epoch  320 | train_nll -1.30778 | train_fsce 0.51639 | val_dev 0.74597 | expl_dev 0.49559 | gat_gain +0.02782 | alpha 0.4713
+epoch  325 | train_nll -1.30269 | train_fsce 0.50998 | val_dev 0.73480 | expl_dev 0.50314 | gat_gain +0.03260 | alpha 0.4707
+epoch  330 | train_nll -1.30151 | train_fsce 0.50684 | val_dev 0.73933 | expl_dev 0.50008 | gat_gain +0.02984 | alpha 0.4700
+epoch  335 | train_nll -1.30390 | train_fsce 0.49962 | val_dev 0.72842 | expl_dev 0.50746 | gat_gain +0.03914 | alpha 0.4700
+epoch  340 | train_nll -1.30740 | train_fsce 0.50529 | val_dev 0.70689 | expl_dev 0.52202 | gat_gain +0.01744 | alpha 0.4696
+epoch  345 | train_nll -1.30451 | train_fsce 0.49943 | val_dev 0.72424 | expl_dev 0.51028 | gat_gain +0.03216 | alpha 0.4691
+epoch  350 | train_nll -1.30253 | train_fsce 0.49897 | val_dev 0.71712 | expl_dev 0.51510 | gat_gain +0.03119 | alpha 0.4688
+epoch  355 | train_nll -1.31361 | train_fsce 0.51207 | val_dev 0.74653 | expl_dev 0.49521 | gat_gain +0.00948 | alpha 0.4681
+epoch  360 | train_nll -1.30207 | train_fsce 0.51045 | val_dev 0.74155 | expl_dev 0.49858 | gat_gain +0.01821 | alpha 0.4679
+epoch  365 | train_nll -1.30344 | train_fsce 0.50548 | val_dev 0.72002 | expl_dev 0.51314 | gat_gain +0.03169 | alpha 0.4677
+epoch  370 | train_nll -1.31387 | train_fsce 0.51608 | val_dev 0.74474 | expl_dev 0.49642 | gat_gain +0.02483 | alpha 0.4672
+epoch  375 | train_nll -1.30951 | train_fsce 0.51401 | val_dev 0.74161 | expl_dev 0.49854 | gat_gain +0.00636 | alpha 0.4665
+epoch  380 | train_nll -1.31389 | train_fsce 0.53257 | val_dev 0.74881 | expl_dev 0.49367 | gat_gain +0.02462 | alpha 0.4664
+epoch  385 | train_nll -1.31558 | train_fsce 0.49981 | val_dev 0.71945 | expl_dev 0.51352 | gat_gain +0.02119 | alpha 0.4660
+epoch  390 | train_nll -1.31530 | train_fsce 0.48826 | val_dev 0.72789 | expl_dev 0.50781 | gat_gain +0.02297 | alpha 0.4656
+epoch  395 | train_nll -1.31350 | train_fsce 0.50541 | val_dev 0.72694 | expl_dev 0.50846 | gat_gain +0.02004 | alpha 0.4652
+epoch  400 | train_nll -1.31034 | train_fsce 0.50421 | val_dev 0.73747 | expl_dev 0.50134 | gat_gain +0.01712 | alpha 0.4648
+epoch  405 | train_nll -1.31226 | train_fsce 0.49595 | val_dev 0.71248 | expl_dev 0.51823 | gat_gain +0.01714 | alpha 0.4645
+epoch  410 | train_nll -1.31182 | train_fsce 0.50182 | val_dev 0.73498 | expl_dev 0.50302 | gat_gain +0.02344 | alpha 0.4640
+epoch  415 | train_nll -1.31947 | train_fsce 0.51400 | val_dev 0.73577 | expl_dev 0.50249 | gat_gain +0.00663 | alpha 0.4635
+epoch  420 | train_nll -1.30394 | train_fsce 0.51959 | val_dev 0.74964 | expl_dev 0.49311 | gat_gain +0.01577 | alpha 0.4632
+epoch  425 | train_nll -1.31682 | train_fsce 0.49412 | val_dev 0.75575 | expl_dev 0.48898 | gat_gain +0.02834 | alpha 0.4630
+epoch  430 | train_nll -1.31191 | train_fsce 0.52782 | val_dev 0.71864 | expl_dev 0.51407 | gat_gain +0.01226 | alpha 0.4626
+epoch  435 | train_nll -1.31075 | train_fsce 0.50189 | val_dev 0.75007 | expl_dev 0.49282 | gat_gain +0.02858 | alpha 0.4625
+epoch  440 | train_nll -1.31312 | train_fsce 0.49644 | val_dev 0.73886 | expl_dev 0.50040 | gat_gain +0.00972 | alpha 0.4619
+epoch  445 | train_nll -1.31537 | train_fsce 0.51290 | val_dev 0.73688 | expl_dev 0.50174 | gat_gain +0.01651 | alpha 0.4616
+epoch  450 | train_nll -1.31756 | train_fsce 0.50599 | val_dev 0.73196 | expl_dev 0.50507 | gat_gain +0.02212 | alpha 0.4613
+epoch  455 | train_nll -1.31045 | train_fsce 0.52312 | val_dev 0.73280 | expl_dev 0.50449 | gat_gain +0.01753 | alpha 0.4608
+epoch  460 | train_nll -1.31550 | train_fsce 0.51326 | val_dev 0.74179 | expl_dev 0.49842 | gat_gain +0.01585 | alpha 0.4603
+epoch  465 | train_nll -1.31935 | train_fsce 0.52236 | val_dev 0.73320 | expl_dev 0.50422 | gat_gain +0.02442 | alpha 0.4600
+epoch  470 | train_nll -1.32239 | train_fsce 0.51325 | val_dev 0.72742 | expl_dev 0.50813 | gat_gain +0.02459 | alpha 0.4598
+epoch  475 | train_nll -1.31971 | train_fsce 0.51917 | val_dev 0.75081 | expl_dev 0.49232 | gat_gain +0.03347 | alpha 0.4595
+epoch  480 | train_nll -1.32115 | train_fsce 0.50395 | val_dev 0.72617 | expl_dev 0.50898 | gat_gain +0.01512 | alpha 0.4591
+epoch  485 | train_nll -1.32159 | train_fsce 0.51804 | val_dev 0.74495 | expl_dev 0.49628 | gat_gain +0.01659 | alpha 0.4588
+epoch  490 | train_nll -1.32057 | train_fsce 0.50596 | val_dev 0.72280 | expl_dev 0.51126 | gat_gain +0.02745 | alpha 0.4584
+epoch  495 | train_nll -1.32026 | train_fsce 0.51235 | val_dev 0.70352 | expl_dev 0.52429 | gat_gain +0.01838 | alpha 0.4581
+epoch  500 | train_nll -1.31893 | train_fsce 0.51373 | val_dev 0.70374 | expl_dev 0.52414 | gat_gain +0.01190 | alpha 0.4576
+epoch  505 | train_nll -1.32670 | train_fsce 0.50975 | val_dev 0.71520 | expl_dev 0.51640 | gat_gain +0.01580 | alpha 0.4572
+epoch  510 | train_nll -1.31921 | train_fsce 0.53452 | val_dev 0.71896 | expl_dev 0.51385 | gat_gain +0.01332 | alpha 0.4567
+epoch  515 | train_nll -1.32440 | train_fsce 0.50857 | val_dev 0.69544 | expl_dev 0.52976 | gat_gain +0.01450 | alpha 0.4565
+epoch  520 | train_nll -1.32198 | train_fsce 0.51415 | val_dev 0.70836 | expl_dev 0.52102 | gat_gain +0.01511 | alpha 0.4566
+epoch  525 | train_nll -1.31953 | train_fsce 0.49573 | val_dev 0.70970 | expl_dev 0.52012 | gat_gain +0.02533 | alpha 0.4560
+epoch  530 | train_nll -1.32768 | train_fsce 0.51208 | val_dev 0.71829 | expl_dev 0.51431 | gat_gain +0.01685 | alpha 0.4553
+epoch  535 | train_nll -1.32405 | train_fsce 0.50596 | val_dev 0.69507 | expl_dev 0.53001 | gat_gain +0.01622 | alpha 0.4551
+epoch  540 | train_nll -1.32837 | train_fsce 0.50179 | val_dev 0.71957 | expl_dev 0.51344 | gat_gain +0.02121 | alpha 0.4548
+epoch  545 | train_nll -1.32512 | train_fsce 0.52395 | val_dev 0.70621 | expl_dev 0.52247 | gat_gain +0.01232 | alpha 0.4544
+epoch  550 | train_nll -1.33268 | train_fsce 0.51284 | val_dev 0.74739 | expl_dev 0.49463 | gat_gain +0.01483 | alpha 0.4542
+epoch  555 | train_nll -1.33308 | train_fsce 0.50989 | val_dev 0.70331 | expl_dev 0.52444 | gat_gain +0.01848 | alpha 0.4540
+epoch  560 | train_nll -1.32302 | train_fsce 0.50228 | val_dev 0.71336 | expl_dev 0.51764 | gat_gain +0.03127 | alpha 0.4539
+epoch  565 | train_nll -1.31982 | train_fsce 0.53054 | val_dev 0.72317 | expl_dev 0.51101 | gat_gain +0.02157 | alpha 0.4536
+epoch  570 | train_nll -1.32696 | train_fsce 0.50292 | val_dev 0.70698 | expl_dev 0.52195 | gat_gain +0.01928 | alpha 0.4533
+epoch  575 | train_nll -1.32630 | train_fsce 0.49909 | val_dev 0.70852 | expl_dev 0.52091 | gat_gain +0.02324 | alpha 0.4529
+epoch  580 | train_nll -1.32603 | train_fsce 0.50532 | val_dev 0.70809 | expl_dev 0.52120 | gat_gain +0.03134 | alpha 0.4527
+epoch  585 | train_nll -1.32898 | train_fsce 0.52817 | val_dev 0.70844 | expl_dev 0.52097 | gat_gain +0.02208 | alpha 0.4524
+epoch  590 | train_nll -1.32558 | train_fsce 0.51322 | val_dev 0.70495 | expl_dev 0.52333 | gat_gain +0.01985 | alpha 0.4521
+epoch  595 | train_nll -1.32431 | train_fsce 0.52521 | val_dev 0.73338 | expl_dev 0.50410 | gat_gain +0.01815 | alpha 0.4519
+epoch  600 | train_nll -1.32827 | train_fsce 0.50372 | val_dev 0.69760 | expl_dev 0.52830 | gat_gain +0.02088 | alpha 0.4514
+epoch  605 | train_nll -1.32916 | train_fsce 0.51603 | val_dev 0.70398 | expl_dev 0.52398 | gat_gain +0.01722 | alpha 0.4515
+epoch  610 | train_nll -1.32830 | train_fsce 0.50693 | val_dev 0.69511 | expl_dev 0.52998 | gat_gain +0.01184 | alpha 0.4510
+epoch  615 | train_nll -1.33027 | train_fsce 0.50912 | val_dev 0.70648 | expl_dev 0.52229 | gat_gain +0.01694 | alpha 0.4507
+epoch  620 | train_nll -1.32949 | train_fsce 0.49573 | val_dev 0.71568 | expl_dev 0.51607 | gat_gain +0.02132 | alpha 0.4504
+epoch  625 | train_nll -1.33203 | train_fsce 0.51162 | val_dev 0.69633 | expl_dev 0.52916 | gat_gain +0.01294 | alpha 0.4499
+epoch  630 | train_nll -1.32674 | train_fsce 0.50998 | val_dev 0.68184 | expl_dev 0.53895 | gat_gain +0.02473 | alpha 0.4496
+epoch  635 | train_nll -1.33274 | train_fsce 0.51375 | val_dev 0.67459 | expl_dev 0.54386 | gat_gain +0.01574 | alpha 0.4495
+epoch  640 | train_nll -1.33391 | train_fsce 0.51409 | val_dev 0.67168 | expl_dev 0.54582 | gat_gain +0.01730 | alpha 0.4494
+epoch  645 | train_nll -1.33246 | train_fsce 0.50426 | val_dev 0.68868 | expl_dev 0.53433 | gat_gain +0.01294 | alpha 0.4490
+epoch  650 | train_nll -1.33532 | train_fsce 0.50580 | val_dev 0.70989 | expl_dev 0.51998 | gat_gain +0.00128 | alpha 0.4489
+epoch  655 | train_nll -1.33616 | train_fsce 0.50642 | val_dev 0.69488 | expl_dev 0.53014 | gat_gain +0.00706 | alpha 0.4484
+epoch  660 | train_nll -1.33785 | train_fsce 0.50382 | val_dev 0.70550 | expl_dev 0.52296 | gat_gain -0.00135 | alpha 0.4482
+epoch  665 | train_nll -1.33146 | train_fsce 0.50199 | val_dev 0.70487 | expl_dev 0.52338 | gat_gain +0.00155 | alpha 0.4480
+epoch  670 | train_nll -1.33283 | train_fsce 0.51313 | val_dev 0.69324 | expl_dev 0.53124 | gat_gain +0.01351 | alpha 0.4477
+epoch  675 | train_nll -1.33461 | train_fsce 0.52706 | val_dev 0.68709 | expl_dev 0.53540 | gat_gain +0.01424 | alpha 0.4475
+epoch  680 | train_nll -1.34164 | train_fsce 0.51683 | val_dev 0.69501 | expl_dev 0.53005 | gat_gain +0.00742 | alpha 0.4472
+epoch  685 | train_nll -1.33845 | train_fsce 0.49843 | val_dev 0.69307 | expl_dev 0.53136 | gat_gain +0.01054 | alpha 0.4469
+epoch  690 | train_nll -1.34404 | train_fsce 0.50653 | val_dev 0.69550 | expl_dev 0.52972 | gat_gain +0.01876 | alpha 0.4467
+epoch  695 | train_nll -1.33561 | train_fsce 0.51704 | val_dev 0.72288 | expl_dev 0.51120 | gat_gain +0.00881 | alpha 0.4463
+epoch  700 | train_nll -1.34245 | train_fsce 0.50704 | val_dev 0.72205 | expl_dev 0.51176 | gat_gain +0.00404 | alpha 0.4461
+epoch  705 | train_nll -1.33582 | train_fsce 0.50018 | val_dev 0.68432 | expl_dev 0.53728 | gat_gain +0.00722 | alpha 0.4460
+epoch  710 | train_nll -1.34190 | train_fsce 0.49788 | val_dev 0.69889 | expl_dev 0.52743 | gat_gain +0.01406 | alpha 0.4456
+epoch  715 | train_nll -1.33466 | train_fsce 0.50870 | val_dev 0.68098 | expl_dev 0.53954 | gat_gain +0.00508 | alpha 0.4454
+epoch  720 | train_nll -1.33293 | train_fsce 0.48989 | val_dev 0.70763 | expl_dev 0.52152 | gat_gain +0.00534 | alpha 0.4449
+epoch  725 | train_nll -1.33999 | train_fsce 0.50828 | val_dev 0.69761 | expl_dev 0.52829 | gat_gain +0.00827 | alpha 0.4447
+epoch  730 | train_nll -1.33156 | train_fsce 0.49260 | val_dev 0.69957 | expl_dev 0.52697 | gat_gain +0.01443 | alpha 0.4443
+epoch  735 | train_nll -1.33634 | train_fsce 0.49526 | val_dev 0.70079 | expl_dev 0.52614 | gat_gain -0.00019 | alpha 0.4441
+epoch  740 | train_nll -1.34093 | train_fsce 0.50985 | val_dev 0.70002 | expl_dev 0.52666 | gat_gain -0.00579 | alpha 0.4437
+epoch  745 | train_nll -1.34105 | train_fsce 0.50986 | val_dev 0.70456 | expl_dev 0.52359 | gat_gain -0.01203 | alpha 0.4436
+epoch  750 | train_nll -1.34730 | train_fsce 0.50536 | val_dev 0.70663 | expl_dev 0.52219 | gat_gain -0.00068 | alpha 0.4432
+epoch  755 | train_nll -1.34117 | train_fsce 0.49852 | val_dev 0.68282 | expl_dev 0.53829 | gat_gain +0.01229 | alpha 0.4431
+epoch  760 | train_nll -1.34213 | train_fsce 0.49840 | val_dev 0.69268 | expl_dev 0.53162 | gat_gain -0.00193 | alpha 0.4429
+epoch  765 | train_nll -1.33301 | train_fsce 0.50451 | val_dev 0.69741 | expl_dev 0.52842 | gat_gain -0.00766 | alpha 0.4426
+epoch  770 | train_nll -1.33978 | train_fsce 0.51770 | val_dev 0.74188 | expl_dev 0.49835 | gat_gain -0.00807 | alpha 0.4419
+epoch  775 | train_nll -1.34327 | train_fsce 0.52261 | val_dev 0.67495 | expl_dev 0.54361 | gat_gain +0.01133 | alpha 0.4419
+epoch  780 | train_nll -1.34197 | train_fsce 0.51698 | val_dev 0.71864 | expl_dev 0.51407 | gat_gain +0.00391 | alpha 0.4417
+epoch  785 | train_nll -1.34604 | train_fsce 0.50594 | val_dev 0.73324 | expl_dev 0.50420 | gat_gain -0.00834 | alpha 0.4415
+epoch  790 | train_nll -1.33748 | train_fsce 0.49440 | val_dev 0.71200 | expl_dev 0.51856 | gat_gain +0.00552 | alpha 0.4415
+epoch  795 | train_nll -1.33266 | train_fsce 0.50645 | val_dev 0.69306 | expl_dev 0.53137 | gat_gain +0.00500 | alpha 0.4411
+epoch  800 | train_nll -1.34239 | train_fsce 0.51402 | val_dev 0.70265 | expl_dev 0.52488 | gat_gain +0.00221 | alpha 0.4411
+
+[中斷] epoch 802 收到 Ctrl-C，用目前模型存 checkpoint 跟 latent
+已存 /Users/yentso/developer/StartOver/model/v3_gat/result/latents.npz
